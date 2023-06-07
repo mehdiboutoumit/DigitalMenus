@@ -46,7 +46,7 @@ class SideBar extends Component {
     const path = window.location.pathname;
 
     /// Active menu
-    let deshBoard = ["", "analytics", "companies", "statistics"],
+    let Collaborators = ["Collaborateurs"],deshBoard = ["", "analytics", "companies", "statistics"],
       app = [
         "app-profile",
         "app-calender",
@@ -144,156 +144,19 @@ class SideBar extends Component {
                 </li>
               </ul>
             </li>
-            <li className={`${app.includes(path.slice(1)) ? "mm-active" : ""}`}>
-              <Link className="has-arrow ai-icon" to="#">
-                <i className="flaticon-381-television"></i>
-                <span className="nav-text">Apps</span>
-              </Link>
-              <ul>
-                <li>
-                  <Link to="/app-profile">Profile</Link>
-                </li>
-                <li>
-                  <Link className="has-arrow" to="#">
-                    Email
-                  </Link>
-                  <ul>
-                    <li>
-                      <Link to="/email-compose">Compose</Link>
-                    </li>
-                    <li>
-                      <Link to="/email-inbox">Inbox</Link>
-                    </li>
-                    <li>
-                      <Link to="/email-read">Read</Link>
-                    </li>
-                  </ul>
-                </li>
-                <li>
-                  <Link to="/app-calender">Calendar</Link>
-                </li>
-                <li>
-                  <Link className="has-arrow" to="#">
-                    Shop
-                  </Link>
-                  <ul>
-                    <li>
-                      <Link to="/ecom-product-grid">Product Grid</Link>
-                    </li>
-                    <li>
-                      <Link to="/ecom-product-list">Product List</Link>
-                    </li>
-                    <li>
-                      <Link to="/ecom-product-detail">Product Details</Link>
-                    </li>
-                    <li>
-                      <Link to="/ecom-product-order">Order</Link>
-                    </li>
-                    <li>
-                      <Link to="/ecom-checkout">Checkout</Link>
-                    </li>
-                    <li>
-                      <Link to="/ecom-invoice">Invoice</Link>
-                    </li>
-                    <li>
-                      <Link to="/ecom-customers">Customers</Link>
-                    </li>
-                  </ul>
-                </li>
-              </ul>
-            </li>
+              {/* Collaborateurs */}
             <li
-              className={`${charts.includes(path.slice(1)) ? "mm-active" : ""}`}
+              className={`${Collaborators.includes(path.slice(1)) ? "mm-active" : ""}`}
             >
-              <Link className="has-arrow ai-icon" to="#">
-                <i className="flaticon-381-controls-3"></i>
-                <span className="nav-text">Charts</span>
+              <Link to="collaborateurs" className="ai-icon">
+                <i className="flaticon-381-user-9"></i>
+                <span className="nav-text">Collaborateurs</span>
               </Link>
-              <ul>
-                <li>
-                  <Link to="/chart-rechart">RechartJs</Link>
-                </li>
-                <li>
-                  <Link to="/chart-float">Chartfloat</Link>
-                </li>
-                <li>
-                  <Link to="/chart-chartjs">Chartjs</Link>
-                </li>
-                <li>
-                  <Link to="/chart-chartist">Chartist</Link>
-                </li>
-                <li>
-                  <Link to="/chart-sparkline">Sparkline</Link>
-                </li>
-                <li>
-                  <Link to="/chart-apexchart">Apexchart</Link>
-                </li>
-              </ul>
             </li>
-            <li
-              className={`${
-                bootstrap.includes(path.slice(1)) ? "mm-active" : ""
-              }`}
-            >
-              <Link className="has-arrow ai-icon" to="#">
-                <i className="flaticon-381-internet"></i>
-                <span className="nav-text">Bootstrap</span>
-              </Link>
-              <ul>
-                <li>
-                  <Link to="/ui-accordion">Accordion</Link>
-                </li>
-                <li>
-                  <Link to="/ui-alert">Alert</Link>
-                </li>
-                <li>
-                  <Link to="/ui-badge">Badge</Link>
-                </li>
-                <li>
-                  <Link to="/ui-button">Button</Link>
-                </li>
-                <li>
-                  <Link to="/ui-modal">Modal</Link>
-                </li>
-                <li>
-                  <Link to="/ui-button-group">Button Group</Link>
-                </li>
-                <li>
-                  <Link to="/ui-list-group">List Group</Link>
-                </li>
-                <li>
-                  <Link to="/ui-media-object">Media Object</Link>
-                </li>
-                <li>
-                  <Link to="/ui-card">Cards</Link>
-                </li>
-                <li>
-                  <Link to="/ui-carousel">Carousel</Link>
-                </li>
-                <li>
-                  <Link to="/ui-dropdown">Dropdown</Link>
-                </li>
-                <li>
-                  <Link to="/ui-popover">Popover</Link>
-                </li>
-                <li>
-                  <Link to="/ui-progressbar">Progressbar</Link>
-                </li>
-                <li>
-                  <Link to="/ui-tab">Tab</Link>
-                </li>
-                <li>
-                  <Link to="/ui-typography">Typography</Link>
-                </li>
-                <li>
-                  <Link to="/ui-pagination">Pagination</Link>
-                </li>
-                <li>
-                  <Link to="/ui-grid">Grid</Link>
-                </li>
-              </ul>
-            </li>
-            <li
+
+
+            
+                       <li
               className={`${
                 restaurants.includes(path.slice(1)) ? "mm-active" : ""
               }`}
@@ -423,6 +286,156 @@ class SideBar extends Component {
                 </li>
               </ul>
             </li>
+            <li className={`${app.includes(path.slice(1)) ? "mm-active" : ""}`}>
+              <Link className="has-arrow ai-icon" to="#">
+                <i className="flaticon-381-television"></i>
+                <span className="nav-text">Apps</span>
+              </Link>
+              <ul>
+                <li>
+                  <Link to="/app-profile">Profile</Link>
+                </li>
+                <li>
+                  <Link className="has-arrow" to="#">
+                    Email
+                  </Link>
+                  <ul>
+                    <li>
+                      <Link to="/email-compose">Compose</Link>
+                    </li>
+                    <li>
+                      <Link to="/email-inbox">Inbox</Link>
+                    </li>
+                    <li>
+                      <Link to="/email-read">Read</Link>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <Link to="/app-calender">Calendar</Link>
+                </li>
+                <li>
+                  <Link className="has-arrow" to="#">
+                    Plats
+                  </Link>
+                  <ul>
+                    <li>
+                      <Link to="/ecom-product-grid">Product Grid</Link>
+                    </li>
+                    <li>
+                      <Link to="/ecom-product-list">Product List</Link>
+                    </li>
+                    <li>
+                      <Link to="/ecom-product-detail">Product Details</Link>
+                    </li>
+                    <li>
+                      <Link to="/ecom-product-order">Order</Link>
+                    </li>
+                    <li>
+                      <Link to="/ecom-checkout">Checkout</Link>
+                    </li>
+                    <li>
+                      <Link to="/ecom-invoice">Invoice</Link>
+                    </li>
+                    <li>
+                      <Link to="/ecom-customers">Customers</Link>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li
+              className={`${charts.includes(path.slice(1)) ? "mm-active" : ""}`}
+            >
+              <Link className="has-arrow ai-icon" to="#">
+                <i className="flaticon-381-controls-3"></i>
+                <span className="nav-text">Charts</span>
+              </Link>
+              <ul>
+                <li>
+                  <Link to="/chart-rechart">RechartJs</Link>
+                </li>
+                <li>
+                  <Link to="/chart-float">Chartfloat</Link>
+                </li>
+                <li>
+                  <Link to="/chart-chartjs">Chartjs</Link>
+                </li>
+                <li>
+                  <Link to="/chart-chartist">Chartist</Link>
+                </li>
+                <li>
+                  <Link to="/chart-sparkline">Sparkline</Link>
+                </li>
+                <li>
+                  <Link to="/chart-apexchart">Apexchart</Link>
+                </li>
+              </ul>
+            </li>
+            <li
+              className={`${
+                bootstrap.includes(path.slice(1)) ? "mm-active" : ""
+              }`}
+            >
+              <Link className="has-arrow ai-icon" to="#">
+                <i className="flaticon-381-internet"></i>
+                <span className="nav-text">Bootstrap</span>
+              </Link>
+              <ul>
+                <li>
+                  <Link to="/ui-accordion">Accordion</Link>
+                </li>
+                <li>
+                  <Link to="/ui-alert">Alert</Link>
+                </li>
+                <li>
+                  <Link to="/ui-badge">Badge</Link>
+                </li>
+                <li>
+                  <Link to="/ui-button">Button</Link>
+                </li>
+                <li>
+                  <Link to="/ui-modal">Modal</Link>
+                </li>
+                <li>
+                  <Link to="/ui-button-group">Button Group</Link>
+                </li>
+                <li>
+                  <Link to="/ui-list-group">List Group</Link>
+                </li>
+                <li>
+                  <Link to="/ui-media-object">Media Object</Link>
+                </li>
+                <li>
+                  <Link to="/ui-card">Cards</Link>
+                </li>
+                <li>
+                  <Link to="/ui-carousel">Carousel</Link>
+                </li>
+                <li>
+                  <Link to="/ui-dropdown">Dropdown</Link>
+                </li>
+                <li>
+                  <Link to="/ui-popover">Popover</Link>
+                </li>
+                <li>
+                  <Link to="/ui-progressbar">Progressbar</Link>
+                </li>
+                <li>
+                  <Link to="/ui-tab">Tab</Link>
+                </li>
+                <li>
+                  <Link to="/ui-typography">Typography</Link>
+                </li>
+                <li>
+                  <Link to="/ui-pagination">Pagination</Link>
+                </li>
+                <li>
+                  <Link to="/ui-grid">Grid</Link>
+                </li>
+              </ul>
+            </li>
+
             <li
               className={`${table.includes(path.slice(1)) ? "mm-active" : ""}`}
             >
@@ -478,6 +491,8 @@ class SideBar extends Component {
                 </li>
               </ul>
             </li>
+
+            
           </MM>
           <div className="plus-box">
             <p className="fs-13 font-w300 mb-4">

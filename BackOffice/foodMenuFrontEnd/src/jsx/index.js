@@ -11,6 +11,12 @@ import "./chart.css";
 import Nav from "./layouts/nav";
 import Footer from "./layouts/Footer";
 
+//MyComponents
+import Collaborators from "./MyComponents/Collaborators/Collaborators";
+import CollabView from "./MyComponents/Collaborators/CollabView";
+
+
+
 /// Pages
 import Registration from "./pages/Registration";
 import Login from "./pages/Login";
@@ -103,6 +109,9 @@ import RechartJs from "./components/charts/rechart";
 
 const Markup = () => {
   const routes = [
+    {url : "collaborateurs", component: CollabView},
+
+
     /// Deshborad
     { url: "", component: Home },
     { url: "companies", component: Companies },
