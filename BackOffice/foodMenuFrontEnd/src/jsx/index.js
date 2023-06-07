@@ -12,10 +12,13 @@ import Nav from "./layouts/nav";
 import Footer from "./layouts/Footer";
 
 //MyComponents
-import Collaborators from "./MyComponents/Collaborators/Collaborators";
+//import Collaborators from "./MyComponents/Collaborators/Collaborators";
 import CollabView from "./MyComponents/Collaborators/CollabView";
 
+import Restaurants from "./MyComponents/Restaurants/Restaurants.jsx";
+import CreateRestau from "./MyComponents/Restaurants/createRestau";
 
+import Categories from "./MyComponents/Categories/Categories";
 
 /// Pages
 import Registration from "./pages/Registration";
@@ -107,10 +110,18 @@ import Toastr from "./components/PluginsMenu/Toastr/Toastr";
 import JqvMap from "./components/PluginsMenu/Jqv Map/JqvMap";
 import RechartJs from "./components/charts/rechart";
 
+
 const Markup = () => {
   const routes = [
+    //Collab
     {url : "collaborateurs", component: CollabView},
 
+    //Restau
+    {url : "Restaurants", component: Restaurants},
+    {url : "CreerRestaurant", component : CreateRestau },
+
+    //Categories
+    {url : "Categories", component : Categories},
 
     /// Deshborad
     { url: "", component: Home },

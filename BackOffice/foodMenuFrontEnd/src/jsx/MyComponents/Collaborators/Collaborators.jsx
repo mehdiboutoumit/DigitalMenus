@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from "react";
 import { MDBDataTable } from "mdbreact";
-import dataCollab from "./dataCollab";
+import dataCollab from "./dataCollab.jsx";
 import { Dropdown, Button, Modal } from "react-bootstrap";
 import CreateCollab from "./createCollab";
 

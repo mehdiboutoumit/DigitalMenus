@@ -46,7 +46,9 @@ class SideBar extends Component {
     const path = window.location.pathname;
 
     /// Active menu
-    let Collaborators = ["Collaborateurs"],deshBoard = ["", "analytics", "companies", "statistics"],
+    let Collaborators = ["Collaborateurs"],Restaurant=["Restaurant"],
+    Categories = ["Categories"],
+    deshBoard = ["", "analytics", "companies", "statistics"],
       app = [
         "app-profile",
         "app-calender",
@@ -123,26 +125,7 @@ class SideBar extends Component {
                 <i className="flaticon-381-networking"></i>
                 <span className="nav-text">Dashboard</span>
               </Link>
-              <ul>
-                <li>
-                  <Link to="/">Dashboard</Link>
-                </li>
-                <li>
-                  <Link to="analytics">Analytics</Link>
-                </li>
-                <li>
-                  <Link to="review">Review</Link>
-                </li>
-                <li>
-                  <Link to="order">Order</Link>
-                </li>
-                <li>
-                  <Link to="order-list">Order List</Link>
-                </li>
-                <li>
-                  <Link to="customer-list">Customer List</Link>
-                </li>
-              </ul>
+              
             </li>
               {/* Collaborateurs */}
             <li
@@ -158,22 +141,34 @@ class SideBar extends Component {
             
                        <li
               className={`${
-                restaurants.includes(path.slice(1)) ? "mm-active" : ""
+                Restaurant.includes(path.slice(1)) ? "mm-active" : ""
               }`}
             >
               <Link className="has-arrow ai-icon" to="#">
-                <i className="flaticon-381-heart"></i>
-                <span className="nav-text">Restaurant</span>
+                <i className="flaticon-381-home-1"></i>
+                <span className="nav-text">Restaurants</span>
               </Link>
               <ul>
                 <li>
-                  <Link to="/restaurant-create">Créer un restaurant</Link>
+                  <Link to="CreerRestaurant">Créer un restaurant</Link>
                 </li>
                 <li>
-                  <Link to="/restaurant-show">Voir les restaurants</Link>
+                  <Link to="Restaurants">Voir les restaurants</Link>
                 </li>
               </ul>
             </li>
+
+
+            {<li
+              className={`${Categories.includes(path.slice(1)) ? "mm-active" : ""}`}
+            >
+              <Link  to="Categories">
+                <i className="flaticon-381-list"></i>
+                <span className="nav-text">Categories</span>
+              </Link>
+             
+            </li> }
+
             {<li
               className={`${orders.includes(path.slice(1)) ? "mm-active" : ""}`}
             >
