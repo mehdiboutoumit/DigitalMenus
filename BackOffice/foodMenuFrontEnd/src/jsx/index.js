@@ -20,6 +20,8 @@ import CreateRestau from "./MyComponents/Restaurants/createRestau";
 
 import Categories from "./MyComponents/Categories/Categories";
 
+import Dishes from "./MyComponents/Dishes/Dishes";
+
 /// Pages
 import Registration from "./pages/Registration";
 import Login from "./pages/Login";
@@ -122,6 +124,10 @@ const Markup = () => {
 
     //Categories
     {url : "Categories", component : Categories},
+
+    //Dishes
+    {url : "Dishes", component : Dishes},
+
 
     /// Deshborad
     { url: "", component: Home },

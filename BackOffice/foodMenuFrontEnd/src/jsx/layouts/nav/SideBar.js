@@ -48,6 +48,7 @@ class SideBar extends Component {
     /// Active menu
     let Collaborators = ["Collaborateurs"],Restaurant=["Restaurant"],
     Categories = ["Categories"],
+    Dishes = ["Plats"],
     deshBoard = ["", "analytics", "companies", "statistics"],
       app = [
         "app-profile",
@@ -165,6 +166,16 @@ class SideBar extends Component {
               <Link  to="Categories">
                 <i className="flaticon-381-list"></i>
                 <span className="nav-text">Categories</span>
+              </Link>
+             
+            </li> }
+
+            {<li
+              className={`${Dishes.includes(path.slice(1)) ? "mm-active" : ""}`}
+            >
+              <Link  to="Dishes">
+                <i className="flaticon-381-box"></i>
+                <span className="nav-text">Plats</span>
               </Link>
              
             </li> }

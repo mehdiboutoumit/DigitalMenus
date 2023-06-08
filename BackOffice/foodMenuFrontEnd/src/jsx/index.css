@@ -1,3 +1,11 @@
+.column-description {
+  width: 200px; /* Adjust the width as per your requirements */
+  word-wrap: break-word;
+}
+
+
+
+
 .card-text {
    margin-bottom: 0;
 }
