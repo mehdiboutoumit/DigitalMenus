@@ -99,7 +99,7 @@ function Restaurants() {
     rows: rows.map((row) => ({
         ...row,
         actions: ( <div>
-            <Link to={`/Restaurants/${row.id}` }  >
+            <Link to={'Dishes' }  >
               
             <i className='flaticon-381-view-2 btn btn-light'></i>
           </Link> <Button variant='info' onClick={handleEdit}><i className='flaticon-381-edit'></i></Button>

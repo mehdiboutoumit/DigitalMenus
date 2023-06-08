@@ -22,6 +22,10 @@ import Categories from "./MyComponents/Categories/Categories";
 
 import Dishes from "./MyComponents/Dishes/Dishes";
 
+import Menus from "./MyComponents/Menus/Menus";
+
+import Tables from "./MyComponents/Tables/Tables";
+
 /// Pages
 import Registration from "./pages/Registration";
 import Login from "./pages/Login";
@@ -39,7 +43,7 @@ import Widget from "./pages/Widget";
 
 // Orders
 import Commandes from "./pages/commandes";
-import Menus from "./pages/menus";
+import menus from "./pages/menus";
 /// Deshboard
 import Home from "./components/Dashboard/Home/Home";
 import Companies from "./components/Dashboard/Companies/Companies";
@@ -128,6 +132,12 @@ const Markup = () => {
     //Dishes
     {url : "Dishes", component : Dishes},
 
+    //Menus
+    {url : "Menus", component : Menus},
+
+    //Tables
+    {url : "Tables", component : Tables},
+
 
     /// Deshborad
     { url: "", component: Home },
@@ -208,7 +218,7 @@ const Markup = () => {
     { url: "page-lock-screen", component: LockScreen },
     { url: "page-login", component: Login },
     { url: "commandes", component: Commandes },
-    { url: "menus", component: Menus },
+   // { url: "menus", component: menus },
     { url: "page-error-400", component: Error400 },
     { url: "page-error-403", component: Error403 },
     { url: "page-error-404", component: Error404 },
