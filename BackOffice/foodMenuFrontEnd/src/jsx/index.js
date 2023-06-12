@@ -24,7 +24,13 @@ import Dishes from "./MyComponents/Dishes/Dishes";
 
 import Menus from "./MyComponents/Menus/Menus";
 
+import ShowMenu from './MyComponents/Menus/ShowMenu';
+
 import Tables from "./MyComponents/Tables/Tables";
+
+import Orders from "./MyComponents/Orders/Orders";
+
+import ShowOrder from "./MyComponents/Orders/ShowOrder";
 
 /// Pages
 import Registration from "./pages/Registration";
@@ -117,6 +123,7 @@ import JqvMap from "./components/PluginsMenu/Jqv Map/JqvMap";
 import RechartJs from "./components/charts/rechart";
 
 
+
 const Markup = () => {
   const routes = [
     //Collab
@@ -134,9 +141,14 @@ const Markup = () => {
 
     //Menus
     {url : "Menus", component : Menus},
+    {url : "ShowMenu", component : ShowMenu},
 
     //Tables
     {url : "Tables", component : Tables},
+
+    //Orders
+    {url : "Orders" , component : Orders},
+    {url : "ShowOrder", component : ShowOrder},
 
 
     /// Deshborad

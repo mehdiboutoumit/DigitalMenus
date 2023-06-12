@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from "react";
 
-
-const categories = ["Dessert", "Lunch", "Dinner"];
-
-const CreateDish = ({ editDishData }) => {
+const CreateDish = ({ editDishData,  onCreateDish }) => {
   const [name, setName] = useState("");
   const [image, setImage] = useState("");
-  const [description, setdescription] = useState("");
+  const [description, setDescription] = useState("");
   const [isSoldOut, setIsSoldOut] = useState(false);
   const [preparationTime, setPreparationTime] = useState(0);
   const [calories, setCalories] = useState(0);
@@ -14,21 +11,21 @@ const CreateDish = ({ editDishData }) => {
   const [category, setCategory] = useState("");
 
   useEffect(() => {
+    // Set the form fields with editDishData values if it exists
     if (editDishData) {
-      // Fill the form fields with the old information
-      setName(editDishData.name || "");
-      setImage(editDishData.image || "");
-      setdescription(editDishData.description || "");
-      setIsSoldOut(editDishData.is_sold_out || false);
-      setPreparationTime(editDishData.preparation_time || 0);
-      setCalories(editDishData.calories || 0);
-      setPrice(editDishData.price || 0);
-      setCategory(editDishData.category || "");
+      setName(editDishData.name);
+      setImage(editDishData.image);
+      setDescription(editDishData.description);
+      setIsSoldOut(editDishData.is_sold_out);
+      setPreparationTime(editDishData.preparation_time);
+      setCalories(editDishData.calories);
+      setPrice(editDishData.price);
+      setCategory(editDishData.category);
     } else {
       // Reset the form fields
       setName("");
       setImage("");
-      setdescription("");
+      setDescription("");
       setIsSoldOut(false);
       setPreparationTime(0);
       setCalories(0);
@@ -39,11 +36,28 @@ const CreateDish = ({ editDishData }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const dishData = {
+      name,
+      image,
+      description,
+      is_sold_out: isSoldOut,
+      preparation_time: preparationTime,
+      calories,
+      price,
+      category,
+    };
+    onCreateDish(dishData);
     // Handle form submission
-    console.log("Submit", { name, image, description, isSoldOut,
-        preparationTime,
-        calories,
-        price, category });
+    console.log("Submit", dishData);
+    // Reset the form fields
+    setName("");
+    setImage("");
+    setDescription("");
+    setIsSoldOut(false);
+    setPreparationTime(0);
+    setCalories(0);
+    setPrice(0);
+    setCategory("");
   };
 
   return (
@@ -68,46 +82,28 @@ const CreateDish = ({ editDishData }) => {
           onChange={(e) => setImage(e.target.value)}
         />
       </div>
-     
       <div className="form-group">
         <label htmlFor="description">Description</label>
         <textarea
           className="form-control"
           id="description"
           value={description}
-          onChange={(e) => setdescription(e.target.value)}
+          onChange={(e) => setDescription(e.target.value)}
         />
       </div>
-     
-
       <div className="form-group">
-  <label htmlFor="available">Disponible ?</label>
-  <select
-    className="form-control"
-    id="available"
-    onChange={(e) => setIsSoldOut(e.target.value)}
-  >
-    <option value={false}>Oui</option>
-    <option value={true}>Non</option>
-  </select>
-</div>
-
-      <div className="form-group">
-        <label htmlFor="category">Categorie</label>
+        <label htmlFor="available">Disponible ?</label>
         <select
           className="form-control"
-          id="category"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
+          id="available"
+          value={isSoldOut}
+          onChange={(e) => setIsSoldOut(e.target.value === "true")}
         >
-          <option value="">Selectionner une categorie</option>
-          {categories.map((category) => (
-            <option key={category} value={category}>
-              {category}
-            </option>
-          ))}
+          <option value={false}>Oui</option>
+          <option value={true}>Non</option>
         </select>
       </div>
+     
       <div className="form-group">
         <label htmlFor="preparationTime">Preparation Time (min)</label>
         <input
@@ -138,9 +134,8 @@ const CreateDish = ({ editDishData }) => {
           onChange={(e) => setPrice(e.target.value)}
         />
       </div>
-      
       <button type="submit" className="btn btn-primary">
-        {editDishData ? "Update" : "Create"}
+        Create
       </button>
     </form>
   );

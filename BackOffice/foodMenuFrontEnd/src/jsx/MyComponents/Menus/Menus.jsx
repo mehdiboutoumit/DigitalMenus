@@ -17,7 +17,9 @@ function Menus() {
   const [showMenu, setShowMenu] = useState(false);
 
   const showMenuComponent = () => {
-    setShowMenu(true);
+    //setShowMenu(true);
+    window.location.href = "/ShowMenu";
+
   };
 
   const handleCloseShowMenu = () => {
