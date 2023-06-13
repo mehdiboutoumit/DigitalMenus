@@ -1,21 +1,138 @@
-import React, { useState } from 'react';
-import { Modal, Button} from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { Modal, Button } from 'react-bootstrap';
 import CreateCategory from '../Categories/createCategory';
 import CreateDish from '../Dishes/CreateDish';
 import Nestable from "react-nestable";
-import img from '../../../images/avatar/1.png';
+import img from '../../../images/big/img6.jpg';
+import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
+import Categories from '../Categories/Categories';
 
-const ShowMenu = ({ menu }) => {
-  const [category, setCategory] = useState([]); // names displayed
+const ShowMenu = () => {
+  const {menuId} = useParams();
+  const [category, setCategory] = useState([]);
   const [showCreateCategoryModal, setShowCreateCategoryModal] = useState(false);
-  const [categories, setCategories] = useState({}); // categories with associated dishes
-  const [selectedCategoryName, setSelectedCategoryName] = useState(null);
-const [showCreateDishModal, setShowCreateDishModal] = useState(false);
-const [editCategoryData, seteditCategoryData] = useState(null);
-const [editDishData, setEditDishData] = useState(null);
+  const [categories, setCategories] = useState({});
+  const [selectedCategoryName, setSelectedCategoryName] = useState({});
+  const [showCreateDishModal, setShowCreateDishModal] = useState(false);
+  const [editCategoryData, setEditCategoryData] = useState(null);
+  const [editDishData, setEditDishData] = useState(null);
+  //const [categoryId, setCategoryId] = useState('');
+  
+
+
+  useEffect(() => {
+    let isMounted = true; // Add a variable to track component mount state
+  
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/api/category/menu/${menuId}`);
+        const categoryData = response.data.categories;
+  
+        // Check if the component is still mounted before updating state
+        if (isMounted) {
+          const updatedCategory = categoryData.map((category) => category);
+          setCategory(updatedCategory);
+  
+          const updatedCategories = {};
+          for (const category of categoryData) {
+            const response = await axios.get(`http://localhost:5000/api/dish/category/${category.id}`);
+            const dishes = response.data.dishes;
+            if (dishes.length > 0) {
+              updatedCategories[category.name] = dishes;
+            }
+           
+
+          }
+  
+          // Check if the component is still mounted before updating state
+          if (isMounted) {
+            setCategories(updatedCategories);
+         
+          }
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+  
+    fetchData();
+    
+  
+    // Cleanup function to cancel any ongoing tasks
+    // return () => {
+    //   isMounted = false;
+    // };
+  }, []);
+  
+  const handleSave = async () => {
+    try {
+      const updatedCategories = {};
+  
+      for (const [categoryName, dishes] of Object.entries(categories)) {
+        // Check if the category already exists
+        // let  exist = false;
+        const foundCategory = category.find((c) => c.name === categoryName);
+        // if (Object.prototype.hasOwnProperty.call(categories, categoryName)) {
+        //    // Skip if the category already exists
+        //    exist = true;
+        // }
+  
+        // if (!exist){
+            const categoryData = {
+              id: foundCategory.id,
+              name: categoryName,
+              image: foundCategory.image,
+              description: foundCategory.description,
+              id_menu: menuId,
+            };
+            console.log("categori", categoryData.id);
+            // Make a POST request to save the category
+            await axios.post('http://localhost:5000/api/category/add', categoryData);
+      
+  
+        for (const dish of dishes) {
+   
+          // let dexist = false;
+          // if (categories[categoryName].find((c) => c.name === dish.name))   
+          // {
+          //   dexist = true; // Skip if the dish already exists in the category
+          // }
+          // console.log("exist dish" + categories[categoryName].find((c) => c.name === dish.name));
+  // if (!dexist){
+          const dishData = {
+            id: dish.id,
+            name: dish.name,
+            image: dish.image,
+            description: dish.description,
+            is_sold_out: dish.is_sold_out,
+            preparation_time: dish.preparation_time,
+            calories: dish.calories,
+            price: dish.price,
+            id_category: foundCategory.id,
+          };
+          console.log("Dish" + dish.id);
+  
+          // Make a POST request to save the dish
+          await axios.post('http://localhost:5000/api/dish/add', dishData);
+   }
+        // }
+      }
+  
+      console.log('Data saved successfully!');
+      console.log('Updated Categories:', updatedCategories);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+  
+
+
 
 
   const handleAddCategory = () => {
+   // console.log(categories);
     setShowCreateCategoryModal(true);
   };
 
@@ -35,7 +152,7 @@ const [editDishData, setEditDishData] = useState(null);
   };
 
   const handleEditCategory = (categoryIndex) => {
-      seteditCategoryData(category[categoryIndex]);
+      setEditCategoryData(category[categoryIndex]);
       setShowCreateCategoryModal(true);
   }
   
@@ -60,7 +177,9 @@ const [editDishData, setEditDishData] = useState(null);
   };
 
   const handleShowCreateDishModal = (categoryName) => {
-    setSelectedCategoryName(categoryName);
+    // const foundCategory = category.find((c) => c.name === categoryName);
+   setSelectedCategoryName(categoryName);
+    
     setShowCreateDishModal(true);
   };
 
@@ -75,6 +194,29 @@ const [editDishData, setEditDishData] = useState(null);
   
     if (selectedCategoryName && updatedCategories[selectedCategoryName]) {
       updatedCategories[selectedCategoryName] = [...updatedCategories[selectedCategoryName], dish];
+      setCategories(updatedCategories);
+    }
+  
+    handleCloseCreateDishModal();
+  };
+  
+  const handleUpdateDish = (updatedDish) => {
+    const updatedCategories = { ...categories };
+  
+    // Find the category that contains the updated dish
+    const categoryKeys = Object.keys(updatedCategories);
+    const categoryToUpdate = categoryKeys.find((categoryName) => {
+      return updatedCategories[categoryName].some((dish) => dish.id === updatedDish.id);
+    });
+  
+    if (categoryToUpdate) {
+      // Find the index of the dish to be updated
+      const dishIndex = updatedCategories[categoryToUpdate].findIndex(
+        (dish) => dish.id === updatedDish.id
+      );
+  
+      // Update the dish in the array
+      updatedCategories[categoryToUpdate][dishIndex] = updatedDish;
       setCategories(updatedCategories);
     }
   
@@ -151,7 +293,7 @@ const [editDishData, setEditDishData] = useState(null);
     </div>
   ))}
 
-<Button onClick={handleAddCategory} className="btn btn-primary mx-auto d-block mb-4">
+<Button onClick={handleSave} className="btn btn-primary mx-auto d-block mb-4">
     Enregistrer
   </Button>
 </div>
@@ -173,12 +315,21 @@ const [editDishData, setEditDishData] = useState(null);
           <Modal.Title>Create Dish in category</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <CreateDish editDishData={editDishData}
-            onCreateDish={(dish) => {
-              handleAddDish(dish)
-            }}
-          />
-        </Modal.Body>
+  {editDishData ? (
+    <CreateDish
+      editDishData={editDishData}
+      onUpdateDish={
+        handleUpdateDish
+      }
+    />
+  ) : (
+    <CreateDish
+      onCreateDish={
+        handleAddDish
+      }
+    />
+  )}
+</Modal.Body>
       </Modal>
     </>
   );

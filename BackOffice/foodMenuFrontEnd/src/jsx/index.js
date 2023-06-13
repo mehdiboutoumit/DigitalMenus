@@ -17,6 +17,7 @@ import CollabView from "./MyComponents/Collaborators/CollabView";
 
 import Restaurants from "./MyComponents/Restaurants/Restaurants.jsx";
 import CreateRestau from "./MyComponents/Restaurants/createRestau";
+import ShowRestaurant from "./MyComponents/Restaurants/ShowRestaurant";
 
 import Categories from "./MyComponents/Categories/Categories";
 
@@ -132,6 +133,7 @@ const Markup = () => {
     //Restau
     {url : "Restaurants", component: Restaurants},
     {url : "CreerRestaurant", component : CreateRestau },
+  {url : "ShowRestaurant", component : ShowRestaurant },
 
     //Categories
     {url : "Categories", component : Categories},
@@ -141,14 +143,18 @@ const Markup = () => {
 
     //Menus
     {url : "Menus", component : Menus},
-    {url : "ShowMenu", component : ShowMenu},
-
+    {
+      url: "ShowMenu/:menuId",
+      component: ShowMenu
+    },
     //Tables
     {url : "Tables", component : Tables},
 
     //Orders
     {url : "Orders" , component : Orders},
     {url : "ShowOrder", component : ShowOrder},
+
+  
 
 
     /// Deshborad

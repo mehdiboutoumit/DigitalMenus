@@ -5,14 +5,14 @@ const verifyJWT = require("../middlewares/verifyJWT");
 const verifyPermission = require("../middlewares/verifyPermission");
 const upload = require("../middlewares/fileUpload");
 router
-  .route("/") //
+  .route("/add") //
   .post(
     verifyJWT,
     // verifyPermission(["admin"]),
-    upload.single("image"),
+    //upload.single("image"),
     categoryController.createCategory
   )
-  .get(
+  router.route("/").get(
     verifyJWT, //
     // verifyPermission(["admin"]),
     categoryController.getAllCategories

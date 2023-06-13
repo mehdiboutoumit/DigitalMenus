@@ -41,21 +41,21 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           notEmpty: true,
-          len: [1, 255],
+          len: [0, 255],
         },
       },
       image: {
         type: DataTypes.STRING,
         allowNull: true,
         validate: {
-          len: [1, 255],
+          len: [0, 255],
         },
       },
       description: {
         type: DataTypes.STRING,
         allowNull: true,
         validate: {
-          len: [1, 255],
+          len: [0, 255],
         },
       },
       is_sold_out: {
@@ -68,7 +68,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       preparation_time: {
         type: DataTypes.TIME,
-        defaultValue: false,
+        defaultValue: 0,
       },
       calories: {
         type: DataTypes.INTEGER,
@@ -84,6 +84,12 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: true,
           isDecimal: true,
         },
+      },
+      id_category: {
+        allowNull: true,
+        type: DataTypes.UUID,
+        defaultValue: 0
+        ,
       },
     },
     {

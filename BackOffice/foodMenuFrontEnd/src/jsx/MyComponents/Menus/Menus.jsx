@@ -1,13 +1,18 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import { MDBDataTable } from 'mdbreact';
-import dataMenus from './dataMenus';
+//import dataMenus from './dataMenus';
 import { Link } from '@material-ui/core';
 import { Button, Modal } from 'react-bootstrap';
 import CreateMenu from './CreateMenu';
 import ShowMenu from './ShowMenu';
+import axios from 'axios';
 
 function Menus() {
-  const datamenu = dataMenus;
+
+  
+  
+const [dataMenus, setDataMenus] = useState([]);
+const [refresh, setRefresh] = useState(0);
   const [expandedMenuID, setExpandedMenuID] = useState(null);
   const [truncatedDescriptions, setTruncatedDescriptions] = useState([]);
 
@@ -16,9 +21,23 @@ function Menus() {
 
   const [showMenu, setShowMenu] = useState(false);
 
-  const showMenuComponent = () => {
+  const fetchData = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/menus');
+      setDataMenus(response.data.menus);
+    } catch (error) {
+      console.error('Error fetching menus:', error);
+    }
+  };
+  useEffect(() => {
+
+    fetchData();
+  }, [] );
+
+
+  const showMenuComponent = (menuId) => {
     //setShowMenu(true);
-    window.location.href = "/ShowMenu";
+    window.location.href = `/ShowMenu/${menuId}`;
 
   };
 
@@ -29,6 +48,7 @@ function Menus() {
 
   const handleEdit = (rowData) => {
     // Set the menu data to editMenuData state
+    
     setEditMenuData(rowData);
     // Show the create modal
     setShowCreateModal(true);
@@ -42,6 +62,10 @@ function Menus() {
 
   const handleCloseCreateModal = () => {
     setShowCreateModal(false);
+    try{
+    fetchData();}catch(e){
+      console.log(e);
+    }
   };
 
 
@@ -93,7 +117,7 @@ function Menus() {
     );
   };
 
-  const rows = datamenu.map((menu) => {
+  const rows = dataMenus.map((menu) => {
     const isExpanded = menu.id === expandedMenuID;
     const shouldTruncate = !isExpanded && !truncatedDescriptions.includes(menu.id);
 
@@ -116,26 +140,38 @@ function Menus() {
     };
   });
 
+  const handleDelete = async(Id)=>{
+    try {
+      const response = await axios.delete(`http://localhost:5000/api/menus/delete/${Id}`);
+      // Handle the response if needed
+      console.log(response.data); // Assuming the server returns a response message or data
+      fetchData();  } 
+      catch (error) {
+      // Handle the error
+      console.error(error);
+    }
+  };  
+
   const data = {
     columns: [
       { label: 'ID', field: 'id', sort: 'asc', width: 100 },
-      { label: 'Name', field: 'name', sort: 'asc' },
-      { label: 'Image', field: 'image', sort: 'asc' },
-      { label: 'Description', field: 'description', sort: 'asc' },
-      { label: 'Updated At', field: 'updatedAt', sort: 'asc' },
+      { label: 'Name', field: 'name' },
+      { label: 'Image', field: 'image'},
+      { label: 'Description', field: 'description' },
+      { label: 'Updated At', field: 'updatedAt' },
       { label: 'Actions', field: 'actions' },
     ],
     rows: rows.map((row) => ({
       ...row,
       actions: (
         <div>
-            <Button variant="primary" onClick={() => showMenuComponent(row)}>
+            <Button variant="primary" onClick={() => showMenuComponent(row.id)}>
           Ouvrir le menu
         </Button>
           <Button variant="info" onClick={() => handleEdit(row)}>
             <i className="flaticon-381-edit"></i>
           </Button>
-          <Button variant="danger" onClick={handleEdit}>
+          <Button variant="danger" onClick={() =>handleDelete(row.id)}>
             <i className="flaticon-381-trash"></i>
           </Button>
         </div>
@@ -163,7 +199,7 @@ function Menus() {
                     {showMenu ? (
                     <ShowMenu menu={editMenuData} />
                     ) : (
-                    <CreateMenu editMenuData={editMenuData} />
+                    <CreateMenu onCloseModal={handleCloseCreateModal} editMenuData={editMenuData} />
                     )}
                 </Modal.Body>
                 </Modal>

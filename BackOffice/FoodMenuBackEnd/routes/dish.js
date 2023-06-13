@@ -5,14 +5,14 @@ const verifyJWT = require("../middlewares/verifyJWT");
 const verifyPermission = require("../middlewares/verifyPermission");
 const upload = require("../middlewares/fileUpload");
 router
-  .route("/") //
+  .route("/add") //
   .post(
     verifyJWT,
     // verifyPermission(["admin"]),
     upload.single("image"),
     dishController.createDish
-  )
-  .get(
+  );
+ router.route("/").get(
     verifyJWT, //
     // verifyPermission(["admin"]),
     dishController.getAllDishes
@@ -23,11 +23,11 @@ router //
 
 router
   .route("/:id") //
-  .get(verifyJWT, dishController.getDishById)
+  //.get( dishController.getDishById)
   .put(
-    verifyJWT,
+    //verifyJWT,
     // verifyPermission(["admin"]),
-    upload.single("image"),
+    //upload.single("image"),
     dishController.updateDish
   );
 module.exports = router;

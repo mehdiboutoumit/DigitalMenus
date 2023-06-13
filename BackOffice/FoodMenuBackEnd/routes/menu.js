@@ -23,13 +23,27 @@ router //
   .route("/restaurant/:idRestaurant")
   .get(menuController.getAllMenusOfRestaurant);
 
-router
-  .route("/:id") //
-  .get(verifyJWT, menuController.getMenuById)
-  .put(
-    verifyJWT,
+// router
+//   .route("/:id") //
+//   .get(verifyJWT, menuController.getMenuById)
+//   .put(
+//     // verifyJWT,
+//     // // verifyPermission(["admin"]),
+//     // upload.single("image"),
+//     // menuController.updateMenu
+//   );
+router.route("/delete/:id")
+  .delete(
+    // verifyJWT,
     // verifyPermission(["admin"]),
-    upload.single("image"),
+    menuController.deleteMenu
+  );
+
+  router.route("/update/:id")
+  .put(
+    // verifyJWT,
+    // verifyPermission(["admin"]),
     menuController.updateMenu
   );
+
 module.exports = router;

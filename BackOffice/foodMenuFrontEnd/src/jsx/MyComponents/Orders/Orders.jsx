@@ -3,6 +3,7 @@ import { MDBDataTable } from "mdbreact";
 import { Dropdown, Button, Modal, Badge } from "react-bootstrap";
 import dataOrders from "./dataOrders";
 import EditOrder from "./EditOrder.jsx";
+import {Link} from 'react-router-dom';
 
 const Orders = () => {
   const rows = dataOrders;
@@ -21,6 +22,8 @@ const Orders = () => {
     rows: rows.map((row) => ({
       ...row,
       actions: (
+        <>
+       <Button> <Link to="/ShowOrder">Details</Link> </Button>
         <Dropdown>
           <Dropdown.Toggle variant="info" id="actions-dropdown"></Dropdown.Toggle>
           <Dropdown.Menu>
@@ -28,6 +31,7 @@ const Orders = () => {
             <Dropdown.Item onClick={() => handleDelete(row)}>Delete</Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
+        </>
       ),
       status: (
         

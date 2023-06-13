@@ -6,15 +6,18 @@ exports.createDish = async (req, res, next) => {
     file,
     // user: connectedUser
   } = req;
+
   if (file?.size) {
     if (file.size > 15000000) {
-      return res.json({ message: "file is too large , 15 Mo max" });
+      return res.json({ message: "file is too large, 15 Mo max" });
     }
     dish.image = file.filename;
   } else {
     dish.image = null;
   }
+
   const {
+    id,
     name,
     description,
     is_sold_out,
@@ -24,18 +27,46 @@ exports.createDish = async (req, res, next) => {
     id_category,
     image,
   } = dish;
-  const newDish = await dishService.createDish({
-    name,
-    image: image,
-    description,
-    is_sold_out,
-    preparation_time,
-    price,
-    calories,
-    id_category,
-  });
-  return res.json({ message: "success", dish: newDish });
+
+  try {
+    let existingDish = await dishService.getDishById(id);
+
+    if (existingDish) {
+      // Dish already exists, update it instead of creating a new one
+      existingDish = await dishService.updateDish(id, {
+        name,
+        image,
+        description,
+        is_sold_out,
+        preparation_time,
+        price,
+        calories,
+        id_category,
+      });
+
+      return res.json({ message: "Dish updated successfully", dish: existingDish });
+    }
+
+    const newDish = await dishService.createDish({
+      id,
+      name,
+      image,
+      description,
+      is_sold_out,
+      preparation_time,
+      price,
+      calories,
+      id_category,
+    });
+
+    return res.json({ message: "Dish created successfully", dish: newDish });
+  } catch (error) {
+    console.error("Error creating/updating dish:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
 };
+
+
 exports.getAllDishes = async (req, res, next) => {
   const dishes = await dishService.getAllDishes();
   return res.json({ message: "success", dishes });
@@ -74,3 +105,4 @@ exports.updateDish = async (req, res, next) => {
   await dishService.updateDish(id, dish);
   return res.json({ message: "success" });
 };
+

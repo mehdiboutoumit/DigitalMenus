@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import {v4 as uuidv4} from 'uuid';
 
 const CreateCategory = ({ editCategoryData, onCreateCategory }) => {
   const [name, setName] = useState("");
@@ -21,8 +22,12 @@ const CreateCategory = ({ editCategoryData, onCreateCategory }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const id = uuidv4();
+    console.log(id);
+
     // Handle form submission
     const categoryData = {
+      id : id,
       name: name,
       image: image,
       description: description,

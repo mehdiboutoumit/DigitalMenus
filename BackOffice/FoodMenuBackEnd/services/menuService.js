@@ -65,3 +65,14 @@ exports.updateMenu = async (id, body) => {
     },
   });
 };
+
+
+exports.deleteMenu = async (id) => {
+  const menu = await Menu.findByPk(id);
+  if (!menu) {
+    return null; // Menu not found
+  }
+  
+  await menu.destroy();
+  return menu.dataValues;
+};

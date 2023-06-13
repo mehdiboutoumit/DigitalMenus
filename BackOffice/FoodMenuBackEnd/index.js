@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 5000;
 
 app.use(cors({
   origin: 'http://localhost:3000', // Replace with the origin of your client-side code
-  methods: ['GET', 'POST'], // Specify the allowed HTTP methods
+  methods: ['GET', 'POST','DELETE','PUT'], // Specify the allowed HTTP methods
   // Specify the allowed headers
 }));
 
@@ -35,7 +35,7 @@ app.use(credentials);
 app.use(cors(corsOptions));
 
 //routes
-require("./startup/routes.js")(app);
+require("./startUp/routes.js")(app);
 
 //remove { force: true }
 db.sequelize

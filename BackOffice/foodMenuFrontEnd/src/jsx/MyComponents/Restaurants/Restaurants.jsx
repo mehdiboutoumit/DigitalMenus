@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import { MDBDataTable } from 'mdbreact';
 import dataRestau from './dataRestau.jsx';
-import { Link } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 
 function Restaurants() {
@@ -99,9 +99,8 @@ function Restaurants() {
     rows: rows.map((row) => ({
         ...row,
         actions: ( <div>
-            <Link to={'Dishes' }  >
-              
-            <i className='flaticon-381-view-2 btn btn-light'></i>
+            <Link to="/ShowRestaurant">
+            <i className='flaticon-381-view-2 btn btn-warning'></i>
           </Link> <Button variant='info' onClick={handleEdit}><i className='flaticon-381-edit'></i></Button>
           <Button variant='danger' onClick={handleEdit}><i className='flaticon-381-trash'></i></Button>
           </div>

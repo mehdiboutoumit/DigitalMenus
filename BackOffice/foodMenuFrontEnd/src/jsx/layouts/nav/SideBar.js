@@ -122,7 +122,7 @@ class SideBar extends Component {
                 deshBoard.includes(path.slice(1)) ? "mm-active" : ""
               }`}
             >
-              <Link className="has-arrow ai-icon" to="#">
+              <Link className="ai-icon" to="/">
                 <i className="flaticon-381-networking"></i>
                 <span className="nav-text">Dashboard</span>
               </Link>
@@ -160,7 +160,7 @@ class SideBar extends Component {
             </li>
 
 
-            {<li
+            {/* {<li
               className={`${Categories.includes(path.slice(1)) ? "mm-active" : ""}`}
             >
               <Link  to="Categories">
@@ -178,20 +178,16 @@ class SideBar extends Component {
                 <span className="nav-text">Plats</span>
               </Link>
              
-            </li> }
+            </li> } */}
 
             {<li
               className={`${orders.includes(path.slice(1)) ? "mm-active" : ""}`}
             >
-              <Link className="has-arrow ai-icon" to="#">
-                <i className="flaticon-381-heart"></i>
+              <Link className="ai-icon" to="/Orders">
+                <i className="flaticon-381-list"></i>
                 <span className="nav-text">Commandes</span>
               </Link>
-              <ul>
-                <li>
-                  <Link to="/order-show">Voir les commandes</Link>
-                </li>
-              </ul>
+             
             </li> }
             {/* <li
               className={`${menus.includes(path.slice(1)) ? "mm-active" : ""}`}
@@ -209,7 +205,7 @@ class SideBar extends Component {
                 </li>
               </ul>
             </li> */}
-            <li
+            {/* <li
               className={`${
                 plugins.includes(path.slice(1)) ? "mm-active" : ""
               }`}
@@ -238,17 +234,17 @@ class SideBar extends Component {
                   <Link to="/map-jqvmap">Jqv Map</Link>
                 </li>
               </ul>
-            </li>
-            <li
+            </li> */}
+            {/* <li
               className={`${widget.includes(path.slice(1)) ? "mm-active" : ""}`}
             >
               <Link to="widget-basic" className="ai-icon">
                 <i className="flaticon-381-settings-2"></i>
                 <span className="nav-text">Widget</span>
               </Link>
-            </li>
+            </li> */}
             {/* commandes */}
-            <li
+            {/* <li
               className={`${
                 commandes.includes(path.slice(1)) ? "mm-active" : ""
               }`}
@@ -257,9 +253,9 @@ class SideBar extends Component {
                 <i className="flaticon-381-settings-2"></i>
                 <span className="nav-text">Commandes</span>
               </Link>
-            </li>
+            </li> */}
             {/* menus */}
-            <li
+            {/* <li
               className={`${menus.includes(path.slice(1)) ? "mm-active" : ""}`}
             >
               <Link to="menus" className="ai-icon">
@@ -377,8 +373,8 @@ class SideBar extends Component {
                   <Link to="/chart-apexchart">Apexchart</Link>
                 </li>
               </ul>
-            </li>
-            <li
+            </li> */}
+            {/* <li
               className={`${
                 bootstrap.includes(path.slice(1)) ? "mm-active" : ""
               }`}
@@ -440,9 +436,9 @@ class SideBar extends Component {
                   <Link to="/ui-grid">Grid</Link>
                 </li>
               </ul>
-            </li>
+            </li> */}
 
-            <li
+            {/* <li
               className={`${table.includes(path.slice(1)) ? "mm-active" : ""}`}
             >
               <Link className="has-arrow ai-icon" to="#">
@@ -496,11 +492,11 @@ class SideBar extends Component {
                   <Link to="/page-lock-screen">Lock Screen</Link>
                 </li>
               </ul>
-            </li>
+            </li> */}
 
             
           </MM>
-          <div className="plus-box">
+          {/* <div className="plus-box">
             <p className="fs-13 font-w300 mb-4">
               Organize your menus through button bellow
             </p>
@@ -510,14 +506,14 @@ class SideBar extends Component {
             >
               +Add Menus
             </Link>
-          </div>
-          <div className="copyright">
+          </div> */}
+          {/* <div className="copyright">
             <p>
               <strong>Koki Restaurant React Dashboard</strong> ©All Rights
               Reserved
             </p>
             <p>by DexignZone</p>
-          </div>
+          </div> */}
         </PerfectScrollbar>
       </div>
     );

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { v4 as uuidv4 } from 'uuid';
 
-const CreateDish = ({ editDishData,  onCreateDish }) => {
+const CreateDish = ({  editDishData,  onCreateDish }) => {
   const [name, setName] = useState("");
   const [image, setImage] = useState("");
   const [description, setDescription] = useState("");
@@ -35,8 +36,25 @@ const CreateDish = ({ editDishData,  onCreateDish }) => {
   }, [editDishData]);
 
   const handleSubmit = (e) => {
+    if (editDishData) {
+      const editedDish = {
+        name,
+        image,
+        description,
+        is_sold_out: isSoldOut,
+        preparation_time: preparationTime,
+        calories,
+        price,
+      };
+
+      // Call the callback function to handle the edit
+      onCreateDish(editedDish);
+    }
+    else{
+    const id = uuidv4();
     e.preventDefault();
     const dishData = {
+      id,
       name,
       image,
       description,
@@ -44,7 +62,6 @@ const CreateDish = ({ editDishData,  onCreateDish }) => {
       preparation_time: preparationTime,
       calories,
       price,
-      category,
     };
     onCreateDish(dishData);
     // Handle form submission
@@ -58,6 +75,7 @@ const CreateDish = ({ editDishData,  onCreateDish }) => {
     setCalories(0);
     setPrice(0);
     setCategory("");
+  }
   };
 
   return (
@@ -105,9 +123,9 @@ const CreateDish = ({ editDishData,  onCreateDish }) => {
       </div>
      
       <div className="form-group">
-        <label htmlFor="preparationTime">Preparation Time (min)</label>
+        <label htmlFor="preparationTime">Preparation Time</label>
         <input
-          type="number"
+          type="time"
           className="form-control"
           id="preparationTime"
           value={preparationTime}

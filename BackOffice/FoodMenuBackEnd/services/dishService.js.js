@@ -13,6 +13,7 @@ exports.createDish = async (dish) => {
     calories: dataValues.calories,
     id_category: dataValues.id_category,
   };
+  console.log("service check");
   return newDish;
 };
 exports.getAllDishes = async () => {

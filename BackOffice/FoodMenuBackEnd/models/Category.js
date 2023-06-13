@@ -32,21 +32,21 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           notEmpty: true,
-          len: [1, 255],
+          len: [0, 255],
         },
       },
       image: {
         type: DataTypes.STRING,
         allowNull: true,
         validate: {
-          len: [1, 255],
+          len: [0, 255],
         },
       },
       description: {
         type: DataTypes.STRING,
         allowNull: true,
         validate: {
-          len: [1, 255],
+          len: [0, 255],
         },
       },
     },
