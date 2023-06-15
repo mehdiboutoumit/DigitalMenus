@@ -10,13 +10,14 @@ exports.createRestaurant = async (req, res, next) => {
   } else {
     restaurant.image = null;
   }
-  const { name, address, description, image } = restaurant;
+  const {id, name, address, description, image } = restaurant;
   const newRestaurant = await restaurantService.createRestaurant({
+    id,
     name,
     image,
     address,
     description,
-    id_admin: connectedUser.id,
+   // id_admin: connectedUser.id,
   });
   return res.json({ message: "success", restaurant: newRestaurant });
 };
@@ -34,6 +35,7 @@ exports.getRestaurantById = async (req, res, next) => {
   }
 };
 exports.updateRestaurant = async (req, res, next) => {
+  console.log("controller");
   const { body: restaurant } = req;
   const { id } = req.params;
   // if there is a file

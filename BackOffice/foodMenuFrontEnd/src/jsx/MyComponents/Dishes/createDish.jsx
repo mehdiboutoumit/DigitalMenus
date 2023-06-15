@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 const CreateDish = ({  editDishData,  onCreateDish }) => {
   const [name, setName] = useState("");
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState(null);
   const [description, setDescription] = useState("");
   const [isSoldOut, setIsSoldOut] = useState(false);
   const [preparationTime, setPreparationTime] = useState(0);
@@ -25,7 +25,7 @@ const CreateDish = ({  editDishData,  onCreateDish }) => {
     } else {
       // Reset the form fields
       setName("");
-      setImage("");
+      setImage(null);
       setDescription("");
       setIsSoldOut(false);
       setPreparationTime(0);
@@ -68,7 +68,7 @@ const CreateDish = ({  editDishData,  onCreateDish }) => {
     console.log("Submit", dishData);
     // Reset the form fields
     setName("");
-    setImage("");
+    setImage(null);
     setDescription("");
     setIsSoldOut(false);
     setPreparationTime(0);
@@ -93,11 +93,11 @@ const CreateDish = ({  editDishData,  onCreateDish }) => {
       <div className="form-group">
         <label htmlFor="image">Image</label>
         <input
-          type="text"
+          type="file"
           className="form-control"
           id="image"
-          value={image}
-          onChange={(e) => setImage(e.target.value)}
+        
+          onChange={(e) => setImage(e.target.files[0])}
         />
       </div>
       <div className="form-group">

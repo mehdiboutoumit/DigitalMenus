@@ -31,6 +31,7 @@ exports.getAllRestaurants = async () => {
   return restaurants;
 };
 exports.updateRestaurant = async (id, body) => {
+  console.log("service");
   await Restaurant.update(body, {
     where: {
       id: id,

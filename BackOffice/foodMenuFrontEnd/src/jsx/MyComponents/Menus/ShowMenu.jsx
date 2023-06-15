@@ -3,11 +3,9 @@ import { useParams } from 'react-router-dom';
 import { Modal, Button } from 'react-bootstrap';
 import CreateCategory from '../Categories/createCategory';
 import CreateDish from '../Dishes/CreateDish';
-import Nestable from "react-nestable";
 import img from '../../../images/big/img6.jpg';
 import axios from 'axios';
-import { v4 as uuidv4 } from 'uuid';
-import Categories from '../Categories/Categories';
+
 
 const ShowMenu = () => {
   const {menuId} = useParams();
@@ -29,18 +27,32 @@ const ShowMenu = () => {
       try {
         const response = await axios.get(`http://localhost:5000/api/category/menu/${menuId}`);
         const categoryData = response.data.categories;
+        console.log(categoryData);
   
         // Check if the component is still mounted before updating state
         if (isMounted) {
           const updatedCategory = categoryData.map((category) => category);
           setCategory(updatedCategory);
-  
+
+ 
           const updatedCategories = {};
           for (const category of categoryData) {
             const response = await axios.get(`http://localhost:5000/api/dish/category/${category.id}`);
             const dishes = response.data.dishes;
+            //   // Check if the dish has an image
+            //   if (dish.image && dish.image !== null) {
+            //     // Convert the Blob image to a readable format (e.g., Buffer)
+            //     const imageBuffer = Buffer.from(dish.image, 'base64');
+            //     // Update the dish object with the image buffer
+            //     dish.image = imageBuffer;
+            //   }
+            //   return dish;
+            // });
             if (dishes.length > 0) {
               updatedCategories[category.name] = dishes;
+            }
+            else{
+              updatedCategories[category.name] = [];
             }
            
 
@@ -49,6 +61,7 @@ const ShowMenu = () => {
           // Check if the component is still mounted before updating state
           if (isMounted) {
             setCategories(updatedCategories);
+            console.log(updatedCategories);
          
           }
         }
@@ -89,7 +102,7 @@ const ShowMenu = () => {
             };
             console.log("categori", categoryData.id);
             // Make a POST request to save the category
-            await axios.post('http://localhost:5000/api/category/add', categoryData);
+            const response = await axios.post('http://localhost:5000/api/category/add', categoryData);
       
   
         for (const dish of dishes) {
@@ -133,6 +146,7 @@ const ShowMenu = () => {
 
   const handleAddCategory = () => {
    // console.log(categories);
+   setEditCategoryData(null);
     setShowCreateCategoryModal(true);
   };
 
@@ -140,27 +154,75 @@ const ShowMenu = () => {
     setShowCreateCategoryModal(false);
   };
 
-  const handleCreateCategory = (newCategory) => {
-    const updatedCategory = [...category, newCategory];
-    setCategory(updatedCategory);
+  // const handleCreateCategory = (newCategory) => {
+  //   const updatedCategory = [...category, newCategory];
+  //   setCategory(updatedCategory);
+  //   handleCloseCreateCategoryModal();
+  
+  //   setCategories((prevCategories) => ({
+  //     ...prevCategories,
+  //     [newCategory.name]: [],
+  //   }));
+  // };
+  const handleCreateCategory = (newCategory,update) => {
+    
+    if (update) {
+      const existingCategory = category.find((cat) => cat.id === newCategory.id);
+      console.log("1"+newCategory);
+      // If the category already exists, update it with the new information
+      const updatedCategory = {
+        ...existingCategory,
+        name: newCategory.name,
+        image: newCategory.image,
+        description: newCategory.description,
+      };
+  
+      // Update the category in the state
+      setCategory((prevCategories) =>
+        prevCategories.map((cat) => (cat.id === newCategory.id ? updatedCategory : cat))
+      );
+    } else {
+      console.log("2"+newCategory);
+      // If the category is not already in the state, add it as a new category
+      const updatedCategories = [...category, newCategory];
+      setCategory(updatedCategories);
+    }
+  
+    // Close the modal and reset the state
     handleCloseCreateCategoryModal();
   
+    // Update the categories state with the new category and an empty array for its dishes
     setCategories((prevCategories) => ({
       ...prevCategories,
       [newCategory.name]: [],
     }));
   };
+  
 
   const handleEditCategory = (categoryIndex) => {
       setEditCategoryData(category[categoryIndex]);
       setShowCreateCategoryModal(true);
   }
   
-  const handleDeleteCategory = (categoryName) => {
-    const updatedCategories = { ...categories };
-    delete updatedCategories[categoryName];
-    setCategories(updatedCategories);
+  const handleDeleteCategory = (id, categoryName) => {
+    if (window.confirm("Are you sure you want to delete this category?")) {
+      const updatedCategories = { ...categories };
+      delete updatedCategories[categoryName];
+      setCategories(updatedCategories);
+  
+      axios
+        .delete(`http://localhost:5000/api/category/delete/${id}`)
+        .then((response) => {
+          // Handle the successful deletion
+          console.log("Category deleted successfully");
+        })
+        .catch((error) => {
+          // Handle the error
+          console.error("Error deleting category:", error);
+        });
+    }
   };
+  
   
   const handleEditDish = (categoryName, dishIndex) => {
     const selectedCategory = categories[categoryName];
@@ -170,10 +232,24 @@ const ShowMenu = () => {
   };
  
 
-  const handleDeleteDish = (categoryName, index) => {
+  const handleDeleteDish = (categoryName, index,id) => {
+    if (window.confirm("Are you sure you want to delete this dish?")) {
+      // Implement the deletion logic here
+      axios
+        .delete(`http://localhost:5000/api/dish/delete/${id}`)
+        .then((response) => {
+          // Handle the successful deletion
+          console.log("Dish deleted successfully");
+        })
+        .catch((error) => {
+          // Handle the error
+          console.error("Error deleting dish:", error);
+        });
+    
     const updatedCategories = { ...categories };
     updatedCategories[categoryName].splice(index, 1);
     setCategories(updatedCategories);
+      }
   };
 
   const handleShowCreateDishModal = (categoryName) => {
@@ -247,7 +323,7 @@ const ShowMenu = () => {
                   Ajouter un plat à {categoryName}
                 </Button>
                 <Button variant='info' onClick={() => handleEditCategory(categoryIndex)}><i className='flaticon-381-edit'></i></Button>
-                <Button onClick={() => handleDeleteCategory(categoryName)} className="btn btn-danger me-2">
+                <Button onClick={() => handleDeleteCategory(category[categoryIndex].id,categoryName)} className="btn btn-danger me-2">
                 <i className="flaticon-381-trash"></i>
                 </Button>
               </div>
@@ -261,10 +337,11 @@ const ShowMenu = () => {
                     <div className="nestable">
                       <div className="dd" id={`nestable-${categoryName}`}>
                       <ol className="dd-list">
-  {dishes.map((dish, dishIndex) => (
+  {dishes.map((dish, dishIndex) => ( 
     <li key={dishIndex} className="dd-item border py-2 px-3 d-flex align-items-center justify-content-between" data-id={dishIndex}>
       <div className="d-flex align-items-center">
         <div className="rounded-circle" style={{ width: "50px", height: "50px", overflow: "hidden" }}>
+          {/* <img src={`data:image/jpeg;base64,${Buffer.from(dish.image).toString('base64')}`} alt={dish.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} /> */}
           <img src={img} alt={dish.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         </div>
         <div className="ml-3">{dish.name}</div>
@@ -273,7 +350,7 @@ const ShowMenu = () => {
       <Button className="btn-info border-0" onClick={() => {handleEditDish(categoryName,dishIndex)}}>
         <i className="flaticon-381-edit"></i>
       </Button>
-      <Button onClick={() => handleDeleteDish(categoryName, dishIndex) } className="btn-danger border-0">
+      <Button onClick={() => handleDeleteDish(categoryName, dishIndex,dish.id) } className="btn-danger border-0">
         <i className="flaticon-381-trash"></i>
       </Button>
       </div>

@@ -133,7 +133,11 @@ const Markup = () => {
     //Restau
     {url : "Restaurants", component: Restaurants},
     {url : "CreerRestaurant", component : CreateRestau },
-  {url : "ShowRestaurant", component : ShowRestaurant },
+ // {url : "ShowRestaurant", component : ShowRestaurant },
+  {
+    url: "ShowRestaurant/:restaurantId",
+    component: ShowRestaurant
+  },
 
     //Categories
     {url : "Categories", component : Categories},

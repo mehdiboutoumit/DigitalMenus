@@ -7,7 +7,7 @@ import CreateMenu from './CreateMenu';
 import ShowMenu from './ShowMenu';
 import axios from 'axios';
 
-function Menus() {
+function Menus({ restaurantId }) {
 
   
   
@@ -23,8 +23,9 @@ const [refresh, setRefresh] = useState(0);
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/menus');
+      const response = await axios.get(`http://localhost:5000/api/menus/restaurant/${restaurantId}`);
       setDataMenus(response.data.menus);
+      console.log(response.data.menus)
     } catch (error) {
       console.error('Error fetching menus:', error);
     }
@@ -154,11 +155,11 @@ const [refresh, setRefresh] = useState(0);
 
   const data = {
     columns: [
-      { label: 'ID', field: 'id', sort: 'asc', width: 100 },
+      // { label: 'ID', field: 'id', sort: 'asc', width: 100 },
       { label: 'Name', field: 'name' },
       { label: 'Image', field: 'image'},
       { label: 'Description', field: 'description' },
-      { label: 'Updated At', field: 'updatedAt' },
+     // { label: 'Updated At', field: 'updatedAt' },
       { label: 'Actions', field: 'actions' },
     ],
     rows: rows.map((row) => ({
@@ -199,7 +200,7 @@ const [refresh, setRefresh] = useState(0);
                     {showMenu ? (
                     <ShowMenu menu={editMenuData} />
                     ) : (
-                    <CreateMenu onCloseModal={handleCloseCreateModal} editMenuData={editMenuData} />
+                    <CreateMenu onCloseModal={handleCloseCreateModal} editMenuData={editMenuData} restaurantId={restaurantId} />
                     )}
                 </Modal.Body>
                 </Modal>

@@ -3,18 +3,18 @@ const dishService = require("../services/dishService.js");
 exports.createDish = async (req, res, next) => {
   const {
     body: dish,
-    file,
     // user: connectedUser
   } = req;
 
-  if (file?.size) {
-    if (file.size > 15000000) {
-      return res.json({ message: "file is too large, 15 Mo max" });
+  if (dish.image?.size) {
+    if (dish.image.size > 15000000) {
+      return res.json({ message: "image is too large, 15 Mo max" });
     }
-    dish.image = file.filename;
+   dish.image = Buffer.from(dish.image, 'base64');
   } else {
-    dish.image = null;
+  //  dish.image = null;
   }
+
 
   const {
     id,
@@ -93,16 +93,26 @@ exports.getDishById = async (req, res, next) => {
 exports.updateDish = async (req, res, next) => {
   const { body: dish } = req;
   const { id } = req.params;
-  // if there is a file
-  if (req.file) {
-    const { file } = req;
-    if (file.size > 15000000) {
-      return res.json({ message: "file is too large , 15 Mo max" });
+  // if there is a image
+  if (req.image) {
+    const { image } = req;
+    if (image.size > 15000000) {
+      return res.json({ message: "image is too large , 15 Mo max" });
     } else {
-      dish.image = file.filename;
+      dish.image = image.imagename;
     }
   }
   await dishService.updateDish(id, dish);
   return res.json({ message: "success" });
 };
+exports.deleteDish = async (req, res, next) => {
+  const { id } = req.params;
 
+  try {
+    await dishService.deleteDish(id);
+    return res.json({ message: "Dish deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting dish:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};

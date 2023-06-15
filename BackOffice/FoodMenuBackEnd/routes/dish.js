@@ -30,4 +30,6 @@ router
     //upload.single("image"),
     dishController.updateDish
   );
+
+  router.delete("/delete/:id", dishController.deleteDish);
 module.exports = router;

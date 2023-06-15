@@ -30,4 +30,6 @@ router
     upload.single("image"),
     categoryController.updateCategory
   );
+
+ router.route("/delete/:id").delete(categoryController.deleteCategoryAndDishes) 
 module.exports = router;

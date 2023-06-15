@@ -26,7 +26,7 @@ exports.getAllDishes = async () => {
     return {
       id: dish.dataValues.id,
       name: dish.dataValues.name,
-      image: dish.dataValues.image,
+      image:  Buffer.from(dish.image, 'base64'),
       description: dish.dataValues.description,
       is_sold_out: dish.dataValues.is_sold_out,
       preparation_time: dish.dataValues.preparation_time,
@@ -51,7 +51,7 @@ exports.getAllDishesOfCategory = async (idCategory) => {
     return {
       id: dish.dataValues.id,
       name: dish.dataValues.name,
-      image: dish.dataValues.image,
+      image: dish.image,
       description: dish.dataValues.description,
       is_sold_out: dish.dataValues.is_sold_out,
       preparation_time: dish.dataValues.preparation_time,
@@ -72,6 +72,13 @@ exports.getDishById = async (id) => {
 };
 exports.updateDish = async (id, body) => {
   await Dish.update(body, {
+    where: {
+      id: id,
+    },
+  });
+};
+exports.deleteDish = async (id) => {
+  await Dish.destroy({
     where: {
       id: id,
     },

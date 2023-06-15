@@ -2,8 +2,9 @@ const tableService = require("../services/tableService");
 
 exports.createTable = async (req, res, next) => {
   const { body: table } = req;
-  const { numTable, size, id_restaurant } = table;
+  const { id, numTable, size, id_restaurant } = table;
   const newTable = await tableService.createTable({
+    id,
     numTable,
     size,
     id_restaurant,
@@ -38,3 +39,8 @@ exports.updateTable = async (req, res, next) => {
   await tableService.updateTable(id, table);
   return res.json({ message: "success" });
 };
+
+exports.deleteTable = async (req,res)=>{
+  tableService.deleteTable(req.params.id);
+  return res.json({ message: "success" });
+}

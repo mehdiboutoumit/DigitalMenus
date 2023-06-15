@@ -62,3 +62,12 @@ exports.updateTable = async (id, body) => {
     },
   });
 };
+
+exports.deleteTable = async (id) => {
+  const table = await Table.destroy({
+    where: {
+      id: id,
+    },
+  });
+  return table;
+};

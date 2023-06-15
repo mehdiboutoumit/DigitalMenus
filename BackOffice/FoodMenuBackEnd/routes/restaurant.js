@@ -5,30 +5,31 @@ const verifyJWT = require("../middlewares/verifyJWT");
 const verifyPermission = require("../middlewares/verifyPermission");
 const upload = require("../middlewares/fileUpload");
 router
-  .route("/") //
+  .route("/add") //
   .post(
     verifyJWT,
     // verifyPermission(["admin"]),
-    upload.single("image"),
+    //upload.single("image"),
     restaurantController.createRestaurant
   )
-  .get(
+  router
+  .route("/") .get(
     verifyJWT,
     // verifyPermission(["admin"]),
     restaurantController.getAllRestaurants
   );
 
-router
-  .route("/:id") //
-  .get(
+ //
+  // .get(
+  //   verifyJWT,
+  //   // verifyPermission(["admin"]),
+  //   restaurantController.getRestaurantById
+  // )
+  router
+  .route("/update/:id").put(
     verifyJWT,
     // verifyPermission(["admin"]),
-    restaurantController.getRestaurantById
-  )
-  .put(
-    verifyJWT,
-    // verifyPermission(["admin"]),
-    upload.single("image"),
+   // upload.single("image"),
     restaurantController.updateRestaurant
   );
 module.exports = router;

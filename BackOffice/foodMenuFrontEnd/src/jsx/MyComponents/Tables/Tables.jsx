@@ -1,20 +1,37 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import { MDBDataTable } from "mdbreact";
 import dataTables from "./dataTables.jsx";
 import { Dropdown, Button, Modal } from "react-bootstrap";
 import CreateTables from './CreateTable.jsx';
+import axios from "axios";
 
-const Tables = () => {
-  const rows = dataTables;
+const Tables = ({restaurantId}) => {
+ 
+  //const rows = dataTables;
+  const [rows , setRows] = useState([]);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [editTableData, seteditTableData] = useState(null);
 
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(`http://localhost:5000/api/table/restaurant/${restaurantId}`);
+      setRows(response.data.tables);
+      console.log(response.data.tables)
+    } catch (error) {
+      console.error('Error fetching tables:', error);
+    }
+  };
+  useEffect(() => {
+
+    fetchData();
+  }, [] );
+
   const data = {
     columns: [
-      { label: "id", field: "id", sort: "asc" },
-      { label: "Numero de la table", field: "num", sort: "asc" },
-      { label: "Nombre de personnes", field: "size", sort: "asc" },
-      { label: "Menu", field: "menu", sort: "asc" },
+    //  { label: "id", field: "id", sort: "asc" },
+      { label: "Numero de la table", field: "numTable", sort: "asc" },
+      { label: "Nombre de personnes", field: "size" },
+      { label: "Menu", field: "menu" },
       {label : "Actions", field : "actions"}
      
     ],
@@ -39,9 +56,14 @@ const Tables = () => {
     setShowCreateModal(true);
   };
 
-  const handleDelete = (rowData) => {
-    // Handle delete action
-    console.log("Delete", rowData);
+  const handleDelete = async(rowData) => {
+    try {
+      const response = await axios.delete(`http://localhost:5000/api/table/delete/${rowData.id}`);
+      fetchData();
+     
+    } catch (error) {
+      console.error('Error deleting tables:', error);
+    }    console.log("Delete", rowData);
   };
 
   const handleShowCreateModal = () => {
@@ -71,7 +93,7 @@ const Tables = () => {
                 </Modal.Title>
               </Modal.Header>
               <Modal.Body>
-                <CreateTables editTableData={editTableData} />
+                <CreateTables onCloseModal={handleCloseCreateModal} editTableData={editTableData} restaurantId={restaurantId} />
               </Modal.Body>
             </Modal>
             </div>

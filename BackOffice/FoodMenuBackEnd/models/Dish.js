@@ -45,11 +45,9 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       image: {
-        type: DataTypes.STRING,
+        type: DataTypes.BLOB,
         allowNull: true,
-        validate: {
-          len: [0, 255],
-        },
+        
       },
       description: {
         type: DataTypes.STRING,

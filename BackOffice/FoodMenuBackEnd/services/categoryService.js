@@ -1,4 +1,5 @@
-const { Category } = require("../models");
+const { Category, Dish } = require("../models");
+const dishService = require('./dishService.js');
 
 exports.createCategory = async (category) => {
   const { dataValues } = await Category.create(category);
@@ -38,12 +39,17 @@ exports.getAllCategoriesOfMenu = async (idMenu) => {
   if (categories == null) {
     return [];
   }
+  console.log(categories)
 
   categories = categories.map((category) => {
+    const imageData = category.dataValues.image; // Assuming the image field is a Blob object
+
+    // Convert the Blob to a Buffer
+    const buffer = imageData ? Buffer.from(imageData, 'base64') : null;
     return {
       id: category.dataValues.id,
       name: category.dataValues.name,
-      image: category.dataValues.image,
+      image: buffer,
       description: category.dataValues.description,
       id_menu: category.dataValues.id_menu,
     };
@@ -63,5 +69,24 @@ exports.updateCategory = async (id, body) => {
     where: {
       id: id,
     },
+  });
+};
+
+exports.deleteCategoryAndDishes = async (categoryId) => {
+  // Delete the category and its related dishes in a transaction
+  const dishes = await Dish.findAll({
+    where: {
+      id_category: categoryId,
+    },
+  });
+
+  for (const dish of dishes) {
+    await dishService.deleteDish(dish.id);
+  }
+
+  await Category.destroy({
+    where: {
+      id: categoryId,
+    }
   });
 };

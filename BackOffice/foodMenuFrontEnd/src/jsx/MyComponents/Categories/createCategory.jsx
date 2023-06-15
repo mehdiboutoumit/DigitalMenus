@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import {v4 as uuidv4} from 'uuid';
 
-const CreateCategory = ({ editCategoryData, onCreateCategory }) => {
+const CreateCategory = ({ editCategoryData, onCreateCategory, update }) => {
   const [name, setName] = useState("");
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState(null);
   const [description, setDescription] = useState("");
 
   useEffect(() => {
@@ -15,13 +15,27 @@ const CreateCategory = ({ editCategoryData, onCreateCategory }) => {
     } else {
       // Reset the form fields
       setName("");
-      setImage("");
+      setImage(null);
       setDescription("");
     }
   }, [editCategoryData]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if(editCategoryData){
+      update=true;
+      console.log("edit true");
+      const categoryData = {
+        id : editCategoryData.id,
+        name: name,
+        image: image,
+        description: description,
+      };
+      onCreateCategory(categoryData,update);
+    }
+    else{
+      update = false;
+      console.log("edit false");
     const id = uuidv4();
     console.log(id);
 
@@ -32,7 +46,8 @@ const CreateCategory = ({ editCategoryData, onCreateCategory }) => {
       image: image,
       description: description,
     };
-    onCreateCategory(categoryData);
+    onCreateCategory(categoryData,update);
+  }
   };
 
   return (
@@ -50,11 +65,10 @@ const CreateCategory = ({ editCategoryData, onCreateCategory }) => {
       <div className="form-group">
         <label htmlFor="image">Image</label>
         <input
-          type="text"
+          type="file"
           className="form-control"
           id="image"
-          value={image}
-          onChange={(e) => setImage(e.target.value)}
+          onChange={(e) => setImage(e.target.files[0])}
         />
       </div>
       <div className="form-group">

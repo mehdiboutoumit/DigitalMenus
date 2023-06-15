@@ -3,7 +3,7 @@ import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 // const categories = ['Categ A', 'Categ B', 'Categ C'];
 
-const CreateMenu = ({ editMenuData,  onCloseModal }) => {
+const CreateMenu = ({ editMenuData,  onCloseModal , restaurantId}) => {
   const [name, setName] = useState('');
   const [image, setimage] = useState(null);
   const [description, setDescription] = useState('');
@@ -55,6 +55,7 @@ const CreateMenu = ({ editMenuData,  onCloseModal }) => {
           name,
           image,
           description,
+          id_restaurant : restaurantId
         });
       }
   

@@ -1,4 +1,5 @@
-const { Menu } = require("../models");
+const { Menu  , Category} = require("../models");
+const categoryService = require("../services/categoryService");
 
 exports.createMenu = async (menu) => {
   const { dataValues } = await Menu.create(menu);
@@ -72,7 +73,18 @@ exports.deleteMenu = async (id) => {
   if (!menu) {
     return null; // Menu not found
   }
-  
+
+  const categories = await Category.findAll({
+    where: {
+      id_menu: id,
+    },
+  });
+
+  for (const category of categories) {
+    await categoryService.deleteCategoryAndDishes(category.id);
+  }
+
   await menu.destroy();
+
   return menu.dataValues;
 };
