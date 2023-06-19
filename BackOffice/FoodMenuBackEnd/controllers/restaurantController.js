@@ -2,23 +2,27 @@ const restaurantService = require("../services/restaurantService");
 
 exports.createRestaurant = async (req, res, next) => {
   const { body: restaurant, file, user: connectedUser } = req;
-  if (file?.size) {
+
+  if (file) {
+    console.log("file",file);
     if (file.size > 15000000) {
-      return res.json({ message: "file is too large , 15 Mo max" });
+      return res.json({ message: "file is too large, 15 MB max" });
     }
-    restaurant.image = file.file.name;
+    restaurant.image = file.filename;
   } else {
-    restaurant.image = null;
+    restaurant.image = "not name";
   }
-  const {id, name, address, description, image } = restaurant;
+
+  const { id, name, address, description, image } = restaurant;
   const newRestaurant = await restaurantService.createRestaurant({
     id,
     name,
-    image,
+    image ,
     address,
     description,
-   // id_admin: connectedUser.id,
+    // id_admin: connectedUser.id,
   });
+
   return res.json({ message: "success", restaurant: newRestaurant });
 };
 exports.getAllRestaurants = async (req, res, next) => {
@@ -35,23 +39,42 @@ exports.getRestaurantById = async (req, res, next) => {
   }
 };
 exports.updateRestaurant = async (req, res, next) => {
-  console.log("controller");
-  const { body: restaurant } = req;
-  const { id } = req.params;
-  // if there is a file
-  if (req.file) {
-    const { file } = req;
+  const { body: restaurant, file, user: connectedUser } = req;
+  const id = restaurant.id;
+
+  if (file) {
+    console.log("file",file);
     if (file.size > 15000000) {
-      return res.json({ message: "file is too large , 15 Mo max" });
-    } else {
-      restaurant.image = file.filename;
+      return res.json({ message: "file is too large, 15 MB max" });
     }
-  }
-  await restaurantService.updateRestaurant(id, restaurant);
+    restaurant.image = file.filename;
+ 
+ // const obj = { name : restaurant.name, image : restaurant.image, description : restaurant.description, address :  restaurant.address};
+ const {  name, address, description, image } = restaurant; 
+ await restaurantService.updateRestaurant(id, {
+  
+  name,
+  image ,
+  address,
+  description,
+  // id_admin: connectedUser.id,
+});
+} 
+else {
+  const {  name, address, description } = restaurant; 
+ await restaurantService.updateRestaurant(id, {
+  
+  name,
+  address,
+  description,
+  // id_admin: connectedUser.id,
+});
+    
+}
   return res.json({ message: "success" });
 };
 exports.deleteRestaurant = async (req, res, next) => {
-  const { restaurant } = req.body;
-  await restaurantService.deleteRestaurant(restaurant.id);
+  const { id } = req.params;
+  await restaurantService.deleteRestaurant(id);
   return res.json({ message: "success" });
 };

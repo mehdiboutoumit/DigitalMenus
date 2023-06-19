@@ -79,6 +79,19 @@ const CreateTable = ({ editTableData, restaurantId, onCloseModal }) => {
     onCloseModal();
   };
 
+  const [selectedMenus, setSelectedMenus] = useState([]);
+
+  const handleMenuChange = (e, menuName) => {
+    const isChecked = e.target.checked;
+    if (isChecked) {
+      setSelectedMenus((prevSelectedMenus) => [...prevSelectedMenus, menuName]);
+    } else {
+      setSelectedMenus((prevSelectedMenus) =>
+        prevSelectedMenus.filter((menu) => menu !== menuName)
+      );
+    }
+  };
+
   return (
     <form onSubmit={handleSubmit}>
       <div className="form-group">
@@ -104,21 +117,24 @@ const CreateTable = ({ editTableData, restaurantId, onCloseModal }) => {
       </div>
 
       <div className="form-group">
-        <label htmlFor="menu">Menu</label>
-        <select
-          className="form-control"
-          id="menu"
-          value={menu}
-          onChange={(e) => setMenu(e.target.value)}
-        >
-          <option value="">Selectionner un menu</option>
-          {menus.map((menu) => (
-            <option key={menu.id} value={menu.name}>
-              {menu.name}
-            </option>
-          ))}
-        </select>
-      </div>
+  <label>Menu</label>
+  {menus.map((menu) => (
+    <div key={menu.id} className="form-check">
+      <input
+        className="form-check-input"
+        type="checkbox"
+        id={`menu-${menu.id}`}
+        value={menu.name}
+        checked={selectedMenus.includes(menu.name)}
+        onChange={(e) => handleMenuChange(e, menu.name)}
+      />
+      <label className="form-check-label" htmlFor={`menu-${menu.id}`}>
+        {menu.name}
+      </label>
+    </div>
+  ))}
+</div>
+
 
       <button type="submit" className="btn btn-outline-primary">
         {editTableData ? "Modifier" : "Ajouter"}

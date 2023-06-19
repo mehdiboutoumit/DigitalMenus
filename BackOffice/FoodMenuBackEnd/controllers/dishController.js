@@ -3,16 +3,17 @@ const dishService = require("../services/dishService.js");
 exports.createDish = async (req, res, next) => {
   const {
     body: dish,
+    file
     // user: connectedUser
   } = req;
 
-  if (dish.image?.size) {
-    if (dish.image.size > 15000000) {
+  if (file?.size) {
+    if (file.size > 15000000) {
       return res.json({ message: "image is too large, 15 Mo max" });
     }
-   dish.image = Buffer.from(dish.image, 'base64');
+   dish.image = file.filename;
   } else {
-  //  dish.image = null;
+   dish.image = null;
   }
 
 
@@ -32,17 +33,18 @@ exports.createDish = async (req, res, next) => {
     let existingDish = await dishService.getDishById(id);
 
     if (existingDish) {
+      const updatedFields = {};
+
+      if (name) updatedFields.name = name;
+      if (image) updatedFields.image = image;
+      if (description) updatedFields.description = description;
+      if (is_sold_out) updatedFields.is_sold_out = is_sold_out;
+      if (preparation_time) updatedFields.preparation_time = preparation_time;
+      if (price) updatedFields.price = price;
+      if (calories) updatedFields.calories = calories;
+    
       // Dish already exists, update it instead of creating a new one
-      existingDish = await dishService.updateDish(id, {
-        name,
-        image,
-        description,
-        is_sold_out,
-        preparation_time,
-        price,
-        calories,
-        id_category,
-      });
+      existingDish = await dishService.updateDish(id, updatedFields);
 
       return res.json({ message: "Dish updated successfully", dish: existingDish });
     }

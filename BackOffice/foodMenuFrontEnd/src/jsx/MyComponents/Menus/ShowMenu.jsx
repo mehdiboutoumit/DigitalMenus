@@ -3,9 +3,8 @@ import { useParams } from 'react-router-dom';
 import { Modal, Button } from 'react-bootstrap';
 import CreateCategory from '../Categories/createCategory';
 import CreateDish from '../Dishes/CreateDish';
-import img from '../../../images/big/img6.jpg';
 import axios from 'axios';
-
+import { baseURL } from '../../../api/baseURL';
 
 const ShowMenu = () => {
   const {menuId} = useParams();
@@ -28,6 +27,7 @@ const ShowMenu = () => {
         const response = await axios.get(`http://localhost:5000/api/category/menu/${menuId}`);
         const categoryData = response.data.categories;
         console.log(categoryData);
+        console.log(categoryData[0].image)
   
         // Check if the component is still mounted before updating state
         if (isMounted) {
@@ -39,15 +39,7 @@ const ShowMenu = () => {
           for (const category of categoryData) {
             const response = await axios.get(`http://localhost:5000/api/dish/category/${category.id}`);
             const dishes = response.data.dishes;
-            //   // Check if the dish has an image
-            //   if (dish.image && dish.image !== null) {
-            //     // Convert the Blob image to a readable format (e.g., Buffer)
-            //     const imageBuffer = Buffer.from(dish.image, 'base64');
-            //     // Update the dish object with the image buffer
-            //     dish.image = imageBuffer;
-            //   }
-            //   return dish;
-            // });
+         
             if (dishes.length > 0) {
               updatedCategories[category.name] = dishes;
             }
@@ -93,16 +85,19 @@ const ShowMenu = () => {
         // }
   
         // if (!exist){
-            const categoryData = {
-              id: foundCategory.id,
-              name: categoryName,
-              image: foundCategory.image,
-              description: foundCategory.description,
-              id_menu: menuId,
-            };
-            console.log("categori", categoryData.id);
-            // Make a POST request to save the category
-            const response = await axios.post('http://localhost:5000/api/category/add', categoryData);
+          const categoryData = new FormData();
+          categoryData.append('id', foundCategory.id);
+          categoryData.append('name', categoryName);
+          categoryData.append('image', foundCategory.image);
+          categoryData.append('description', foundCategory.description);
+          categoryData.append('id_menu', menuId);
+          
+          // Make a POST request to save the category
+          const response = await axios.post('http://localhost:5000/api/category/add', categoryData, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          });
       
   
         for (const dish of dishes) {
@@ -114,21 +109,23 @@ const ShowMenu = () => {
           // }
           // console.log("exist dish" + categories[categoryName].find((c) => c.name === dish.name));
   // if (!dexist){
-          const dishData = {
-            id: dish.id,
-            name: dish.name,
-            image: dish.image,
-            description: dish.description,
-            is_sold_out: dish.is_sold_out,
-            preparation_time: dish.preparation_time,
-            calories: dish.calories,
-            price: dish.price,
-            id_category: foundCategory.id,
-          };
-          console.log("Dish" + dish.id);
-  
-          // Make a POST request to save the dish
-          await axios.post('http://localhost:5000/api/dish/add', dishData);
+    const dishData = new FormData();
+    dishData.append('id', dish.id);
+    dishData.append('name', dish.name);
+    dishData.append('image', dish.image);
+    dishData.append('description', dish.description);
+    dishData.append('is_sold_out', dish.is_sold_out);
+    dishData.append('preparation_time', dish.preparation_time);
+    dishData.append('calories', dish.calories);
+    dishData.append('price', dish.price);
+    dishData.append('id_category', foundCategory.id);
+    
+    // Make a POST request to save the dish
+    await axios.post('http://localhost:5000/api/dish/add', dishData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
    }
         // }
       }
@@ -312,39 +309,44 @@ const ShowMenu = () => {
 
   {Object.entries(categories).map(([categoryName, dishes], categoryIndex) => (
     <div key={categoryIndex} className="mb-4">
-      <div className="row justify-content-center">
-        <div className="col-12">
-          <div className="card">
-            <div className="card-header align-items-center">
-              <h2 className="card-title text-center">{categoryName}</h2>
-              <div className="d-flex justify-content-center mb-4">
-               
-                <Button onClick={() => {handleShowCreateDishModal(categoryName);}} className="btn btn-success">
-                  Ajouter un plat à {categoryName}
-                </Button>
-                <Button variant='info' onClick={() => handleEditCategory(categoryIndex)}><i className='flaticon-381-edit'></i></Button>
-                <Button onClick={() => handleDeleteCategory(category[categoryIndex].id,categoryName)} className="btn btn-danger me-2">
-                <i className="flaticon-381-trash"></i>
-                </Button>
-              </div>
+    <div className="row justify-content-center">
+      <div className="col-12">
+        <div className="card">
+          <div className="card-header align-items-center">
+            <h2 className="card-title text-center">{categoryName}</h2>
+            <div className="d-flex justify-content-center mb-4">
+
+              <img src={`http://localhost:5000/images/${category[categoryIndex].image}`} style={{ width: "100%", height: "100%", objectFit: "cover", overflow : 'hidden' }}  alt="" className="rounded" />
             </div>
-            <div className="card-body">
-              
+            <div className="d-flex justify-content-center mb-4">
+              <Button onClick={() => {handleShowCreateDishModal(categoryName);}} className="btn btn-success">
+                Ajouter un plat à {categoryName}
+              </Button>
+              <Button variant='info' onClick={() => handleEditCategory(categoryIndex)}>
+                <i className='flaticon-381-edit'></i>
+              </Button>
+              <Button onClick={() => handleDeleteCategory(category[categoryIndex].id, categoryName)} className="btn btn-danger me-2">
+                <i className="flaticon-381-trash"></i>
+              </Button>
+            </div>
+          </div>
+          <div className="card-body">
               <hr />
               <div className="row d-flex align-items-center justify-content-center">
-                <div className="col-md-6">
+                <div className="col-md-8">
                   <div className="card-content">
                     <div className="nestable">
                       <div className="dd" id={`nestable-${categoryName}`}>
                       <ol className="dd-list">
   {dishes.map((dish, dishIndex) => ( 
-    <li key={dishIndex} className="dd-item border py-2 px-3 d-flex align-items-center justify-content-between" data-id={dishIndex}>
+    <li key={dishIndex} className="dd-item border py-4 px-5 d-flex align-items-center justify-content-between" data-id={dishIndex}>
       <div className="d-flex align-items-center">
-        <div className="rounded-circle" style={{ width: "50px", height: "50px", overflow: "hidden" }}>
+        <div className="rounded-circle" style={{ width: "30%", height: "30%", overflow: "hidden" }}>
           {/* <img src={`data:image/jpeg;base64,${Buffer.from(dish.image).toString('base64')}`} alt={dish.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} /> */}
-          <img src={img} alt={dish.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          <img src={`http://localhost:5000/images/${dish.image}`}
+           alt={dish.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         </div>
-        <div className="ml-3">{dish.name}</div>
+        <div className="ml-5">{dish.name}</div>
       </div>
       <div>
       <Button className="btn-info border-0" onClick={() => {handleEditDish(categoryName,dishIndex)}}>
@@ -383,7 +385,14 @@ const ShowMenu = () => {
           <Modal.Title>Create Category</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <CreateCategory editCategoryData={editCategoryData} onCreateCategory={handleCreateCategory} />
+        {editCategoryData ? (
+      <CreateCategory
+        editCategoryData={editCategoryData}
+        onUpdateCategory={handleCreateCategory}
+      />
+    ) : (
+      <CreateCategory onCreateCategory={handleCreateCategory} />
+    )}
         </Modal.Body>
       </Modal>
 
@@ -394,6 +403,7 @@ const ShowMenu = () => {
         <Modal.Body>
   {editDishData ? (
     <CreateDish
+    
       editDishData={editDishData}
       onUpdateDish={
         handleUpdateDish

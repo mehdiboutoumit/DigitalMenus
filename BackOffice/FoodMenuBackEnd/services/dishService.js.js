@@ -26,7 +26,7 @@ exports.getAllDishes = async () => {
     return {
       id: dish.dataValues.id,
       name: dish.dataValues.name,
-      image:  Buffer.from(dish.image, 'base64'),
+      image: dish.dataValues.image,
       description: dish.dataValues.description,
       is_sold_out: dish.dataValues.is_sold_out,
       preparation_time: dish.dataValues.preparation_time,

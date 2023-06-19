@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { v4 as uuidv4 } from 'uuid';
+import axios from "axios";
 
-const CreateDish = ({  editDishData,  onCreateDish }) => {
+const CreateDish = ({  editDishData,  onCreateDish, update }) => {
   const [name, setName] = useState("");
   const [image, setImage] = useState(null);
   const [description, setDescription] = useState("");
@@ -14,6 +15,7 @@ const CreateDish = ({  editDishData,  onCreateDish }) => {
   useEffect(() => {
     // Set the form fields with editDishData values if it exists
     if (editDishData) {
+    
       setName(editDishData.name);
       setImage(editDishData.image);
       setDescription(editDishData.description);
@@ -23,6 +25,7 @@ const CreateDish = ({  editDishData,  onCreateDish }) => {
       setPrice(editDishData.price);
       setCategory(editDishData.category);
     } else {
+    
       // Reset the form fields
       setName("");
       setImage(null);
@@ -35,48 +38,76 @@ const CreateDish = ({  editDishData,  onCreateDish }) => {
     }
   }, [editDishData]);
 
-  const handleSubmit = (e) => {
-    if (editDishData) {
-      const editedDish = {
-        name,
-        image,
-        description,
-        is_sold_out: isSoldOut,
-        preparation_time: preparationTime,
-        calories,
-        price,
-      };
-
-      // Call the callback function to handle the edit
-      onCreateDish(editedDish);
+  const handleSubmit = async (e) => {
+    try {
+      if (editDishData) {
+        e.preventDefault();
+        update = true;
+        console.log(update)
+        const editedDish = {
+          name,
+          image,
+          description,
+          is_sold_out: isSoldOut,
+          preparation_time: preparationTime,
+          calories,
+          price,
+        };
+  
+        // Call the callback function to handle the edit
+        //onCreateDish(editedDish, update);
+  
+        const dishData = new FormData();
+       dishData.append('id', editDishData.id)
+        dishData.append('name', editedDish.name);
+        dishData.append('image', editedDish.image);
+        dishData.append('description', editedDish.description);
+        dishData.append('is_sold_out', editedDish.is_sold_out);
+        dishData.append('preparation_time', editedDish.preparation_time);
+        dishData.append('calories', editedDish.calories);
+        dishData.append('price', editedDish.price);
+       
+  
+        // Make a POST request to save the dish
+        await axios.post('http://localhost:5000/api/dish/add', dishData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+      } else {
+        update = false;
+        const id = uuidv4();
+        e.preventDefault();
+        const dishData = {
+          id,
+          name,
+          image,
+          description,
+          is_sold_out: isSoldOut,
+          preparation_time: preparationTime,
+          calories,
+          price,
+        };
+        //onCreateDish(dishData, update);
+        // Handle form submission
+        console.log("Submit", dishData);
+        // Reset the form fields
+        setName("");
+        setImage(null);
+        setDescription("");
+        setIsSoldOut(false);
+        setPreparationTime(0);
+        setCalories(0);
+        setPrice(0);
+        setCategory("");
+        onCreateDish(dishData, update);
+      }
+    } catch (error) {
+      // Handle any error that occurred during the submission
+      console.error(error);
     }
-    else{
-    const id = uuidv4();
-    e.preventDefault();
-    const dishData = {
-      id,
-      name,
-      image,
-      description,
-      is_sold_out: isSoldOut,
-      preparation_time: preparationTime,
-      calories,
-      price,
-    };
-    onCreateDish(dishData);
-    // Handle form submission
-    console.log("Submit", dishData);
-    // Reset the form fields
-    setName("");
-    setImage(null);
-    setDescription("");
-    setIsSoldOut(false);
-    setPreparationTime(0);
-    setCalories(0);
-    setPrice(0);
-    setCategory("");
-  }
   };
+  
 
   return (
     <form onSubmit={handleSubmit}>

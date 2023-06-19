@@ -42,14 +42,11 @@ exports.getAllCategoriesOfMenu = async (idMenu) => {
   console.log(categories)
 
   categories = categories.map((category) => {
-    const imageData = category.dataValues.image; // Assuming the image field is a Blob object
-
-    // Convert the Blob to a Buffer
-    const buffer = imageData ? Buffer.from(imageData, 'base64') : null;
+  
     return {
       id: category.dataValues.id,
       name: category.dataValues.name,
-      image: buffer,
+      image: category.dataValues.image,
       description: category.dataValues.description,
       id_menu: category.dataValues.id_menu,
     };

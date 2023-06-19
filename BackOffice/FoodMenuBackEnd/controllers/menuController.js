@@ -1,16 +1,19 @@
 const menuService = require("../services/menuService");
 
 exports.createMenu = async (req, res, next) => {
-  console.log(req.body);
-  const {id, name, description, id_restaurant } = req.body;
+  
+  const { body: menu, file, user: connectedUser } = req;
 
-  // if (req.image) {
-  //   const image = req.image;
-  //   if (image.size > 15000000) {
-  //     return res.json({ message: "image is too large, maximum size is 15MB." });
-  //   }
-  // }
-  const image = req.image;
+  if (file) {
+    console.log("file",file);
+    if (file.size > 15000000) {
+      return res.json({ message: "file is too large, 15 MB max" });
+    }
+    menu.image = file.filename;
+  } else {
+    menu.image = "no name";
+  }
+  const { id, name, description, image, id_restaurant } = menu;
   const newMenu = await menuService.createMenu({
     id,
     name,

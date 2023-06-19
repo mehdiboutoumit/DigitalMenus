@@ -9,6 +9,7 @@ const storage = multer.diskStorage({
   },
 });
 const fileFilter = (req, file, cb) => {
+  console.log("Upload");
   const fileSize = parseInt(req.headers["content-length"]);
   if (
     file.mimetype === "image/png" ||

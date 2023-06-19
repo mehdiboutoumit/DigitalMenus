@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {v4 as uuidv4} from 'uuid';
+import axios from "axios";
+import { baseURL } from "../../../api/baseURL";
 
 const CreateCategory = ({ editCategoryData, onCreateCategory, update }) => {
   const [name, setName] = useState("");
@@ -15,40 +17,62 @@ const CreateCategory = ({ editCategoryData, onCreateCategory, update }) => {
     } else {
       // Reset the form fields
       setName("");
-      setImage(null);
+      setImage("Vide");
       setDescription("");
     }
   }, [editCategoryData]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if(editCategoryData){
-      update=true;
-      console.log("edit true");
-      const categoryData = {
-        id : editCategoryData.id,
-        name: name,
-        image: image,
-        description: description,
-      };
-      onCreateCategory(categoryData,update);
-    }
-    else{
-      update = false;
-      console.log("edit false");
-    const id = uuidv4();
-    console.log(id);
+  const handleSubmit = async (e) => {
+    try {
+      e.preventDefault();
+  
+      if (editCategoryData) {
+        update = true;
+        console.log("edit true");
+        const categoryData = {
+          id: editCategoryData.id,
+          name: name,
+          image: image,
+          description: description,
+        };
+        const CatData = new FormData();
+        CatData.append('id', categoryData.id)
+        CatData.append('name', categoryData.name);
+        CatData.append('image', categoryData.image);
+        CatData.append('description', categoryData.description);
+       
 
-    // Handle form submission
-    const categoryData = {
-      id : id,
-      name: name,
-      image: image,
-      description: description,
-    };
-    onCreateCategory(categoryData,update);
-  }
+        console.log("New", CatData.image)
+  
+        // Make a POST request to save the dish
+        await axios.post('${baseURL}/category/add', CatData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+  
+        //onCreateCategory(categoryData,update);
+      } else {
+        update = false;
+        console.log("edit false");
+        const id = uuidv4();
+        console.log(id);
+  
+        // Handle form submission
+        const categoryData = {
+          id: id,
+          name: name,
+          image: image,
+          description: description,
+        };
+        onCreateCategory(categoryData, update);
+      }
+    } catch (error) {
+      // Handle any error that occurred during the submission
+      console.error(error);
+    }
   };
+  
 
   return (
     <form onSubmit={handleSubmit}>

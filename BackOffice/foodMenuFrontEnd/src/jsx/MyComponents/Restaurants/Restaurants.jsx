@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { Button , Modal} from 'react-bootstrap';
 import axios from 'axios';
 
+
 function Restaurants() {
   //const dataRestaurants = dataRestau;
   const [expandedRestaurantId, setExpandedRestaurantId] = useState(null);
@@ -41,6 +42,7 @@ function Restaurants() {
     setImage(restaurant.image);
     setDescription(restaurant.description);
     setEditModalShow(true);
+
   };
 
   const handleCloseEditModal = () => {
@@ -54,9 +56,51 @@ function Restaurants() {
       ...prevState,
       [name]: value,
     }));
+
   };
 
-  
+  const handleUpload = (e) => {
+    setImage(e.target.files[0]);
+    console.log(e.target.files[0]);
+   }
+  // const getCircularReplacer = (obj) => {
+  //   const seen = new WeakSet();
+
+  //   const transData = (data) => {
+  //     let result = {};
+    
+
+  //   if (seen.has(data)){
+  //     return;
+  //   }
+
+   
+    
+  //     if (typeof data === "object" ) {
+  //       seen.add(data);
+  //       for (let key in data){
+  //         result[key]= transData(data[key]);
+  //       }
+  //     }
+  //     else {
+  //       return data;
+  //     }
+     
+  //   }
+  //   transData(obj);
+  // };
+  const getCircularReplacer = () => {
+    const seen = new WeakSet();
+    return (key, value) => {
+      if (typeof value === "object" && value !== null) {
+        if (seen.has(value)) {
+          return;
+        }
+        seen.add(value);
+      }
+      return value;
+    };
+  };
   const handleSaveEditModal = async () => {
   
     // const editedRestaurant = {
@@ -67,34 +111,50 @@ function Restaurants() {
 
     // };
   
-    const editedRestaurant = {
-      id: selectedRestaurant.id,
-      name: selectedRestaurant.name,
-      address: selectedRestaurant.address,
-      image: selectedRestaurant.image,
-      description: selectedRestaurant.description
-    };
+    // const editedRestaurant = {
+    //   id: selectedRestaurant.id,
+    //   name: selectedRestaurant.name,
+    //   address: selectedRestaurant.address,
+    //   image: image,
+    //   description: selectedRestaurant.description
+    // };
+    // console.log("selec3tedRestaurant");
+
+    // console.log(editedRestaurant);
     const ID = selectedRestaurant.id;
-        try {
+  //  try {
       
-      const response = await axios.put(
-        `http://localhost:5000/api/restaurant/${ID}`,
-        {
-          name,
-          address,
-          description,
-          image,
-        }
-      );
-      console.log("Handler");
-      console.log('Restaurant updated successfully');
-      // Handle success, e.g., show a success message or refresh the data
-      fetchData();
-    } catch (error) {
-      console.error('Error updating restaurant:', error);
-      // Handle error, e.g., show an error message
-    }
+  //     const response = await axios.patch(
+  //       `http://localhost:5000/api/restaurant/update/${ID}`,selectedRestaurant
+  //     );
+  //     console.log("Handler");
+  //     console.log('Restaurant updated successfully');
+  //     // Handle success, e.g., show a success message or refresh the data
+  //     fetchData();
+  //   } catch (error) {
+  //     console.error('Error updating restaurant:', error);
+  //     // Handle error, e.g., show an error message
+  //   }
+
+
+  const editedRestaurant = new FormData();
+  editedRestaurant.append('id', selectedRestaurant.id);
+  editedRestaurant.append('name', selectedRestaurant.name);
+  editedRestaurant.append('address', selectedRestaurant.address);
+  editedRestaurant.append('description', selectedRestaurant.description);
+  editedRestaurant.append('image', image);
   
+  axios.put(`http://localhost:5000/api/restaurant/update/${ID}`, editedRestaurant, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+    .then((response) => {
+      console.log(response);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
     // Close the edit modal
     handleCloseEditModal();
   };
@@ -160,7 +220,7 @@ function Restaurants() {
         <div className="media mb-3" style={{ width: '150px' }}>
           <img
             className="rounded"
-            src={restaurant.image}
+            src={`http://localhost:5000/images/${restaurant.image}`}
             style={{ width: '100%' }}
             alt=""
           />
@@ -188,10 +248,21 @@ function Restaurants() {
             <Link to={`/ShowRestaurant/${row.id}`}>
             <i className='flaticon-381-view-2 btn btn-warning'></i>
           </Link> <Button variant='info' onClick={() => handleEdit(row)}><i className='flaticon-381-edit'></i></Button>
-          <Button variant='danger' ><i className='flaticon-381-trash'></i></Button>
+          <Button variant='danger' onClick={() => handleDelete(row.id)} ><i className='flaticon-381-trash'></i></Button>
           </div>
         ),
       })),
+  };
+
+  const handleDelete = (id) => {
+    if (window.confirm("Supprimer ce restaurant ?")) {
+      axios
+        .delete(`http://localhost:5000/api/restaurant/delete/${id}`)
+        .then(() => fetchData())
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   };
 
   return (
@@ -237,7 +308,7 @@ function Restaurants() {
                 type="file"
                 className="form-control"
                 name="image"
-                onChange={handleInputChange}
+                onChange={(e)=> {handleUpload(e)}}
               />
             </div>
             <div className="form-group">

@@ -9,7 +9,7 @@ router
   .post(
    // verifyJWT,
     // verifyPermission(["admin"]),
-    //upload.single("image"),
+    upload.single("image"),
     menuController.createMenu
   )
 router  

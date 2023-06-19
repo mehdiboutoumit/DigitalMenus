@@ -9,7 +9,7 @@ router
   .post(
     verifyJWT,
     // verifyPermission(["admin"]),
-    //upload.single("image"),
+    upload.single("image"),
     categoryController.createCategory
   )
   router.route("/").get(

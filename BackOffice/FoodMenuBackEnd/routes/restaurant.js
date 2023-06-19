@@ -9,7 +9,7 @@ router
   .post(
     verifyJWT,
     // verifyPermission(["admin"]),
-    //upload.single("image"),
+    upload.single("image"),
     restaurantController.createRestaurant
   )
   router
@@ -29,7 +29,11 @@ router
   .route("/update/:id").put(
     verifyJWT,
     // verifyPermission(["admin"]),
-   // upload.single("image"),
+   upload.single("image"),
     restaurantController.updateRestaurant
+  );
+
+  router.route("/delete/:id").delete(
+    restaurantController.deleteRestaurant
   );
 module.exports = router;

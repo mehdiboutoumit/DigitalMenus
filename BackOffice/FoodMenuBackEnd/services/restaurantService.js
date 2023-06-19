@@ -1,4 +1,5 @@
-const { Restaurant } = require("../models");
+const { Restaurant, Menu, Table } = require("../models");
+const menuService = require('../services/menuService');
 
 exports.createRestaurant = async (restaurant) => {
   const { dataValues } = await Restaurant.create(restaurant);
@@ -44,6 +45,24 @@ exports.deleteRestaurant = async (id) => {
       id: id,
     },
   });
+
+   // Find and destroy tables related to the restaurant
+   await Table.destroy({
+    where: {
+      id_restaurant: id,
+    },
+  });
+
+  // Find and delete menus related to the restaurant
+  const menus = await Menu.findAll({
+    where: {
+      id_restaurant: id,
+    },
+  });
+
+  for (const menu of menus) {
+    await menuService.deleteMenu(menu.id);
+  }
   return restaurant;
 };
 

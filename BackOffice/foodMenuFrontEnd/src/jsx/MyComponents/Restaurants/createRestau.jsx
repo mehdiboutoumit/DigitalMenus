@@ -13,20 +13,26 @@ const [address,setAddress] = useState('');
 
  
 
-  const handleUpload = (e)=>{
-
-  }
+  const handleUpload = (e) => {
+    setimage(e.target.files[0]);
+    console.log(e.target.files[0]);
+   }
   const handleSave = async () => {
    const id = uuidv4();
     try {
-      const response = await axios.post("http://localhost:5000/api/restaurant/add", {
-        id : id,
-        name,
-        address,
-        description,
-        image
-      });
-      console.log("Restaurant saved successfully");
+      const formData = new FormData();
+formData.append("id", id);
+formData.append("name", name);
+formData.append("address", address);
+formData.append("description", description);
+formData.append("image", image); // Assuming `image` is the file object obtained from the file input
+
+const response = await axios.post("http://localhost:5000/api/restaurant/add", formData, {
+  headers: {
+    "Content-Type": "multipart/form-data"
+  }
+});
+      console.log("Restaurant saved successfully",image);
       // Handle success, e.g., show a success message or redirect to another page
     } catch (error) {
       console.error("Error saving restaurant:", error);
@@ -68,8 +74,8 @@ const [address,setAddress] = useState('');
                           type="file"
                           name="image"
                           // onChange={handleUpload}
-                          value={image}
-                          onChange={(e) => setimage(e.target.value)}
+                        
+                          onChange={(e) => handleUpload(e)}
                         />
                        
                       </div>

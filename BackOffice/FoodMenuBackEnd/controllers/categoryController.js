@@ -3,18 +3,12 @@ const categoryService = require("../services/categoryService");
 exports.createCategory = async (req, res, next) => {
   const {
     body: category,
-   // file,
+   file,
     // user: connectedUser
   } = req;
-
-  if (category.image?.size) {
-    if (category.image.size > 15000000) {
-      return res.json({ message: "file is too large, 15 Mo max" });
-    }
-    
-  } else {
-   // category.image = null;
-  }
+  console.log(file);
+  
+ 
 
   const { id, name, description, id_menu, image } = category;
 
@@ -22,24 +16,31 @@ exports.createCategory = async (req, res, next) => {
     let existingCategory = await categoryService.getCategoryById(id);
 
     if (existingCategory) {
+      if (file) {
+        if (file.size > 15000000) {
+          return res.json({ message: "file is too large, 15 Mo max" });
+        }
+        existingCategory.image = file.filename;}
       // Category already exists, update it instead of creating a new one
-      existingCategory = await categoryService.updateCategory(id, {
-        name,
-        image,
-        description,
-        id_menu,
-      });
+      if (name) existingCategory.name = name;
+  if (image) existingCategory.image = image;
+  if (description) existingCategory.description = description;
+
+      existingCategory = await categoryService.updateCategory(id, existingCategory);
 
       return res.json({ message: "Category updated successfully", category: existingCategory });
     }
-
-    const newCategory = await categoryService.createCategory({
-      id,
-      name,
-      image,
-      description,
-      id_menu,
-    });
+    if (file) {
+      if (file.size > 15000000) {
+        return res.json({ message: "file is too large, 15 Mo max" });
+      }
+      category.image = file.filename;
+    } else {
+      category.image = "no name";
+    }
+  
+    
+    const newCategory = await categoryService.createCategory(category);
 
     return res.json({ message: "Category created successfully", category: newCategory });
   } catch (error) {
@@ -60,11 +61,7 @@ exports.getAllCategoriesOfMenu = async (req, res, next) => {
     );
 
     const updatedCategories = categories.map((category) => {
-      const imageData = category.image.toString('base64');
-      return {
-        ...category,
-        image: imageData,
-      };
+      return category;
     });
 
     return res.json({ message: "success", categories: updatedCategories });

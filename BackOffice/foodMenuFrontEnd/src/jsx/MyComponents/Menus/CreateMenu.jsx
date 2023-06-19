@@ -38,26 +38,34 @@ const CreateMenu = ({ editMenuData,  onCloseModal , restaurantId}) => {
     try {
       // Make an HTTP POST request to your backend API endpoint
      
+      const formData = new FormData();
+   
+      formData.append('name', name);
+      formData.append('image', image);
+      formData.append('description', description);
+      formData.append('id_restaurant', restaurantId);
+      
+      let response;
+      
       if (editMenuData) {
-        const { id, name, image, description } = editMenuData;
+        const { id } = editMenuData;
         // If editMenuData is present, it means we're editing an existing menu
-       response = await axios.put(`http://localhost:5000/api/menus/update/${id}`, {
-          name,
-          image,
-          description,
+        response = await axios.put(`http://localhost:5000/api/menus/update/${id}`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
         });
       } else {
-       
-        console.log(idM);
+        formData.append('id', idM);
         // If editMenuData is null, it means we're creating a new menu
-        response = await axios.post('http://localhost:5000/api/menus/add', {
-         id : idM,
-          name,
-          image,
-          description,
-          id_restaurant : restaurantId
+        response = await axios.post('http://localhost:5000/api/menus/add', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
         });
       }
+      
+      
   
       // Handle the response from the server
       console.log('Server response:', response.data);

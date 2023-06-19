@@ -131,7 +131,12 @@ const [refresh, setRefresh] = useState(0);
       name: menu.name,
       image: (
         <div className="media mb-3" style={{ width: '150px' }}>
-          <img className="rounded" src={menu.image} style={{ width: '100%' }} alt="" />
+          <img
+            className="rounded"
+            src={`http://localhost:5000/images/${menu.image}`}
+            style={{ width: '100%' }}
+            alt=""
+          />
         </div>
       ),
       description: isExpanded
