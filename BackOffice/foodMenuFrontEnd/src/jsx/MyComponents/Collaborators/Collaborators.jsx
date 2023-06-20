@@ -1,21 +1,49 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import { MDBDataTable } from "mdbreact";
-import dataCollab from "./dataCollab.jsx";
+//import dataCollab from "./dataCollab.jsx";
 import { Dropdown, Button, Modal } from "react-bootstrap";
-import CreateCollab from "./createCollab";
+import axios from "axios";
+//import CreateCollab from "./createCollab";
 
-const Collaborators = () => {
-  const rows = dataCollab;
+const Collaborators = (restaurantId) => {
+  // const rows = dataCollab;
+  const [dataCollab, setDataCollab] = useState([])
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [editCollabData, setEditCollabData] = useState(null);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(`http://localhost:5000/api/user/restaurant/${restaurantId}`);
+      console.log(response.data.users);
+      const users = response.data.users;
+      for (const user of users) {
+        const roleId = user.id_role;
+  
+        // Make an API request to get the role name based on roleId
+        const roleResponse = await axios.get(`http://localhost:5000/api/role/${roleId}`);
+        const role = roleResponse.data.role;
+  
+        // Update the user's id_role field with the role name
+        user.role = role;
+      }
+
+      setDataCollab(users);
+      console.log(users);
+    } catch (error) {
+      console.error('Error fetching menus:', error);
+    }
+  };
+  useEffect(() => {
+
+    fetchData();
+  }, [] );
+  const rows = dataCollab;
 
   const data = {
     columns: [
       { label: "Nom", field: "name", sort: "asc" },
-      { label: "Image", field: "image", sort: "asc" },
       { label: "Email", field: "email", sort: "asc" },
       { label: "Role", field: "role", sort: "asc" },
-      { label: "Notes", field: "notes", sort: "asc" },
       { label: "Actions", field: "actions" },
     ],
     rows: rows.map((row) => ({
@@ -60,7 +88,7 @@ const Collaborators = () => {
         <div className="col-xl-12">
           <div className="table-responsive">
           <div className="d-flex justify-content-end mb-3">
-            <Button variant="primary" onClick={handleShowCreateModal}>
+            {/* <Button variant="primary" onClick={handleShowCreateModal}>
               Ajouter un collaborateur
             </Button>
 
@@ -73,7 +101,7 @@ const Collaborators = () => {
               <Modal.Body>
                 <CreateCollab editCollabData={editCollabData} />
               </Modal.Body>
-            </Modal>
+            </Modal> */}
             </div>
 
             <div className="display mb-4 dataTablesCard">

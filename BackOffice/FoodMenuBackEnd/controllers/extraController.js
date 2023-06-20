@@ -2,13 +2,27 @@ const extraService = require("../services/extraService");
 
 exports.createExtra = async (req, res, next) => {
   const { body: extra } = req;
-  const { name, price, id_dish } = extra;
-  const newExtra = await extraService.createExtra({
-    name,
-    price,
-    id_dish,
-  });
-  return res.json({ message: "success", extra: newExtra });
+  const {id, name, price, id_dish } = extra;
+  try {
+    let existingextra = await extraService.getExtraById(id);
+    if (existingextra) {
+      await extraService.updateExtra(id,extra);
+      return res.json({ message: "success" });
+    }
+    else{
+      const newextra = await extraService.createExtra({
+        id,
+        name,
+        price,
+        id_dish,
+      });
+      return res.json({ message: "success", extra: newextra });
+    }
+
+} catch (error) {
+  console.error("Error creating/updating extra:", error);
+  return res.status(500).json({ message: "Internal server error" });
+}
 };
 
 exports.getAllExtras = async (req, res, next) => {
@@ -40,3 +54,8 @@ exports.updateExtra = async (req, res, next) => {
   await extraService.updateExtra(id, extra);
   return res.json({ message: "success" });
 };
+
+exports.deleteExtra = async (req,res)=>{
+  extraService.deleteExtra(req.params.id);
+  return res.json({ message: "success" });
+}

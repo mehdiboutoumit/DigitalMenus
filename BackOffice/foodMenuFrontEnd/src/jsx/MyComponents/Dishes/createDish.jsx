@@ -154,9 +154,9 @@ const CreateDish = ({  editDishData,  onCreateDish, update }) => {
       </div>
      
       <div className="form-group">
-        <label htmlFor="preparationTime">Preparation Time</label>
+        <label htmlFor="preparationTime">Preparation Time (min)</label>
         <input
-          type="time"
+          type="number"
           className="form-control"
           id="preparationTime"
           value={preparationTime}

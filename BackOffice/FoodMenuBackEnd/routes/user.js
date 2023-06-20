@@ -4,13 +4,13 @@ const userController = require("../controllers/userController");
 const verifyJWT = require("../middlewares/verifyJWT");
 const verifyPermission = require("../middlewares/verifyPermission");
 router
-  .route("/") //
+  .route("/add") //
   .post(
     verifyJWT,
     // verifyPermission(["admin"]),
     userController.createUser
   )
-  .get(
+  router.route("/").get(
     verifyJWT,
     // verifyPermission(["admin"]),
     userController.getAllUsers

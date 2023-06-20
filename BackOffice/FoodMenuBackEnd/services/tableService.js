@@ -6,6 +6,7 @@ exports.createTable = async (table) => {
     id: dataValues.id,
     numTable: dataValues.numTable,
     size: dataValues.size,
+    id_menus: dataValues.id_menus,
     id_restaurant: dataValues.id_restaurant,
   };
   return newTable;
@@ -22,6 +23,7 @@ exports.getAllTables = async () => {
       id: table.dataValues.id,
       numTable: table.dataValues.numTable,
       size: table.dataValues.size,
+      id_menus : table.dataValues.id_menus,
       id_restaurant: table.dataValues.id_restaurant,
     };
   });
@@ -42,6 +44,7 @@ exports.getAllTablesOfRestaurant = async (idRestaurant) => {
       id: table.dataValues.id,
       numTable: table.dataValues.numTable,
       size: table.dataValues.size,
+      id_menus : table.dataValues.id_menus,
       id_restaurant: table.dataValues.id_restaurant,
     };
   });

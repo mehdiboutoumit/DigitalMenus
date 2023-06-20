@@ -1,13 +1,15 @@
 import React, { Component } from "react";
 
 /// Link
-import { Link } from "react-router-dom";
+import { Link , BrowserRouter} from "react-router-dom";
 
 /// Scroll
 import PerfectScrollbar from "react-perfect-scrollbar";
 
 /// Menu
 import MetisMenu from "metismenujs";
+
+const baseURL = "http://localhost:3000";
 
 class MM extends Component {
   componentDidMount() {
@@ -114,6 +116,7 @@ class SideBar extends Component {
       table = ["table-bootstrap-basic", "table-datatable-basic"];
 
     return (
+     
       <div className="deznav">
         <PerfectScrollbar className="deznav-scroll">
           <MM className="metismenu" id="menu">
@@ -151,10 +154,10 @@ class SideBar extends Component {
               </Link>
               <ul>
                 <li>
-                  <Link to="CreerRestaurant">Créer un restaurant</Link>
+                  <a href={`${baseURL}/CreerRestaurant`}>Créer un restaurant</a>
                 </li>
                 <li>
-                  <Link to="Restaurants">Voir les restaurants</Link>
+                  <a href={`${baseURL}/Restaurants`}>Mes restaurants</a>
                 </li>
               </ul>
             </li>
@@ -516,6 +519,7 @@ class SideBar extends Component {
           </div> */}
         </PerfectScrollbar>
       </div>
+    
     );
   }
 }

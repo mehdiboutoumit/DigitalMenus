@@ -2,14 +2,29 @@ const portionService = require("../services/portionService");
 
 exports.createPortion = async (req, res, next) => {
   const { body: portion } = req;
-  const { name, price, calories, id_dish } = portion;
-  const newPortion = await portionService.createPortion({
-    name,
-    price,
-    calories,
-    id_dish,
-  });
-  return res.json({ message: "success", portion: newPortion });
+  const {id, name, price, calories, id_dish } = portion;
+  console.log(req);
+  try {
+    let existingPortion = await portionService.getPortionById(id);
+    if (existingPortion) {
+      await portionService.updatePortion(id,portion);
+      return res.json({ message: "success" });
+    }
+    else{
+      const newPortion = await portionService.createPortion({
+        id,
+        name,
+        price,
+        calories,
+        id_dish,
+      });
+      return res.json({ message: "success", portion: newPortion });
+    }
+
+} catch (error) {
+  console.error("Error creating/updating portion:", error);
+  return res.status(500).json({ message: "Internal server error" });
+}
 };
 
 exports.getAllPortions = async (req, res, next) => {
@@ -41,3 +56,8 @@ exports.updatePortion = async (req, res, next) => {
   await portionService.updatePortion(id, portion);
   return res.json({ message: "success" });
 };
+
+exports.deletePortion = async (req,res)=>{
+  portionService.deletePortion(req.params.id);
+  return res.json({ message: "success" });
+}

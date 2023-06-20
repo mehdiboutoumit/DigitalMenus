@@ -65,3 +65,13 @@ exports.updatePortion = async (id, body) => {
     },
   });
 };
+
+
+exports.deletePortion = async (id) => {
+  const portion = await Portion.destroy({
+    where: {
+      id: id,
+    },
+  });
+  return portion;
+};

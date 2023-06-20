@@ -62,3 +62,12 @@ exports.updateExtra = async (id, body) => {
     },
   });
 };
+
+exports.deleteExtra = async (id) => {
+  const extra = await Extra.destroy({
+    where: {
+      id: id,
+    },
+  });
+  return extra;
+};

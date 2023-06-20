@@ -4,13 +4,13 @@ const extraController = require("../controllers/extraController");
 const verifyJWT = require("../middlewares/verifyJWT");
 const verifyPermission = require("../middlewares/verifyPermission");
 router
-  .route("/") //
+  .route("/add") //
   .post(
     verifyJWT, //
     // verifyPermission(["admin"]),
     extraController.createExtra
   )
-  .get(
+  router.route("/").get(
     verifyJWT, //
     // verifyPermission(["admin"]),
     extraController.getAllExtras
@@ -27,4 +27,8 @@ router
     // verifyPermission(["admin"]),
     extraController.updateExtra
   );
+
+router.route("/delete/:id").delete(
+  extraController.deleteExtra
+)
 module.exports = router;

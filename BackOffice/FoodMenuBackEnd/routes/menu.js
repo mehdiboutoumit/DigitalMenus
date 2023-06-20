@@ -19,6 +19,9 @@ router
     // verifyPermission(["admin"]),
     menuController.getAllMenus
   );
+  router.route("/:id").get(
+    menuController.getMenuById
+  )
 router //
   .route("/restaurant/:idRestaurant")
   .get(menuController.getAllMenusOfRestaurant);

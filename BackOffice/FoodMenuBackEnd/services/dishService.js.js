@@ -1,4 +1,4 @@
-const { Dish } = require("../models");
+const { Dish, Portion, Extra } = require("../models");
 
 exports.createDish = async (dish) => {
   const { dataValues } = await Dish.create(dish);
@@ -78,6 +78,16 @@ exports.updateDish = async (id, body) => {
   });
 };
 exports.deleteDish = async (id) => {
+  await Portion.destroy({
+    where: {
+      id_dish : id,
+    },
+  });
+  await Extra.destroy({
+    where: {
+      id_dish : id,
+    },
+  });
   await Dish.destroy({
     where: {
       id: id,

@@ -65,7 +65,7 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       preparation_time: {
-        type: DataTypes.TIME,
+        type: DataTypes.INTEGER,
         defaultValue: 0,
       },
       calories: {

@@ -6,9 +6,6 @@ exports.createCategory = async (req, res, next) => {
    file,
     // user: connectedUser
   } = req;
-  console.log(file);
-  
- 
 
   const { id, name, description, id_menu, image } = category;
 

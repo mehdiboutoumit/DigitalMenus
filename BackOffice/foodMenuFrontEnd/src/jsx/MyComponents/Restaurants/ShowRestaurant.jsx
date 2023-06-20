@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import {Link} from "react-router-dom";
 import Menus from "../Menus/Menus";
 import Tables from "../Tables/Tables";
+import Collaborators from "../Collaborators/Collaborators";
 
 const RestaurantView = () => {
 
@@ -76,6 +77,11 @@ const RestaurantView = () => {
       <div className="justify-content-between">
         <h2>Menus</h2>
         <Menus restaurantId={restaurantId}  />
+      </div>
+      <hr></hr>
+      <div className="justify-content-between">
+        <h2>Collaborateurs</h2>
+        <Collaborators restaurantId={restaurantId}  />
       </div>
     </div>
   );

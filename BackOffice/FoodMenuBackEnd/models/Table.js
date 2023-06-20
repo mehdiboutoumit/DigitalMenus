@@ -44,6 +44,11 @@ module.exports = (sequelize, DataTypes) => {
           isInt: true,
         },
       },
+      id_menus: {
+        type: DataTypes.STRING,
+        allowNull: true,
+       
+      },
     },
     {
       sequelize,

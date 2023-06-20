@@ -5,6 +5,8 @@ import CreateCategory from '../Categories/createCategory';
 import CreateDish from '../Dishes/CreateDish';
 import axios from 'axios';
 import { baseURL } from '../../../api/baseURL';
+import CreatePortion from '../Portions/CreatePortion'; 
+import CreateExtra from '../Extras/CreateExtra';
 
 const ShowMenu = () => {
   const {menuId} = useParams();
@@ -12,10 +14,24 @@ const ShowMenu = () => {
   const [showCreateCategoryModal, setShowCreateCategoryModal] = useState(false);
   const [categories, setCategories] = useState({});
   const [selectedCategoryName, setSelectedCategoryName] = useState({});
+
+
   const [showCreateDishModal, setShowCreateDishModal] = useState(false);
   const [editCategoryData, setEditCategoryData] = useState(null);
   const [editDishData, setEditDishData] = useState(null);
-  //const [categoryId, setCategoryId] = useState('');
+
+  const [selectedDishId, setSelectedDishId] = useState(null);
+
+
+  const [showCreatePortionModal, setShowCreatePortionModal] = useState(false);
+  const [portions, setPortions] = useState([]);
+  const [editPortionData, setEditPortionData] = useState(null);
+
+
+  const [showCreateExtraModal, setShowCreateExtraModal] = useState(false);
+  const [extras, setExtras] = useState([]);
+  const [editExtraData, setEditExtraData] = useState(null);
+
   
 
 
@@ -26,8 +42,7 @@ const ShowMenu = () => {
       try {
         const response = await axios.get(`http://localhost:5000/api/category/menu/${menuId}`);
         const categoryData = response.data.categories;
-        console.log(categoryData);
-        console.log(categoryData[0].image)
+       
   
         // Check if the component is still mounted before updating state
         if (isMounted) {
@@ -49,11 +64,18 @@ const ShowMenu = () => {
            
 
           }
-  
+          const response = await axios.get(`http://localhost:5000/api/portion/`);
+          const portionsData = response.data.portions;
+          setPortions(portionsData);
+
+          const res = await axios.get(`http://localhost:5000/api/extra/`);
+          const extrasData = res.data.extras;
+          setExtras(extrasData);
+
           // Check if the component is still mounted before updating state
           if (isMounted) {
             setCategories(updatedCategories);
-            console.log(updatedCategories);
+         
          
           }
         }
@@ -126,9 +148,21 @@ const ShowMenu = () => {
         'Content-Type': 'multipart/form-data'
       }
     });
+
+
+    for (const portion of portions){
+      await axios.post('http://localhost:5000/api/portion/add', portion);
+  }
+  for (const extra of extras){
+    await axios.post('http://localhost:5000/api/extra/add', extra);
+}
+    
    }
         // }
       }
+     
+
+
   
       console.log('Data saved successfully!');
       console.log('Updated Categories:', updatedCategories);
@@ -165,7 +199,7 @@ const ShowMenu = () => {
     
     if (update) {
       const existingCategory = category.find((cat) => cat.id === newCategory.id);
-      console.log("1"+newCategory);
+     
       // If the category already exists, update it with the new information
       const updatedCategory = {
         ...existingCategory,
@@ -179,7 +213,7 @@ const ShowMenu = () => {
         prevCategories.map((cat) => (cat.id === newCategory.id ? updatedCategory : cat))
       );
     } else {
-      console.log("2"+newCategory);
+   
       // If the category is not already in the state, add it as a new category
       const updatedCategories = [...category, newCategory];
       setCategory(updatedCategories);
@@ -296,6 +330,97 @@ const ShowMenu = () => {
     handleCloseCreateDishModal();
   };
   
+  const handleAddPortion = (dishId) => {
+    setSelectedDishId(dishId);
+    setShowCreatePortionModal(true);
+  };
+
+  const handleCloseCreatePortionModal = () => {
+    setShowCreatePortionModal(false);
+  };
+
+  const handleCreatePortion = (portion) => {
+    setPortions([...portions, portion]);
+  handleCloseCreatePortionModal();
+ 
+  }
+
+  const handleEditPortion= (portion) => {
+    setSelectedDishId(portion.id_dish);
+    setEditPortionData(portion);
+    setShowCreatePortionModal(true);
+
+  }
+  const handleUpdatePortion = (updatedPortion) => {
+    const updatedPortions = portions.map((portion) =>
+      portion.id === updatedPortion.id ? updatedPortion : portion
+    );
+ 
+    setPortions(updatedPortions);
+    setShowCreatePortionModal(false);
+  };
+  const handleDeletePortion = (id) => {
+    if(window.confirm("Supprimer ?")){
+    axios
+        .delete(`http://localhost:5000/api/portion/delete/${id}`)
+        .then((response) => {
+          // Handle the successful deletion
+          console.log("Portion deleted successfully");
+        })
+        .catch((error) => {
+          // Handle the error
+          console.error("Error deleting portion:", error);
+        });
+    const updatedPortions = portions.filter((port) => port.id !== id);
+    setPortions(updatedPortions);
+      }
+  }
+
+
+
+  const handleAddExtra = (dishId) => {
+    setSelectedDishId(dishId);
+    setShowCreateExtraModal(true);
+  };
+
+  const handleCloseCreateExtraModal = () => {
+    setShowCreateExtraModal(false);
+  };
+  const handleCreateExtra = (extra) => {
+    setExtras([...extras, extra]);
+  handleCloseCreateExtraModal();
+  console.log("Extra created", extra);
+  }
+  const handleEditExtra = (extra) => {
+    setSelectedDishId(extra.id_dish);
+    setEditExtraData(extra);
+    setShowCreateExtraModal(true);
+  }
+
+  const handleUpdateExtra = (updatedExtra) => {
+    const updatedExtras = extras.map((extra) =>
+    extra.id === updatedExtra.id ? updatedExtra : extra
+  );
+
+  setExtras(updatedExtras);
+  setShowCreateExtraModal(false);
+  }
+  const handleDeleteExtra = (id) => {
+    if(window.confirm("Supprimer ?")){
+      axios
+          .delete(`http://localhost:5000/api/extra/delete/${id}`)
+          .then((response) => {
+            // Handle the successful deletion
+            console.log("Extra deleted successfully");
+          })
+          .catch((error) => {
+            // Handle the error
+            console.error("Error deleting extra:", error);
+          });
+      const updatedExtras = extras.filter((ext) => ext.id !== id);
+      setExtras(updatedExtras);
+        }
+  }
   
   
   
@@ -316,7 +441,13 @@ const ShowMenu = () => {
             <h2 className="card-title text-center">{categoryName}</h2>
             <div className="d-flex justify-content-center mb-4">
 
-              <img src={`http://localhost:5000/images/${category[categoryIndex].image}`} style={{ width: "100%", height: "100%", objectFit: "cover", overflow : 'hidden' }}  alt="" className="rounded" />
+              <img src={`http://localhost:5000/images/${category[categoryIndex].image}`}  style={{
+                        width: '100px',
+                        height: '100px',
+                        borderRadius: '10%',
+                        objectFit: 'cover',
+                        marginRight: '20px'
+                      }} alt="" className="rounded" />
             </div>
             <div className="d-flex justify-content-center mb-4">
               <Button onClick={() => {handleShowCreateDishModal(categoryName);}} className="btn btn-success">
@@ -338,26 +469,89 @@ const ShowMenu = () => {
                     <div className="nestable">
                       <div className="dd" id={`nestable-${categoryName}`}>
                       <ol className="dd-list">
-  {dishes.map((dish, dishIndex) => ( 
-    <li key={dishIndex} className="dd-item border py-4 px-5 d-flex align-items-center justify-content-between" data-id={dishIndex}>
-      <div className="d-flex align-items-center">
-        <div className="rounded-circle" style={{ width: "30%", height: "30%", overflow: "hidden" }}>
-          {/* <img src={`data:image/jpeg;base64,${Buffer.from(dish.image).toString('base64')}`} alt={dish.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} /> */}
-          <img src={`http://localhost:5000/images/${dish.image}`}
-           alt={dish.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-        </div>
-        <div className="ml-5">{dish.name}</div>
-      </div>
-      <div>
-      <Button className="btn-info border-0" onClick={() => {handleEditDish(categoryName,dishIndex)}}>
-        <i className="flaticon-381-edit"></i>
-      </Button>
-      <Button onClick={() => handleDeleteDish(categoryName, dishIndex,dish.id) } className="btn-danger border-0">
-        <i className="flaticon-381-trash"></i>
-      </Button>
-      </div>
-    </li>
-  ))}
+                      {dishes.map((dish, dishIndex) => ( 
+                                <li key={dishIndex} className="dd-item border py-4 px-5 d-flex flex-column align-items-center justify-content-between" data-id={dishIndex}>
+                                  <div className="d-flex align-items-center text-center">
+                                    <div className="rounded-circle" style={{ width: "30%", height: "30%", overflow: "hidden" }}>
+                                      {/* <img src={`data:image/jpeg;base64,${Buffer.from(dish.image).toString('base64')}`} alt={dish.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} /> */}
+                                      <img src={`http://localhost:5000/images/${dish.image}`} alt={dish.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                                    </div>
+                                    <div className="ml-5">{dish.name}</div>
+                                    <div className="ml-5">{dish.calories} Calories</div>
+                                    <div className="ml-5" style={{color : 'green', fontWeight : 'bold', fontSize : '20px'}}>{dish.price} DH</div>
+                                  </div>
+                                  <div>
+                                  
+                                    <Button className="btn-info border-0" onClick={() => {handleEditDish(categoryName,dishIndex)}}>
+                                      <i className="flaticon-381-edit"></i>
+                                    </Button>
+                                    <Button onClick={() => handleDeleteDish(categoryName, dishIndex,dish.id) } className="btn-danger border-0">
+                                      <i className="flaticon-381-trash"></i>
+                                    </Button>
+                                  </div>
+                                
+
+                                  <div className="ml-5 mt-4 col-13">
+                    <div className="card mb-3 text-center ">
+                      <div className="card-body ">
+                        
+                        <h5 className="card-title">Portions</h5>
+                        <Button className="btn-warning border-0" onClick={() => {handleAddPortion(dish.id)}}>
+                                      Ajouter une portion
+                                    </Button>
+                                    <hr></hr>
+                        <ol className="list-unstyled  align-items-center  justify-content-center">
+                          {portions.map((portion, portionIndex) => {
+                            if (portion.id_dish === dish.id) {
+                           // if (true) {
+                              return (
+                                <li key={portionIndex} className='d-flex align-items-center  justify-content-center'>
+                                  <div className='ml-5 mr-2'>{portion.name}</div>
+                                  <div className='ml-5 mr-2'>{portion.calories} calories</div>
+                                  <div className='ml-5 mr-2' style={{color : 'green'}}>{portion.price} DH</div>
+                                  <Button className="btn-info border-0 ml-2" onClick={() => {handleEditPortion(portion)}}> <i className="flaticon-381-edit"></i></Button>
+                                  <Button className="btn-danger border-0 ml-2" onClick={() => {handleDeletePortion(portion.id)}}> <i className="flaticon-381-trash"></i></Button>
+                                  <hr></hr>
+                                </li>
+                              );
+                            }
+                            return null;
+                          })}
+                        </ol>
+                      </div>
+                    </div>
+                   
+                    <div className="card mb-3 text-center ">
+                
+                      <div className="card-body ">
+                    
+                        <h5 className="card-title">Extras</h5>
+                        <Button className="btn-warning border-0" onClick={() => {handleAddExtra(dish.id)}}>
+                                      Ajouter un extra
+                                    </Button>
+                                    <hr></hr>
+                        <ol className="list-unstyled  align-items-center  justify-content-center">
+                          {extras.map((extra, extraIndex) => {
+                            if (extra.id_dish === dish.id) {
+                           // if (true) {
+                              return (
+                                <li key={extraIndex} className='d-flex align-items-center  justify-content-center'>
+                                  <div className='ml-5 mr-2'>{extra.name}</div>
+                                  <div className='ml-5 mr-2' style={{color : 'green'}}>{extra.price} DH</div>
+                                  <Button className="btn-info border-0 ml-2" onClick={() => {handleEditExtra(extra)}}> <i className="flaticon-381-edit"></i></Button>
+                                  <Button className="btn-danger border-0 ml-2" onClick={() => {handleDeleteExtra(extra.id)}}> <i className="flaticon-381-trash"></i></Button>
+                                  <hr></hr>
+                                </li>
+                              );
+                            }
+                            return null;
+                          })}
+                        </ol>
+                      </div>
+                    </div>
+                  </div>
+                                </li>
+                              ))}
 </ol>
 
                       </div>
@@ -417,6 +611,49 @@ const ShowMenu = () => {
     />
   )}
 </Modal.Body>
+      </Modal>
+
+      <Modal
+        show={showCreatePortionModal}
+        onHide={handleCloseCreatePortionModal}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Create Portion</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <CreatePortion
+            dishId={selectedDishId}
+           editPortion={editPortionData}
+           onEditPortion ={handleUpdatePortion}
+            onCreatePortion={
+              handleCreatePortion
+            }
+
+
+          />
+        </Modal.Body>
+      </Modal>
+
+      <Modal
+        show={showCreateExtraModal}
+        onHide={handleCloseCreateExtraModal}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Ajouter un Extra</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <CreateExtra
+            dishId={selectedDishId}
+            extraToEdit={editExtraData}
+
+            onEditExtra={handleUpdateExtra}
+         
+            onCreateExtra={
+              handleCreateExtra
+            }
+
+          />
+        </Modal.Body>
       </Modal>
     </>
   );

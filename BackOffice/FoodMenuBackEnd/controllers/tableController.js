@@ -2,11 +2,12 @@ const tableService = require("../services/tableService");
 
 exports.createTable = async (req, res, next) => {
   const { body: table } = req;
-  const { id, numTable, size, id_restaurant } = table;
+  const { id, numTable, size, id_menus , id_restaurant } = table;
   const newTable = await tableService.createTable({
     id,
     numTable,
     size,
+    id_menus,
     id_restaurant,
   });
   return res.json({ message: "success", table: newTable });

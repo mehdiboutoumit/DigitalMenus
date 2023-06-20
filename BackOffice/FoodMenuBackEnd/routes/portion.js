@@ -4,13 +4,13 @@ const portionController = require("../controllers/portionController");
 const verifyJWT = require("../middlewares/verifyJWT");
 const verifyPermission = require("../middlewares/verifyPermission");
 router
-  .route("/") //
+  .route("/add") //
   .post(
     verifyJWT,
     // verifyPermission(["admin"]),
     portionController.createPortion
   )
-  .get(
+  router.route("/").get(
     verifyJWT, //
     // verifyPermission(["admin"]),
     portionController.getAllPortions
@@ -27,4 +27,8 @@ router
     // verifyPermission(["admin"]),
     portionController.updatePortion
   );
+ 
+  router.route("/delete/:id").delete(
+    portionController.deletePortion
+  )
 module.exports = router;
