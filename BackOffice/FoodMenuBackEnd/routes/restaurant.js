@@ -25,6 +25,10 @@ router
   //   // verifyPermission(["admin"]),
   //   restaurantController.getRestaurantById
   // )
+
+  router.route("/:id").get(
+    restaurantController.getRestaurantById
+  )
   router
   .route("/update/:id").put(
     verifyJWT,

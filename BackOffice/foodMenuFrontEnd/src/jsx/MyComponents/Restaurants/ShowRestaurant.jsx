@@ -1,15 +1,33 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { MDBDataTable } from "mdbreact";
 import { useParams } from 'react-router-dom';
 import {Link} from "react-router-dom";
 import Menus from "../Menus/Menus";
 import Tables from "../Tables/Tables";
 import Collaborators from "../Collaborators/Collaborators";
+import axios from "axios";
 
 const RestaurantView = () => {
 
   const {restaurantId} = useParams();
+  const [restauName, setRestauName] = useState("");
   
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(`http://localhost:5000/api/restaurant/${restaurantId}`);
+      const restau = response.data.restaurant;
+      setRestauName(restau.name);
+      console.log(response)
+
+    } catch (error) {
+      console.error('Error fetching restau:', error);
+    }
+  };
+
+  useEffect(() => {
+
+    fetchData();
+  }, [] );
 
   // const tables = [
   //   { id: 1, name: "Table 1", capacity: 4 },
@@ -68,19 +86,37 @@ const RestaurantView = () => {
   // };
 
   return (
-    <div className="restaurant-view">
-      <div className="justify-content-center">
-        <h2>Tables</h2>
+    <div className="restaurant-view text-center">
+      <h3 className="text-center mb-4">
+        Bienvenue dans{" "}
+        <span className="text-primary">
+          <h1 style={{ fontSize: "60px", fontWeight: "bold", fontFamily: "Rockwell Extra Bold" }}>{restauName}</h1>
+        </span>
+      </h3>
+      <div className="justify-content-center border border-2  rounded p-5">
+      <h2 className="text-center text-uppercase mb-4">
+        <span className="bg-primary px-4 py-2 rounded text-white">
+          Tables
+        </span>
+      </h2>
         <Tables restaurantId={restaurantId} />
       </div>
-      <hr></hr>
-      <div className="justify-content-between">
-        <h2>Menus</h2>
+    
+      <div className="justify-content-between border border-2  rounded p-5">
+      <h2 className="text-center text-uppercase mb-4">
+        <span className="bg-primary px-4 py-2 rounded text-white">
+          Menus
+        </span>
+      </h2>
         <Menus restaurantId={restaurantId}  />
       </div>
-      <hr></hr>
-      <div className="justify-content-between">
-        <h2>Collaborateurs</h2>
+   
+      <div className="justify-content-between border border-2  rounded p-5">
+      <h2 className="text-center text-uppercase mb-4">
+        <span className="bg-primary px-4 py-2 rounded text-white">
+          Collaborateurs
+        </span>
+      </h2>
         <Collaborators restaurantId={restaurantId}  />
       </div>
     </div>

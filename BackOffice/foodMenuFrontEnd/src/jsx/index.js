@@ -13,6 +13,12 @@ import Footer from "./layouts/Footer";
 
 //MyComponents
 //import Collaborators from "./MyComponents/Collaborators/Collaborators";
+import Registration from "./MyComponents/Auth/Registration";
+import Login from "./MyComponents/Auth/Login";
+import ForgotPassword from "./MyComponents/Auth/ForgotPassword";
+import LockScreen from "./MyComponents/Auth/LockScreen";
+import LoginUser from "./MyComponents/Auth/LoginUser";
+
 import CollabView from "./MyComponents/Collaborators/CollabView";
 
 import Restaurants from "./MyComponents/Restaurants/Restaurants.jsx";
@@ -34,16 +40,16 @@ import Orders from "./MyComponents/Orders/Orders";
 import ShowOrder from "./MyComponents/Orders/ShowOrder";
 
 /// Pages
-import Registration from "./pages/Registration";
-import Login from "./pages/Login";
-import LoginUser from "./pages/LoginUser";
-import LockScreen from "./pages/LockScreen";
+// import Registration from "./pages/Registration";
+// import Login from "./pages/Login";
+// import LoginUser from "./pages/LoginUser";
+// import LockScreen from "./pages/LockScreen";
 import Error400 from "./pages/Error400";
 import Error403 from "./pages/Error403";
 import Error404 from "./pages/Error404";
 import Error500 from "./pages/Error500";
 import Error503 from "./pages/Error503";
-import ForgotPassword from "./pages/ForgotPassword";
+//import ForgotPassword from "./pages/ForgotPassword";
 
 /// Widget
 import Widget from "./pages/Widget";
@@ -127,6 +133,17 @@ import RechartJs from "./components/charts/rechart";
 
 const Markup = () => {
   const routes = [
+    //auth
+    {url : "locked", component: LockScreen},
+    {url : "register", component: Registration},
+    {url : "login", component: Login},
+    {url : "forgotpassword", component: ForgotPassword},
+    {url : "userlogin", component: LoginUser},
+
+
+    
+
+
     //Collab
     {url : "collaborateurs", component: CollabView},
 
@@ -236,9 +253,9 @@ const Markup = () => {
 
     /// pages
     { url: "widget-basic", component: Widget },
-    { url: "page-register", component: Registration },
-    { url: "page-lock-screen", component: LockScreen },
-    { url: "page-login", component: Login },
+    // { url: "page-register", component: Registration },
+    // { url: "page-lock-screen", component: LockScreen },
+    // { url: "page-login", component: Login },
     { url: "commandes", component: Commandes },
    // { url: "menus", component: menus },
     { url: "page-error-400", component: Error400 },
@@ -246,7 +263,7 @@ const Markup = () => {
     { url: "page-error-404", component: Error404 },
     { url: "page-error-500", component: Error500 },
     { url: "page-error-503", component: Error503 },
-    { url: "page-forgot-password", component: ForgotPassword },
+    // { url: "page-forgot-password", component: ForgotPassword },
   ];
   return (
     // you can change baseName to whatever you want
@@ -255,6 +272,26 @@ const Markup = () => {
         <Route path="/login">
           <div className="container-fluid">
             <Login />
+          </div>
+        </Route>
+        <Route path="/register">
+          <div className="container-fluid">
+            <Registration />
+          </div>
+        </Route>
+        <Route path="/forgotpassword">
+          <div className="container-fluid">
+            <ForgotPassword />
+          </div>
+        </Route>
+        <Route path="/locked">
+          <div className="container-fluid">
+            <LockScreen />
+          </div>
+        </Route>
+        <Route path="/userlogin">
+          <div className="container-fluid">
+            <LoginUser />
           </div>
         </Route>
         <Route>

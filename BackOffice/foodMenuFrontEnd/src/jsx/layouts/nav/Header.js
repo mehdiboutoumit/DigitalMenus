@@ -54,7 +54,7 @@ const Header = ({ onNote, toggle, onProfile, onActivity, onNotification }) => {
                 className="dashboard_bar"
                 style={{ textTransform: "capitalize" }}
               >
-                {page_name}
+               
               </div>
             </div>
 

@@ -108,7 +108,7 @@ const Tables = ({restaurantId}) => {
       { label: "Numero de la table", field: "numTable", sort: "asc" },
       { label: "Nombre de personnes", field: "size" },
       { label: "Menus", field: "id_menus" },
-      { label: "QR code", field: "qr" },
+      { label: "code QR", field: "qr" },
       {label : "Actions", field : "actions"}
      
     ],
@@ -160,10 +160,10 @@ const Tables = ({restaurantId}) => {
 
   return (
     <Fragment>
-      <div className="row">
-        <div className="col-xl-12">
+      <div className="row ">
+        <div className="col-xl-12 ">
           <div className="table-responsive">
-          <div className="d-flex justify-content-end mb-3">
+          <div className="d-flex justify-content-end mb-3 ">
             <Button variant="primary" onClick={handleShowCreateModal}>
               Ajouter une table
             </Button>
@@ -180,7 +180,7 @@ const Tables = ({restaurantId}) => {
             </Modal>
             </div>
 
-            <div className="display mb-4 dataTablesCard">
+            <div className="display mb-4 dataTablesCard text-center">
               <MDBDataTable striped small noBottomColumns hover align="middle" data={data} />
             </div>
           </div>
