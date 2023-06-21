@@ -68,13 +68,13 @@ exports.getAllUsers = async () => {
 };
 exports.getAllUsersOfRestaurant = async (idRestaurant) => {
   let users = await User.findAll({
-    // include: [
-    //   {
-    //     model: Role,
-    //     // as: "Role",
-    //     attributes: ["id", "role"],
-    //   },
-    // ],
+    include: [
+      {
+        model: Role,
+        // as: "Role",
+        attributes: ["id", "role"],
+      },
+    ],
     where: {
       id_restaurant: idRestaurant,
     },
@@ -82,17 +82,17 @@ exports.getAllUsersOfRestaurant = async (idRestaurant) => {
   if (users == null) {
     return [];
   }
-  // users = users.map((role) => {
-  //   return {
-  //     id: role.dataValues.id,
-  //     name: role.dataValues.name,
-  //     email: role.dataValues.email,
-  //     roles: {
-  //       id: role.dataValues.Role.id,
-  //       role: role.dataValues.Role.role,
-  //     },
-  //   };
-  // });
+  users = users.map((role) => {
+    return {
+      id: role.dataValues.id,
+      name: role.dataValues.name,
+      email: role.dataValues.email,
+      role: {
+        id: role.dataValues.Role.id,
+        role: role.dataValues.Role.role,
+      },
+    };
+  });
   return users;
 };
 exports.getUserWithRefreshToken = async (refreshToken) => {

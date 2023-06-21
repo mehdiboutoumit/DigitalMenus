@@ -13,22 +13,15 @@ const Collaborators = (restaurantId) => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/user/restaurant/${restaurantId}`);
-      console.log(response.data.users);
+      const response = await axios.get(`http://localhost:5000/api/user/restaurant/${restaurantId.restaurantId}`);
+
       const users = response.data.users;
       for (const user of users) {
-        const roleId = user.id_role;
-  
-        // Make an API request to get the role name based on roleId
-        const roleResponse = await axios.get(`http://localhost:5000/api/role/${roleId}`);
-        const role = roleResponse.data.role;
-  
-        // Update the user's id_role field with the role name
-        user.role = role;
+        user.role = user.role.role;
       }
 
       setDataCollab(users);
-      console.log(users);
+      //console.log(users);
     } catch (error) {
       console.error('Error fetching menus:', error);
     }
