@@ -1,6 +1,6 @@
 {
-   "name": "koki",
-   "homepage": "http://koki.dexignzone.com/react/",
+   "name": "digirestau",
+   "homepage": "http://koki.dexignzone.com/",
    "version": "0.1.0",
    "private": true,
    "dependencies": {

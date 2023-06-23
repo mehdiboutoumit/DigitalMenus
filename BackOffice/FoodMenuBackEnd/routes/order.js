@@ -5,16 +5,16 @@ const verifyJWT = require("../middlewares/verifyJWT");
 const verifyPermission = require("../middlewares/verifyPermission");
 router
   .route("/") //
-  .post(
-    verifyJWT, //
-    // verifyPermission(["admin"]),
-    orderController.createOrder
-  )
-  // .get(
+  // .post(
   //   verifyJWT, //
   //   // verifyPermission(["admin"]),
-  //   orderController.getAllOrders
-  // );
+  //   orderController.createOrder
+  // )
+  .get(
+    verifyJWT, //
+    // verifyPermission(["admin"]),
+   // orderController.getAllOrders
+  );
 router //
   .route("/restaurant/:idRestaurant")
   .get(orderController.getAllOrdersOfRestaurant);

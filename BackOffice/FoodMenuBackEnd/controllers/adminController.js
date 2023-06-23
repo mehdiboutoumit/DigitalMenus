@@ -75,18 +75,31 @@ exports.refreshToken = async (req, res, next) => {
 };
 exports.register = async (req, res, next) => {
   const { name, email, password } = req.body;
+  console.log(req)
   const adminFromDb = await adminService.findAdminByEmail(email);
   if (adminFromDb == null) {
-    const hashedPaswword = await bcrypt.hash(password, 10);
-    const newAdmin = await adminService.createAdmin({
-      name,
-      email,
-      password: hashedPaswword,
-    });
-    return res.json({ message: "success", user: newAdmin });
+    const { name, email, password } = req.body;
+    if(name && email && password){
+    try {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const newAdmin = await adminService.createAdmin({
+        name,
+        email,
+        password: hashedPassword,
+      });
+  
+      console.log('New admin created:', newAdmin);
+      res.status(200).json({ message: 'Admin created successfully' });
+    } catch (error) {
+      console.error('Error creating admin:', error);
+      res.status(500).json({ message: 'Failed to create admin' });
+    }
   } else {
-    return res.json({ message: "User Already exists" });
+    return res.status(500).json({ message: "User Already exists" });
   }
+}else{
+  return ""
+}
 };
 exports.logout = async (req, res, next) => {
   // delete access token on frontend

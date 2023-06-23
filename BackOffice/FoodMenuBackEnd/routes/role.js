@@ -6,11 +6,6 @@ const verifyPermission = require("../middlewares/verifyPermission");
 
 router
   .route("/") //
-  .post(
-    verifyJWT,
-    // verifyPermission(["admin"]),
-    roleController.createRole
-  )
   .get(
     verifyJWT,
     // verifyPermission(["admin"]),

@@ -2,8 +2,8 @@ import React from "react";
 import "./Orders.css";
 import { Table } from "react-bootstrap";
 
-const OrderDetails = ({ Gorder }) => {
-  const order = {
+const ShowOrder = ({ Gorder }) => {
+  Gorder = {
     id: 1,
     customerName: "John Doe",
     orderDate: "2023-06-05",
@@ -35,7 +35,7 @@ const OrderDetails = ({ Gorder }) => {
       },
     ],
   };
-
+  
   return (
     <div className="order-details">
       <h2 className="order-header">Order Details</h2>
@@ -43,19 +43,19 @@ const OrderDetails = ({ Gorder }) => {
         <tbody>
           <tr>
             <td><strong>Order ID:</strong></td>
-            <td>{order.id}</td>
+            <td>{Gorder.id}</td>
           </tr>
           <tr>
             <td><strong>Customer Name:</strong></td>
-            <td>{order.customerName}</td>
+            <td>{Gorder.customerName}</td>
           </tr>
           <tr>
             <td><strong>Order Date:</strong></td>
-            <td>{order.orderDate}</td>
+            <td>{Gorder.orderDate}</td>
           </tr>
         </tbody>
       </Table>
-      {order.individualOrders.map((individualOrder, index) => (
+      {Gorder.individualOrders.map((individualOrder, index) => (
         <div key={index} className="individual-order">
           <h3>Individual Order #{index + 1}</h3>
           <Table striped bordered>
@@ -90,4 +90,4 @@ const OrderDetails = ({ Gorder }) => {
   );
 };
 
-export default OrderDetails;
+export default ShowOrder;

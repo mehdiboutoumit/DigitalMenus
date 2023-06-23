@@ -39,6 +39,8 @@ import Orders from "./MyComponents/Orders/Orders";
 
 import ShowOrder from "./MyComponents/Orders/ShowOrder";
 
+import ContactSupport from "./MyComponents/ConatctSupport/ContactSupport";
+
 /// Pages
 // import Registration from "./pages/Registration";
 // import Login from "./pages/Login";
@@ -175,8 +177,8 @@ const Markup = () => {
     {url : "Orders" , component : Orders},
     {url : "ShowOrder", component : ShowOrder},
 
-  
-
+  //Contact support
+  {url : "ContactSupport", component : ContactSupport},
 
     /// Deshborad
     { url: "", component: Home },

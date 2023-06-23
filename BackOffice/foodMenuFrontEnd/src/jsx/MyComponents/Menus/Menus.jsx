@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState, useEffect, useContext } from 'react';
 import { MDBDataTable } from 'mdbreact';
 //import dataMenus from './dataMenus';
 import { Link } from '@material-ui/core';
@@ -6,10 +6,12 @@ import { Button, Modal } from 'react-bootstrap';
 import CreateMenu from './CreateMenu';
 import ShowMenu from './ShowMenu';
 import axios from 'axios';
+import AuthContext from '../../../context/AuthProvider';
 
 function Menus({ restaurantId }) {
 
-  
+  const { auth } = useContext(AuthContext);
+  const{ accessToken } = auth;
   
 const [dataMenus, setDataMenus] = useState([]);
 const [refresh, setRefresh] = useState(0);
@@ -23,7 +25,11 @@ const [refresh, setRefresh] = useState(0);
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/menus/restaurant/${restaurantId}`);
+      const response = await axios.get(`http://localhost:5000/api/menus/restaurant/${restaurantId}`, {
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+      });
       setDataMenus(response.data.menus);
       console.log(response.data.menus)
     } catch (error) {

@@ -1,29 +1,41 @@
+import axios from "axios";
 import React, { useState , useEffect } from "react";
+import { baseURL } from "../../../api/baseURL";
 
-const roles = [
-  { id: 1, role: "Serveur" },
-  { id: 2, role: "Cuisinier" }
-];
 
 const CreateCollab = ({ editCollabData }) => {
     const [name, setName] = useState("");
-    const [image, setImage] = useState("");
+    const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
     const [role, setRole] = useState("");
     const [notes, setNotes] = useState("");
+    const [roles, setRoles] = useState([]);
+const fetchRoles = async()=>{
+    try {
+    
+        const res =  await axios.get(`${baseURL}/role/`);
+setRoles(res.data.role);      
+ 
+    } catch (error) {
+      console.log("Error fetching roles",error);
+    }
+  }
+  useEffect(()=>{
+      fetchRoles();
+  },[])
   
     useEffect(() => {
       if (editCollabData) {
         // Fill the form fields with the old information
         setName(editCollabData.name || "");
-        setImage(editCollabData.image || "");
+        setPassword(editCollabData.password || "");
         setEmail(editCollabData.email || "");
         setRole(editCollabData.role || "");
         setNotes(editCollabData.notes || "");
       } else {
         // Reset the form fields
         setName("");
-        setImage("");
+        setPassword("");
         setEmail("");
         setRole("");
         setNotes("");
@@ -33,7 +45,7 @@ const CreateCollab = ({ editCollabData }) => {
     const handleSubmit = (e) => {
       e.preventDefault();
       // Handle form submission
-      console.log("Submit", { name, image, email, role, notes });
+      console.log("Submit", { name, password, email, role, notes });
     };
   
     return (
@@ -48,16 +60,7 @@ const CreateCollab = ({ editCollabData }) => {
             onChange={(e) => setName(e.target.value)}
           />
         </div>
-        <div className="form-group">
-          <label htmlFor="image">Image</label>
-          <input
-            type="text"
-            className="form-control"
-            id="image"
-            value={image}
-            onChange={(e) => setImage(e.target.value)}
-          />
-        </div>
+    
         <div className="form-group">
           <label htmlFor="email">Email</label>
           <input
@@ -66,6 +69,17 @@ const CreateCollab = ({ editCollabData }) => {
             id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="password">password</label>
+          <input
+            type="password"
+            className="form-control"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
         </div>
         <div className="form-group">

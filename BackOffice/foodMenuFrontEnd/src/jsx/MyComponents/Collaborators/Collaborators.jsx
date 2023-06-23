@@ -1,19 +1,26 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useState, useEffect, useContext } from "react";
 import { MDBDataTable } from "mdbreact";
 //import dataCollab from "./dataCollab.jsx";
 import { Dropdown, Button, Modal } from "react-bootstrap";
 import axios from "axios";
-//import CreateCollab from "./createCollab";
+import CreateCollab from "./createCollab";
+import AuthContext from "../../../context/AuthProvider";
 
 const Collaborators = (restaurantId) => {
   // const rows = dataCollab;
+  const { auth } = useContext(AuthContext);
+  const{ accessToken } = auth;
   const [dataCollab, setDataCollab] = useState([])
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [editCollabData, setEditCollabData] = useState(null);
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/user/restaurant/${restaurantId.restaurantId}`);
+      const response = await axios.get(`http://localhost:5000/api/user/restaurant/${restaurantId.restaurantId}`, {
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+      });
 
       const users = response.data.users;
       for (const user of users) {
@@ -81,7 +88,7 @@ const Collaborators = (restaurantId) => {
         <div className="col-xl-12">
           <div className="table-responsive">
           <div className="d-flex justify-content-end mb-3">
-            {/* <Button variant="primary" onClick={handleShowCreateModal}>
+            <Button variant="primary" onClick={handleShowCreateModal}>
               Ajouter un collaborateur
             </Button>
 
@@ -94,7 +101,7 @@ const Collaborators = (restaurantId) => {
               <Modal.Body>
                 <CreateCollab editCollabData={editCollabData} />
               </Modal.Body>
-            </Modal> */}
+            </Modal>
             </div>
 
             <div className="display mb-4 dataTablesCard">

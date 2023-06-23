@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react";
 import { Link, useHistory } from "react-router-dom";
 import AuthContext from "../../../context/AuthProvider";
 import axios from "axios";
+import { baseURL } from "../../../api/baseURL";
 const LOGIN_URL = "/api/admin/login";
 
 const Login = () => {
@@ -9,7 +10,8 @@ const Login = () => {
   const navigation = useHistory();
   const [loginData, setLoginData] = useState({});
   const [loading, setLoading] = useState(false);
-  const handleBlur = (e) => {
+  const [err, setErr ] = useState("");
+    const handleBlur = (e) => {
     const newLoginData = { ...loginData };
     newLoginData[e.target.name] = e.target.value;
     setLoginData(newLoginData);
@@ -20,35 +22,40 @@ const Login = () => {
     try {
       setLoading(true);
       const response = await axios.post(
-        LOGIN_URL,
+        `${baseURL}/admin/login`,
         JSON.stringify({
           email: loginData.email,
           password: loginData.password,
         }),
         {
           headers: { "Content-Type": "application/json" },
-          withCredentials: true,
+          withCredentials: false,
         }
       );
-      const accesToken = response?.data?.accesToken;
-      console.log(response.accesToken);
+      const accessToken = response?.data?.accessToken;
+      console.log(response.data);
       console.log(JSON.stringify(response.data));
       setAuth({
         email: loginData.email,
         password: loginData.password,
-        accesToken,
+        accessToken,
       });
+      console.log("accesss ",accessToken)
       navigation.push("/");
     } catch (err) {
       setLoading(false);
       console.log(err);
       if (!err?.response) {
         console.log("No Server Response");
+        setErr("Probleme de serveur")
       } else if (err.response.status === 400) {
+        setErr("Email ou password non rempli")
         console.log("Missing Username or Password");
       } else if (err.response.status === 401) {
+        setErr("Non autorisé")
         console.log("Unauthorized");
       } else {
+        setErr("Echec")
         console.log("LoginFailed");
       }
     }
@@ -114,6 +121,9 @@ const Login = () => {
                       </Link>
                     </div>
                   </div>
+                 {err && <div  className="alert alert-danger d-flex justify-content-center mt-4 mb-4">
+                    {err}
+                  </div>}
                   <div className="text-center">
                     <button
                       type="submit"

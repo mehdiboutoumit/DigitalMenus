@@ -16,7 +16,11 @@ const Tables = ({restaurantId}) => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/table/restaurant/${restaurantId}`);
+      const response = await axios.get(`http://localhost:5000/api/table/restaurant/${restaurantId}`, {
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+      });
       const tableData = response.data.tables;
 
       // Fetch menu details for each row
@@ -64,7 +68,11 @@ const Tables = ({restaurantId}) => {
 
     for (const menuId of menuIds) {
       try {
-        const response = await axios.get(`http://localhost:5000/api/menus/${menuId}`);
+        const response = await axios.get(`http://localhost:5000/api/menus/${menuId}`, {
+          headers: {
+            authorization: `Bearer ${accessToken}`,
+          },
+        });
         const menu = response.data;
 
         menuList.push(menu);
@@ -81,10 +89,10 @@ const Tables = ({restaurantId}) => {
   }, [] );
 
   const handleGenerateQRCode = (tableId) => {
-    if(window.confirm("QR ?")){
+    if(window.confirm("Generer le code QR ?")){
     // Generate the QR code containing the table ID and menu IDs
     const qrCodeData = {
-      tableId: tableId,
+      id: tableId,
     };
   
     // Convert the qrCodeData object to a JSON string

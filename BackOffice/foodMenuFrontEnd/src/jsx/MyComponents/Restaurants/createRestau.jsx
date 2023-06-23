@@ -44,8 +44,8 @@ const response = await axios.post("http://localhost:5000/api/restaurant/add", fo
      
 
      
-          <div className="card">
-            <div className="card-header">
+          <div className="card" style={{ textAlign: "center" }}>
+            <div className="card-header" >
               <h4 className="card-title">Creer un restaurant</h4>
             </div>
             <div className="card-body">

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { Modal, Button } from 'react-bootstrap';
 import CreateCategory from '../Categories/createCategory';
@@ -7,8 +7,12 @@ import axios from 'axios';
 import { baseURL } from '../../../api/baseURL';
 import CreatePortion from '../Portions/CreatePortion'; 
 import CreateExtra from '../Extras/CreateExtra';
+import AuthContext from '../../../context/AuthProvider';
+
 
 const ShowMenu = () => {
+  const { auth } = useContext(AuthContext);
+  const{ accessToken } = auth;
   const {menuId} = useParams();
   const [category, setCategory] = useState([]);
   const [showCreateCategoryModal, setShowCreateCategoryModal] = useState(false);
@@ -40,7 +44,11 @@ const ShowMenu = () => {
   
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/category/menu/${menuId}`);
+        const response = await axios.get(`http://localhost:5000/api/category/menu/${menuId}`, {
+          headers: {
+            authorization: `Bearer ${accessToken}`,
+          },
+        });
         const categoryData = response.data.categories;
        
   
@@ -52,7 +60,11 @@ const ShowMenu = () => {
  
           const updatedCategories = {};
           for (const category of categoryData) {
-            const response = await axios.get(`http://localhost:5000/api/dish/category/${category.id}`);
+            const response = await axios.get(`http://localhost:5000/api/dish/category/${category.id}`, {
+              headers: {
+                authorization: `Bearer ${accessToken}`,
+              },
+            });
             const dishes = response.data.dishes;
          
             if (dishes.length > 0) {
@@ -64,11 +76,19 @@ const ShowMenu = () => {
            
 
           }
-          const response = await axios.get(`http://localhost:5000/api/portion/`);
+          const response = await axios.get(`http://localhost:5000/api/portion/`, {
+            headers: {
+              authorization: `Bearer ${accessToken}`,
+            },
+          });
           const portionsData = response.data.portions;
           setPortions(portionsData);
 
-          const res = await axios.get(`http://localhost:5000/api/extra/`);
+          const res = await axios.get(`http://localhost:5000/api/extra/`, {
+            headers: {
+              authorization: `Bearer ${accessToken}`,
+            },
+          });
           const extrasData = res.data.extras;
           setExtras(extrasData);
 
@@ -151,10 +171,18 @@ const ShowMenu = () => {
 
 
     for (const portion of portions){
-      await axios.post('http://localhost:5000/api/portion/add', portion);
+      await axios.post('http://localhost:5000/api/portion/add', portion, {
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+      });
   }
   for (const extra of extras){
-    await axios.post('http://localhost:5000/api/extra/add', extra);
+    await axios.post('http://localhost:5000/api/extra/add', extra, {
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+      },
+    });
 }
     
    }

@@ -1,15 +1,25 @@
+import axios from "axios";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import { baseURL } from "../../../api/baseURL";
 
 const Registration = () => {
    const [registrationData, setRegistrationData] = useState({});
+   const history = useHistory();
    const handleBlur = (e) => {
       const newRegistrationData = { ...registrationData };
       newRegistrationData[e.target.name] = e.target.value;
       setRegistrationData(newRegistrationData);
    };
-   const submitHandler = (e) => {
+   const submitHandler = async(e) => {
       e.preventDefault();
+      try {
+         const res = await axios.post(`${baseURL}/admin/register`,registrationData);
+         history.push(`/login`); 
+               
+      } catch (error) {
+         console.log(error);
+      }
       
    };
    return (
@@ -25,7 +35,7 @@ const Registration = () => {
                         
                         <form
                            action=""
-                           onSubmit={(e) => e.preventDefault(submitHandler)}
+                           onSubmit={submitHandler}
                         >
                            <div className="form-group">
                               <label className="mb-1 "> <strong>Username</strong> </label>
@@ -39,14 +49,14 @@ const Registration = () => {
                            </div>
                            <div className="form-group">
                               <label className="mb-1 ">   <strong>Email</strong>  </label>
-                              <input  type="email" className="form-control"  placeholder="hello@example.com"  name="Email"  onChange={handleBlur}   />
+                              <input  type="email" className="form-control"  placeholder="hello@example.com"  name="email"  onChange={handleBlur}   />
                            </div>
                            <div className="form-group">
                               <label className="mb-1 ">   <strong>Password</strong>  </label>
-                              <input type="password" className="form-control" value="Password"  onChange={handleBlur}  />
+                              <input type="password" className="form-control" name="password"  onChange={handleBlur}  />
                            </div>
                            <div className="text-center mt-4">
-                              <button type="submit" className="btn btn-primary btn-block"  onClick={() => submitHandler} >  Sign me up  </button>
+                              <button type="submit" className="btn btn-primary btn-block"   >  Sign me up  </button>
                            </div>
                         </form>
                         <div className="new-account mt-3">

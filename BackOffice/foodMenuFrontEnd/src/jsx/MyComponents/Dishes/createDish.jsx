@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import axios from "axios";
+import AuthContext from "../../../context/AuthProvider";
 
 const CreateDish = ({  editDishData,  onCreateDish, update }) => {
+  const { auth } = useContext(AuthContext);
+  const{ accessToken } = auth;
   const [name, setName] = useState("");
   const [image, setImage] = useState(null);
   const [description, setDescription] = useState("");
@@ -72,6 +75,8 @@ const CreateDish = ({  editDishData,  onCreateDish, update }) => {
         await axios.post('http://localhost:5000/api/dish/add', dishData, {
           headers: {
             'Content-Type': 'multipart/form-data',
+            authorization: `Bearer ${accessToken}`,
+            
           },
         });
       } else {

@@ -66,7 +66,7 @@ exports.login = async (req, res, next) => {
         accessToken,
       });
     } else {
-      return resstatus(400).json({ message: "Wrong Email or Password" });
+      return res.status(400).json({ message: "Wrong Email or Password" });
     }
   } else {
     return res.status(400).json({ message: "Wrong Email or Password" });

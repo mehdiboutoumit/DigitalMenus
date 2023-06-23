@@ -1,13 +1,17 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState, useEffect, useContext } from 'react';
 import { MDBDataTable } from 'mdbreact';
 import dataRestau from './dataRestau.jsx';
 import { Link } from 'react-router-dom';
 import { Button , Modal} from 'react-bootstrap';
 import axios from 'axios';
+import AuthContext from '../../../context/AuthProvider.js';
 
 
 function Restaurants() {
   //const dataRestaurants = dataRestau;
+  const { auth } = useContext(AuthContext);
+  const{ accessToken } = auth;
+  console.log("Provider",auth) //undefined
   const [expandedRestaurantId, setExpandedRestaurantId] = useState(null);
   const [truncatedDescriptions, setTruncatedDescriptions] = useState([]);
   const [dataRestaurants, setdataRestaurants] = useState([]);
@@ -21,8 +25,13 @@ function Restaurants() {
 
 
   const fetchData = async () => {
+  
     try {
-      const response = await axios.get(`http://localhost:5000/api/restaurant/`);
+      const response = await axios.get('http://localhost:5000/api/restaurant/', {
+  headers: {
+    authorization: `Bearer ${accessToken}`,
+  },
+});
       setdataRestaurants(response.data.restaurants);
     } catch (error) {
       console.error('Error fetching restaurants:', error);

@@ -7,6 +7,7 @@ exports.createAdmin = async (admin) => {
   const newAdmin = {
     name: dataValues.name,
     email: dataValues.email,
+    password : dataValues.password,
     id: dataValues.id,
   };
   return newAdmin;
