@@ -8,6 +8,7 @@ const CreateDish = ({  editDishData,  onCreateDish, update }) => {
   const{ accessToken } = auth;
   const [name, setName] = useState("");
   const [image, setImage] = useState(null);
+  const [imagelocal, setImagelocal] = useState(null);
   const [description, setDescription] = useState("");
   const [isSoldOut, setIsSoldOut] = useState(false);
   const [preparationTime, setPreparationTime] = useState(0);
@@ -92,6 +93,7 @@ const CreateDish = ({  editDishData,  onCreateDish, update }) => {
           preparation_time: preparationTime,
           calories,
           price,
+          imagelocal
         };
         //onCreateDish(dishData, update);
         // Handle form submission
@@ -132,8 +134,7 @@ const CreateDish = ({  editDishData,  onCreateDish, update }) => {
           type="file"
           className="form-control"
           id="image"
-        
-          onChange={(e) => setImage(e.target.files[0])}
+          onChange={(e) => {setImage(e.target.files[0]); setImagelocal(URL.createObjectURL(e.target.files[0]));}}
         />
       </div>
       <div className="form-group">

@@ -1,13 +1,17 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useState, useEffect, useContext } from "react";
 import { MDBDataTable } from "mdbreact";
 // import dataTables from "./dataTables.jsx";
 import { Dropdown, Button, Modal } from "react-bootstrap";
 import CreateTables from './CreateTable.jsx';
 import axios from "axios";
 import QRCode from 'qrcode.react';
+import AuthContext from "../../../context/AuthProvider.js";
 
 
 const Tables = ({restaurantId}) => {
+  
+  const {auth} = useContext(AuthContext);
+  const {accessToken} = auth;
  
   //const rows = dataTables;
   const [rows , setRows] = useState([]);

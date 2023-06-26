@@ -5,11 +5,14 @@ import { Link } from 'react-router-dom';
 import { Button , Modal} from 'react-bootstrap';
 import axios from 'axios';
 import AuthContext from '../../../context/AuthProvider.js';
+import { frontURL } from '../../../api/frontURL.js';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min.js';
 
 
 function Restaurants() {
   //const dataRestaurants = dataRestau;
   const { auth } = useContext(AuthContext);
+  const history = useHistory();
   const{ accessToken } = auth;
   console.log("Provider",auth) //undefined
   const [expandedRestaurantId, setExpandedRestaurantId] = useState(null);
@@ -34,6 +37,7 @@ function Restaurants() {
 });
       setdataRestaurants(response.data.restaurants);
     } catch (error) {
+      history.push(`/login`)
       console.error('Error fetching restaurants:', error);
     }
   };

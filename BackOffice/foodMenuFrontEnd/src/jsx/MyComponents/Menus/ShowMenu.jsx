@@ -13,7 +13,10 @@ import AuthContext from '../../../context/AuthProvider';
 const ShowMenu = () => {
   const { auth } = useContext(AuthContext);
   const{ accessToken } = auth;
+
   const {menuId} = useParams();
+  const [menuName, setMenuName] = useState("");
+
   const [category, setCategory] = useState([]);
   const [showCreateCategoryModal, setShowCreateCategoryModal] = useState(false);
   const [categories, setCategories] = useState({});
@@ -44,13 +47,21 @@ const ShowMenu = () => {
   
     const fetchData = async () => {
       try {
+        const res = await axios.get(`http://localhost:5000/api/menus/${menuId}`, {
+          headers: {
+            authorization: `Bearer ${accessToken}`,
+          },
+        });
+        setMenuName(res.data.menu.name);
         const response = await axios.get(`http://localhost:5000/api/category/menu/${menuId}`, {
           headers: {
             authorization: `Bearer ${accessToken}`,
           },
         });
-        const categoryData = response.data.categories;
-       
+        const categoryData = response.data.categories.map((category) => ({
+          ...category,
+          fromDB: true, 
+        }));       
   
         // Check if the component is still mounted before updating state
         if (isMounted) {
@@ -65,7 +76,10 @@ const ShowMenu = () => {
                 authorization: `Bearer ${accessToken}`,
               },
             });
-            const dishes = response.data.dishes;
+            const dishes = response.data.dishes.map((d) => ({
+              ...d,
+              fromDB: true, 
+            }));
          
             if (dishes.length > 0) {
               updatedCategories[category.name] = dishes;
@@ -454,7 +468,10 @@ const ShowMenu = () => {
   
   return (
     <>
-  <div className="border p-4 justify-content-center " style={{ maxWidth: "70%", margin: "0 auto" }}>
+<div className="text-primary text-center">
+   <h1 style={{color : 'orange', fontSize: "60px", fontWeight: "bold", fontFamily: "Rockwell Extra Bold" }}>{menuName}</h1>
+</div>
+<div className="border p-4 justify-content-center " style={{ maxWidth: "70%", margin: "0 auto" }}>
   <Button onClick={handleAddCategory} className="btn btn-primary mx-auto d-block mb-4">
     Ajouter Category
   </Button>
@@ -469,7 +486,7 @@ const ShowMenu = () => {
             <h2 className="card-title text-center">{categoryName}</h2>
             <div className="d-flex justify-content-center mb-4">
 
-              <img src={`http://localhost:5000/images/${category[categoryIndex].image}`}  style={{
+              <img src={category[categoryIndex].fromDB ?  `http://localhost:5000/images/${category[categoryIndex].image}` : category[categoryIndex].imagelocal}  style={{
                         width: '100px',
                         height: '100px',
                         borderRadius: '10%',
@@ -502,7 +519,7 @@ const ShowMenu = () => {
                                   <div className="d-flex align-items-center text-center">
                                     <div className="rounded-circle" style={{ width: "30%", height: "30%", overflow: "hidden" }}>
                                       {/* <img src={`data:image/jpeg;base64,${Buffer.from(dish.image).toString('base64')}`} alt={dish.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} /> */}
-                                      <img src={`http://localhost:5000/images/${dish.image}`} alt={dish.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                                      <img src={dish.fromDB ? `http://localhost:5000/images/${dish.image}` : dish.imagelocal} alt={dish.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                                     </div>
                                     <div className="ml-5">{dish.name}</div>
                                     <div className="ml-5">{dish.calories} Calories</div>

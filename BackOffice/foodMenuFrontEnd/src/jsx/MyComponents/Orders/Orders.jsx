@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useState, useEffect, useContext } from "react";
 import { MDBDataTable } from "mdbreact";
 import { Dropdown, Button, Modal, Badge } from "react-bootstrap";
 import { Link } from 'react-router-dom';
@@ -7,9 +7,11 @@ import {baseURL} from '../../../api/baseURL';
 import axios from "axios";
 import Select from 'react-select';
 import { useHistory } from "react-router-dom";
+import AuthContext from "../../../context/AuthProvider";
 
 const Orders = () => {
-  const history = useHistory()
+  const {auth} = useContext(AuthContext);
+  const {accessToken} = auth;
   const [orders, setOrders] = useState([]);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [editOrderData, setEditOrderData] = useState(null);

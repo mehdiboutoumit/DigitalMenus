@@ -6,7 +6,9 @@ import { baseURL } from "../../../api/baseURL";
 const CreateCategory = ({ editCategoryData, onCreateCategory, update }) => {
   const [name, setName] = useState("");
   const [image, setImage] = useState(null);
+  const [imagelocal, setImagelocal] = useState(null);
   const [description, setDescription] = useState("");
+  
 
   useEffect(() => {
     if (editCategoryData) {
@@ -34,6 +36,7 @@ const CreateCategory = ({ editCategoryData, onCreateCategory, update }) => {
           name: name,
           image: image,
           description: description,
+          imagelocal : imagelocal
         };
         const CatData = new FormData();
         CatData.append('id', categoryData.id)
@@ -64,6 +67,7 @@ const CreateCategory = ({ editCategoryData, onCreateCategory, update }) => {
           name: name,
           image: image,
           description: description,
+          imagelocal : imagelocal
         };
         onCreateCategory(categoryData, update);
       }
@@ -92,7 +96,7 @@ const CreateCategory = ({ editCategoryData, onCreateCategory, update }) => {
           type="file"
           className="form-control"
           id="image"
-          onChange={(e) => setImage(e.target.files[0])}
+          onChange={(e) => {setImage(e.target.files[0]); setImagelocal(URL.createObjectURL(e.target.files[0]));}}
         />
       </div>
       <div className="form-group">
