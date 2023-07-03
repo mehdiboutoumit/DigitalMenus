@@ -130,6 +130,7 @@ import MainSweetAlert from "./components/PluginsMenu/Sweet Alert/SweetAlert";
 import Toastr from "./components/PluginsMenu/Toastr/Toastr";
 import JqvMap from "./components/PluginsMenu/Jqv Map/JqvMap";
 import RechartJs from "./components/charts/rechart";
+import Logout from "./MyComponents/Auth/Logout";
 
 
 
@@ -141,6 +142,7 @@ const Markup = () => {
     {url : "login", component: Login},
     {url : "forgotpassword", component: ForgotPassword},
     {url : "userlogin", component: LoginUser},
+    {url : "logout", component: Logout},
 
 
     
