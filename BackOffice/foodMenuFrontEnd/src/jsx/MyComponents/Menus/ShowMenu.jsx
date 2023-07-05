@@ -8,6 +8,11 @@ import { baseURL } from '../../../api/baseURL';
 import CreatePortion from '../Portions/CreatePortion'; 
 import CreateExtra from '../Extras/CreateExtra';
 import AuthContext from '../../../context/AuthProvider';
+import MenuPDF from './MenuPDF';
+import { ToastContainer, toast } from 'react-toastify';
+import swal from 'sweetalert';
+
+
 
 
 const ShowMenu = () => {
@@ -126,6 +131,8 @@ const ShowMenu = () => {
     //   isMounted = false;
     // };
   }, []);
+
+ 
   
   const handleSave = async () => {
     try {
@@ -204,7 +211,16 @@ const ShowMenu = () => {
       }
      
 
-
+    
+        toast.success("Menu enregistré ✅ !", {
+           position: "bottom-right",
+           autoClose: 5000,
+           hideProgressBar: false,
+           closeOnClick: true,
+           pauseOnHover: true,
+           draggable: true,
+        });
+    
   
       console.log('Data saved successfully!');
       console.log('Updated Categories:', updatedCategories);
@@ -254,11 +270,27 @@ const ShowMenu = () => {
       setCategory((prevCategories) =>
         prevCategories.map((cat) => (cat.id === newCategory.id ? updatedCategory : cat))
       );
+      toast.success("Categorie modifiée ✅ !", {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+     });
     } else {
    
       // If the category is not already in the state, add it as a new category
       const updatedCategories = [...category, newCategory];
       setCategory(updatedCategories);
+      toast.success("Categorie Ajoutée ✅ !", {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+     });
     }
   
     // Close the modal and reset the state
@@ -278,8 +310,17 @@ const ShowMenu = () => {
   }
   
   const handleDeleteCategory = (id, categoryName) => {
-    if (window.confirm("Are you sure you want to delete this category?")) {
-      const updatedCategories = { ...categories };
+    swal({
+      title: `êtes-vous sûr de vouloir supprimer la categorie ${categoryName}?`,
+      text:
+         "",
+      icon: "warning",
+      buttons: true,
+      buttons: [ "Annuler","Supprimer"],
+      dangerMode: true,
+   }).then((willDelete) => {
+      if (willDelete) {
+        const updatedCategories = { ...categories };
       delete updatedCategories[categoryName];
       setCategories(updatedCategories);
   
@@ -291,9 +332,21 @@ const ShowMenu = () => {
         })
         .catch((error) => {
           // Handle the error
+          swal(
+            "Erreur",
+         );
           console.error("Error deleting category:", error);
+
         });
-    }
+         swal(
+            "Categorie supprimée avec succes !",
+            {
+               icon: "success",
+            }
+         );
+      }
+    })
+   
   };
   
   
@@ -306,9 +359,17 @@ const ShowMenu = () => {
  
 
   const handleDeleteDish = (categoryName, index,id) => {
-    if (window.confirm("Are you sure you want to delete this dish?")) {
-      // Implement the deletion logic here
-      axios
+    swal({
+      title: `êtes-vous sûr de vouloir supprimer ce plat ?`,
+      text:
+         "",
+      icon: "warning",
+      buttons: true,
+      buttons: [ "Annuler","Supprimer"],
+      dangerMode: true,
+   }).then((willDelete) => {
+      if (willDelete) {
+        axios
         .delete(`http://localhost:5000/api/dish/delete/${id}`)
         .then((response) => {
           // Handle the successful deletion
@@ -316,13 +377,22 @@ const ShowMenu = () => {
         })
         .catch((error) => {
           // Handle the error
+          swal("Erreur !")
           console.error("Error deleting dish:", error);
         });
     
     const updatedCategories = { ...categories };
     updatedCategories[categoryName].splice(index, 1);
     setCategories(updatedCategories);
+         swal(
+            "Plat supprimé avec succes !",
+            {
+               icon: "success",
+            }
+         );
       }
+    })
+ 
   };
 
   const handleShowCreateDishModal = (categoryName) => {
@@ -345,6 +415,14 @@ const ShowMenu = () => {
       updatedCategories[selectedCategoryName] = [...updatedCategories[selectedCategoryName], dish];
       setCategories(updatedCategories);
     }
+    toast.success("Plat ajouté ✅ !", {
+      position: "bottom-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+   });
   
     handleCloseCreateDishModal();
   };
@@ -367,8 +445,16 @@ const ShowMenu = () => {
       // Update the dish in the array
       updatedCategories[categoryToUpdate][dishIndex] = updatedDish;
       setCategories(updatedCategories);
+      toast.success("Plat modifié ✅ !", {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+     });
     }
-  
+    
     handleCloseCreateDishModal();
   };
   
@@ -383,6 +469,14 @@ const ShowMenu = () => {
 
   const handleCreatePortion = (portion) => {
     setPortions([...portions, portion]);
+    toast.success("Portion ajoutée ✅ !", {
+      position: "bottom-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+   });
   handleCloseCreatePortionModal();
  
   }
@@ -399,11 +493,29 @@ const ShowMenu = () => {
     );
  
     setPortions(updatedPortions);
+    toast.success("Portion modifiée ✅ !", {
+      position: "bottom-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+   });
     setShowCreatePortionModal(false);
+    setEditPortionData(null);
   };
   const handleDeletePortion = (id) => {
-    if(window.confirm("Supprimer ?")){
-    axios
+    swal({
+      title: `êtes-vous sûr de vouloir supprimer cette portion ?`,
+      text:
+         "",
+      icon: "warning",
+      buttons: true,
+      buttons: [ "Annuler","Supprimer"],
+      dangerMode: true,
+   }).then((willDelete) => {
+      if (willDelete) {
+        axios
         .delete(`http://localhost:5000/api/portion/delete/${id}`)
         .then((response) => {
           // Handle the successful deletion
@@ -415,7 +527,15 @@ const ShowMenu = () => {
         });
     const updatedPortions = portions.filter((port) => port.id !== id);
     setPortions(updatedPortions);
+         swal(
+            "Portion supprimée avec succes !",
+            {
+               icon: "success",
+            }
+         );
       }
+    })
+  
   }
 
 
@@ -428,11 +548,21 @@ const ShowMenu = () => {
   const handleCloseCreateExtraModal = () => {
     setShowCreateExtraModal(false);
   };
+
   const handleCreateExtra = (extra) => {
     setExtras([...extras, extra]);
   handleCloseCreateExtraModal();
+  toast.success("Extra ajouté ✅ !", {
+    position: "bottom-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+ });
   console.log("Extra created", extra);
   }
+
   const handleEditExtra = (extra) => {
     setSelectedDishId(extra.id_dish);
     setEditExtraData(extra);
@@ -446,22 +576,48 @@ const ShowMenu = () => {
 
   setExtras(updatedExtras);
   setShowCreateExtraModal(false);
+  toast.success("Extra modifié ✅ !", {
+    position: "bottom-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+ });
+ setEditExtraData(null);
   }
   const handleDeleteExtra = (id) => {
-    if(window.confirm("Supprimer ?")){
-      axios
-          .delete(`http://localhost:5000/api/extra/delete/${id}`)
-          .then((response) => {
-            // Handle the successful deletion
-            console.log("Extra deleted successfully");
-          })
-          .catch((error) => {
-            // Handle the error
-            console.error("Error deleting extra:", error);
-          });
-      const updatedExtras = extras.filter((ext) => ext.id !== id);
-      setExtras(updatedExtras);
-        }
+    swal({
+      title: `êtes-vous sûr de vouloir supprimer cet extra ?`,
+      text:
+         "",
+      icon: "warning",
+      buttons: true,
+      buttons: [ "Annuler","Supprimer"],
+      dangerMode: true,
+   }).then((willDelete) => {
+      if (willDelete) {
+        axios
+        .delete(`http://localhost:5000/api/extra/delete/${id}`)
+        .then((response) => {
+          // Handle the successful deletion
+          console.log("Extra deleted successfully");
+        })
+        .catch((error) => {
+          // Handle the error
+          console.error("Error deleting extra:", error);
+        });
+    const updatedExtras = extras.filter((ext) => ext.id !== id);
+    setExtras(updatedExtras);
+         swal(
+            "Extra supprimé avec succes !",
+            {
+               icon: "success",
+            }
+         );
+      }
+    })
+  
   }
   
   
@@ -476,6 +632,9 @@ const ShowMenu = () => {
     Ajouter Category
   </Button>
   <hr />
+
+  {/*generate pdf */}
+ {/* <MenuPDF></MenuPDF> */}
 
   {Object.entries(categories).map(([categoryName, dishes], categoryIndex) => (
     <div key={categoryIndex} className="mb-4">
@@ -612,6 +771,17 @@ const ShowMenu = () => {
   ))}
 
 <Button onClick={handleSave} className="btn btn-primary mx-auto d-block mb-4">
+<ToastContainer
+                           position="top-right"
+                           autoClose={5000}
+                           hideProgressBar={false}
+                           newestOnTop
+                           closeOnClick
+                           rtl={false}
+                           pauseOnFocusLoss
+                           draggable
+                           pauseOnHover
+                        />
     Enregistrer
   </Button>
 </div>

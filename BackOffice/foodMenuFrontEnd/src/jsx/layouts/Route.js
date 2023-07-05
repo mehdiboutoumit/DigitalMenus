@@ -52,7 +52,7 @@ import Customers from "../components/AppsMenu/Shop/Customers/Customers";
 import ChartChartist from "../components/charts/chartflot";
 import SparklineChart from "../components/charts/Sparkline";
 import ChartJs from "../components/charts/Chartjs";
-import Chartist from "../components/charts/Chartist";
+// import Chartist from "../components/charts/Chartist";
 
 import BtcChart from "../components/charts/apexcharts/ApexChart";
 

@@ -34,15 +34,21 @@ const CreatePortionModal = ({ onCreatePortion, onEditPortion, dishId, editPortio
 
     if (editMode) {
       onEditPortion(updatedPortion);
-    } else {
-      onCreatePortion(updatedPortion);
-    }
-
-    // Reset the form fields
+        // Reset the form fields
     setName("");
     setCalories(0);
     setPrice(0);
     setEditMode(false);
+    } else {
+      onCreatePortion(updatedPortion);
+        // Reset the form fields
+    setName("");
+    setCalories(0);
+    setPrice(0);
+    setEditMode(false);
+    }
+
+  
   };
 
 

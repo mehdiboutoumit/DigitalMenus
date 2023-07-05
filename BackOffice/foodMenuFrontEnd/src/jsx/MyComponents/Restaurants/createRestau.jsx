@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Modal } from "react-bootstrap";
 import axios from "axios";
 import {v4 as uuidv4} from 'uuid';
+import { ToastContainer, toast } from "react-toastify";
 
 function CreateRestau() {
 const [name,setName] = useState('');
@@ -32,7 +33,21 @@ const response = await axios.post("http://localhost:5000/api/restaurant/add", fo
     "Content-Type": "multipart/form-data"
   }
 });
-      console.log("Restaurant saved successfully",image);
+
+toast.success("Restaurant creé ✅ !", {
+  position: "bottom-right",
+  autoClose: 2000,
+  hideProgressBar: false,
+  closeOnClick: true,
+  pauseOnHover: true,
+  draggable: true,
+  onClose: () => {
+    window.location.reload(); // Reload the page after the Toast notification is closed
+  }
+});
+      console.log("Restaurant saved successfully");
+      
+
       // Handle success, e.g., show a success message or redirect to another page
     } catch (error) {
       console.error("Error saving restaurant:", error);
@@ -46,7 +61,7 @@ const response = await axios.post("http://localhost:5000/api/restaurant/add", fo
      
           <div className="card" style={{ textAlign: "center" }}>
             <div className="card-header" >
-              <h4 className="card-title">Creer un restaurant</h4>
+              <h4 className="card-title">Créer un restaurant</h4>
             </div>
             <div className="card-body">
               <div className="basic-form">
@@ -125,6 +140,17 @@ const response = await axios.post("http://localhost:5000/api/restaurant/add", fo
             className="btn btn-primary"
             onClick={handleSave}
           >
+            <ToastContainer
+                           position="top-right"
+                           autoClose={5000}
+                           hideProgressBar={false}
+                           newestOnTop
+                           closeOnClick
+                           rtl={false}
+                           pauseOnFocusLoss
+                           draggable
+                           pauseOnHover
+                        />
             Enregistrer
           </Button>
        

@@ -15,7 +15,7 @@ exports.getAllOrdersOfRestaurant = async (idRestaurant) => {
     where: {
       id_restaurant: idRestaurant,
     },
-    attributes: ["id", "id_table", "id_restaurant","createdAt"],
+    attributes: ["id","state", "id_table", "id_restaurant","createdAt"],
     include: [
       {
         model: IndividualOrder,

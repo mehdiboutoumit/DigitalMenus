@@ -39,6 +39,8 @@ import Orders from "./MyComponents/Orders/Orders";
 
 import ShowOrder from "./MyComponents/Orders/ShowOrder";
 
+import Subs from "./MyComponents/Subs/Subs";
+
 import ContactSupport from "./MyComponents/ConatctSupport/ContactSupport";
 
 /// Pages
@@ -60,7 +62,7 @@ import Widget from "./pages/Widget";
 import Commandes from "./pages/commandes";
 import menus from "./pages/menus";
 /// Deshboard
-import Home from "./components/Dashboard/Home/Home";
+import Dashboard from "./MyComponents/Dashboard/Dashboard";
 import Companies from "./components/Dashboard/Companies/Companies";
 import Analytics from "./components/Dashboard/Analytics/Analytics";
 import Review from "./components/Dashboard/Review/Review";
@@ -178,12 +180,17 @@ const Markup = () => {
     //Orders
     {url : "Orders" , component : Orders},
     {url : "ShowOrder", component : ShowOrder},
+    
+    //Subs
+    {url : "Subs", component : Subs}
+    
+    ,
 
   //Contact support
   {url : "ContactSupport", component : ContactSupport},
 
     /// Deshborad
-    { url: "", component: Home },
+    { url: "", component: Dashboard },
     { url: "companies", component: Companies },
     { url: "analytics", component: Analytics },
     { url: "review", component: Review },

@@ -7,6 +7,7 @@ import axios from 'axios';
 import AuthContext from '../../../context/AuthProvider.js';
 import { frontURL } from '../../../api/frontURL.js';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min.js';
+import swal from 'sweetalert';
 
 
 function Restaurants() {
@@ -268,14 +269,33 @@ function Restaurants() {
   };
 
   const handleDelete = (id) => {
-    if (window.confirm("Supprimer ce restaurant ?")) {
-      axios
+    swal({
+      title: `êtes-vous sûr de vouloir supprimer ce restaurant ?`,
+      text:
+         "Cette action est irréversible",
+      icon: "warning",
+      buttons: true,
+      buttons: [ "Annuler","Supprimer"],
+      dangerMode: true,
+   }).then((willDelete) => {
+      if (willDelete) {
+        axios
         .delete(`http://localhost:5000/api/restaurant/delete/${id}`)
         .then(() => fetchData())
         .catch((error) => {
+          swal("Erreur");
           console.log(error);
         });
-    }
+
+         swal(
+            "Restaurant supprimé avec succes !",
+            {
+               icon: "success",
+            }
+         );
+      }
+    })
+ 
   };
 
   return (

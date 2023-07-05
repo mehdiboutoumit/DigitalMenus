@@ -16,7 +16,7 @@ const Toastr = () => {
    };
 
    const notifyBottomRight = () => {
-      toast.warn("✅ Bottom Right !", {
+      toast.success("✅ Bottom Right !", {
          position: "bottom-right",
          autoClose: 5000,
          hideProgressBar: false,

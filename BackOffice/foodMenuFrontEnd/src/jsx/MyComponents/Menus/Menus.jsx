@@ -230,6 +230,17 @@ const [refresh, setRefresh] = useState(0);
                 </Modal.Body>
                 </Modal>
 
+                <ToastContainer
+                           position="top-right"
+                           autoClose={5000}
+                           hideProgressBar={false}
+                           newestOnTop
+                           closeOnClick
+                           rtl={false}
+                           pauseOnFocusLoss
+                           draggable
+                           pauseOnHover
+                        />
             </div>
             <div className="display mb-4 dataTablesCard">
               <MDBDataTable

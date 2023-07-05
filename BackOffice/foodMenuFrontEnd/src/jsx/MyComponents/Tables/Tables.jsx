@@ -6,6 +6,7 @@ import CreateTables from './CreateTable.jsx';
 import axios from "axios";
 import QRCode from 'qrcode.react';
 import AuthContext from "../../../context/AuthProvider.js";
+import { ToastContainer, toast } from "react-toastify";
 
 
 const Tables = ({restaurantId}) => {
@@ -167,7 +168,19 @@ const Tables = ({restaurantId}) => {
   };
 
   const handleCloseCreateModal = () => {
+    toast.success("Table creé ✅ !", {
+      position: "bottom-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true
+    });
     setShowCreateModal(false);
+    try{
+      fetchData();}catch(e){
+        console.log(e);
+      }
   };
 
   return (
@@ -190,6 +203,17 @@ const Tables = ({restaurantId}) => {
                 <CreateTables onCloseModal={handleCloseCreateModal} editTableData={editTableData} restaurantId={restaurantId} />
               </Modal.Body>
             </Modal>
+            <ToastContainer
+                           position="top-right"
+                           autoClose={5000}
+                           hideProgressBar={false}
+                           newestOnTop
+                           closeOnClick
+                           rtl={false}
+                           pauseOnFocusLoss
+                           draggable
+                           pauseOnHover
+                        />
             </div>
 
             <div className="display mb-4 dataTablesCard text-center">
