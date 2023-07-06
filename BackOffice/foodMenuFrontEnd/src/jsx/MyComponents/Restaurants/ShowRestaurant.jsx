@@ -6,6 +6,7 @@ import Menus from "../Menus/Menus";
 import Tables from "../Tables/Tables";
 import Collaborators from "../Collaborators/Collaborators";
 import axios from "axios";
+import { Nav, Tab } from "react-bootstrap";
 
 const RestaurantView = () => {
 
@@ -85,6 +86,12 @@ const RestaurantView = () => {
   //   })),
   // };
 
+  const [activeTab, setActiveTab] = useState('tab1');
+
+  const handleTabSelect = (tab) => {
+    setActiveTab(tab);
+  };
+
   return (
     <div className="restaurant-view text-center">
       <h3 className="text-center mb-4">
@@ -93,16 +100,33 @@ const RestaurantView = () => {
           <h1 style={{ fontSize: "60px", fontWeight: "bold", fontFamily: "Rockwell Extra Bold" }}>{restauName}</h1>
         </span>
       </h3>
-      <div className="justify-content-center border border-2  rounded p-5">
-      <h2 className="text-center text-uppercase mb-4">
-        <span className="bg-primary px-4 py-2 rounded text-white">
-          Tables
-        </span>
-      </h2>
-        <Tables restaurantId={restaurantId} />
-      </div>
+      <Tab.Container activeKey={activeTab} onSelect={handleTabSelect}>
+        <Nav variant="tabs" className="nav-pills mb-4">
+          <Nav.Item>
+            <Nav.Link eventKey="tab1">Tables</Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link eventKey="tab2">Menus</Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link eventKey="tab3">Collaborateurs</Nav.Link>
+          </Nav.Item>
+        </Nav>
+
+        <Tab.Content>
+          <Tab.Pane eventKey="tab1">
+                <div className="justify-content-center border border-2  rounded p-5">
+            <h2 className="text-center text-uppercase mb-4">
+              <span className="bg-primary px-4 py-2 rounded text-white">
+                Tables
+              </span>
+            </h2>
+              <Tables restaurantId={restaurantId} />
+            </div>
     
-      <div className="justify-content-between border border-2  rounded p-5">
+          </Tab.Pane>
+          <Tab.Pane eventKey="tab2">
+          <div className="justify-content-between border border-2  rounded p-5">
       <h2 className="text-center text-uppercase mb-4">
         <span className="bg-primary px-4 py-2 rounded text-white">
           Menus
@@ -110,8 +134,9 @@ const RestaurantView = () => {
       </h2>
         <Menus restaurantId={restaurantId}  />
       </div>
-   
-      <div className="justify-content-between border border-2  rounded p-5">
+            </Tab.Pane>
+            <Tab.Pane eventKey="tab3">
+            <div className="justify-content-between border border-2  rounded p-5">
       <h2 className="text-center text-uppercase mb-4">
         <span className="bg-primary px-4 py-2 rounded text-white">
           Collaborateurs
@@ -119,6 +144,14 @@ const RestaurantView = () => {
       </h2>
         <Collaborators restaurantId={restaurantId}  />
       </div>
+            
+            </Tab.Pane>
+      </Tab.Content>
+      </Tab.Container>
+      
+     
+   
+      
     </div>
   );
 };

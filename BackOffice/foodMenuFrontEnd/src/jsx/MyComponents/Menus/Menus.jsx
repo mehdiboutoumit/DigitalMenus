@@ -7,6 +7,8 @@ import CreateMenu from './CreateMenu';
 import ShowMenu from './ShowMenu';
 import axios from 'axios';
 import AuthContext from '../../../context/AuthProvider';
+import { ToastContainer } from 'react-toastify';
+import swal from 'sweetalert';
 
 function Menus({ restaurantId }) {
 
@@ -153,15 +155,35 @@ const [refresh, setRefresh] = useState(0);
   });
 
   const handleDelete = async(Id)=>{
-    try {
-      const response = await axios.delete(`http://localhost:5000/api/menus/delete/${Id}`);
-      // Handle the response if needed
-      console.log(response.data); // Assuming the server returns a response message or data
-      fetchData();  } 
-      catch (error) {
-      // Handle the error
-      console.error(error);
-    }
+    swal({
+      title: `êtes-vous sûr de vouloir supprimer ce menu ?`,
+      text:
+         "Cette action est irréversible",
+      icon: "warning",
+      buttons: true,
+      buttons: [ "Annuler","Supprimer"],
+      dangerMode: true,
+   }).then(async(willDelete) => {
+      if (willDelete) {
+        try {
+          const response = await axios.delete(`http://localhost:5000/api/menus/delete/${Id}`);
+          // Handle the response if needed
+          console.log(response.data); // Assuming the server returns a response message or data
+          fetchData();  } 
+          catch (error) {
+          // Handle the error
+          console.error(error);
+        }
+
+         swal(
+            "Menu supprimé avec succes !",
+            {
+               icon: "success",
+            }
+         );
+      }
+    })
+   
   };  
 
   const data = {

@@ -1,8 +1,12 @@
+import { MDBDataTable } from 'mdbreact';
 import React from 'react';
 
 function Subs() {
   return (
-    <div>Subs</div>
+    <>
+      <div>Subs</div>
+      <MDBDataTable ></MDBDataTable>
+    </>
   )
 }
 

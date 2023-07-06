@@ -6,6 +6,7 @@ import CreateTables from './CreateTable.jsx';
 import axios from "axios";
 import QRCode from 'qrcode.react';
 import AuthContext from "../../../context/AuthProvider.js";
+import swal from "sweetalert";
 import { ToastContainer, toast } from "react-toastify";
 
 
@@ -31,20 +32,22 @@ const Tables = ({restaurantId}) => {
       // Fetch menu details for each row
       const updatedRows = await Promise.all(
         tableData.map(async (row) => {
-          const menuIds = JSON.parse(row.id_menus);
+          console.log(row);
+          const menuIds = JSON.parse(row?.id_menus);
+          //const menuIds = row?.id_menus;
           const menuList = await getMenuDetails(menuIds);
           console.log("Menulist",menuList);
 
           return {
             ...row,
-            id_menus: (
+            div_menus: (
               <div>
-                {menuList.map((menu) => (
-                  <div key={menu.menu.id}>
-                  <a  href={`/ShowMenu/${menu.menu.id}`}>
+                {menuList.map((menu, index) => (
+                  <div key={index}>
+                  <a  href={`/ShowMenu/${menu.menu?.id}`}>
                     <img
-                      src={`http://localhost:5000/images/${menu.menu.image}`}
-                      alt={menu.menu.name}
+                      src={`http://localhost:5000/images/${menu.menu?.image}`}
+                      alt={menu.menu?.name}
                       style={{
                         width: '80px',
                         height: '80px',
@@ -53,7 +56,7 @@ const Tables = ({restaurantId}) => {
                         marginRight: '20px'
                       }}
                     />
-                    {menu.menu.name}
+                    {menu.menu?.name}
                   </a>
                   </div>
                 ))}
@@ -120,7 +123,7 @@ const Tables = ({restaurantId}) => {
     //  { label: "id", field: "id", sort: "asc" },
       { label: "Numero de la table", field: "numTable", sort: "asc" },
       { label: "Nombre de personnes", field: "size" },
-      { label: "Menus", field: "id_menus" },
+      { label: "Menus", field: "div_menus" },
       { label: "code QR", field: "qr" },
       {label : "Actions", field : "actions"}
      
@@ -147,18 +150,39 @@ const Tables = ({restaurantId}) => {
   const handleEdit = (rowData) => {
     // Set the collaborator data to editTableData state
     seteditTableData(rowData);
+    console.log(rowData);
     // Show the create modal
     setShowCreateModal(true);
   };
 
-  const handleDelete = async(rowData) => {
-    try {
-      const response = await axios.delete(`http://localhost:5000/api/table/delete/${rowData.id}`);
-      fetchData();
-     
-    } catch (error) {
-      console.error('Error deleting tables:', error);
-    }    console.log("Delete", rowData);
+  const handleDelete = (rowData) => {
+    swal({
+      title: `êtes-vous sûr de vouloir supprimer cete table ?`,
+      text:
+         "Cette action est irréversible",
+      icon: "warning",
+      buttons: true,
+      buttons: [ "Annuler","Supprimer"],
+      dangerMode: true,
+   }).then(async(willDelete) => {
+      if (willDelete) {
+        try {
+          const response = await axios.delete(`http://localhost:5000/api/table/delete/${rowData.id}`);
+          fetchData();
+         
+        } catch (error) {
+          console.error('Error deleting tables:', error);
+        }    console.log("Delete", rowData);
+
+         swal(
+            "Table supprimée avec succes !",
+            {
+               icon: "success",
+            }
+         );
+      }
+    })
+    
   };
 
   const handleShowCreateModal = () => {
@@ -168,14 +192,9 @@ const Tables = ({restaurantId}) => {
   };
 
   const handleCloseCreateModal = () => {
-    toast.success("Table creé ✅ !", {
-      position: "bottom-right",
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true
-    });
+   
+      seteditTableData([]);
+   
     setShowCreateModal(false);
     try{
       fetchData();}catch(e){
@@ -203,7 +222,16 @@ const Tables = ({restaurantId}) => {
                 <CreateTables onCloseModal={handleCloseCreateModal} editTableData={editTableData} restaurantId={restaurantId} />
               </Modal.Body>
             </Modal>
-            <ToastContainer
+           
+            </div>
+
+            <div className="display mb-4 dataTablesCard text-center">
+              <MDBDataTable striped small noBottomColumns hover align="middle" data={data} />
+            </div>
+          </div>
+        </div>
+      </div>
+      <ToastContainer
                            position="top-right"
                            autoClose={5000}
                            hideProgressBar={false}
@@ -214,14 +242,6 @@ const Tables = ({restaurantId}) => {
                            draggable
                            pauseOnHover
                         />
-            </div>
-
-            <div className="display mb-4 dataTablesCard text-center">
-              <MDBDataTable striped small noBottomColumns hover align="middle" data={data} />
-            </div>
-          </div>
-        </div>
-      </div>
     </Fragment>
   );
 };

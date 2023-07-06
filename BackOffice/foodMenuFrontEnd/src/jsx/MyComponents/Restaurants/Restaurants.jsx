@@ -8,6 +8,7 @@ import AuthContext from '../../../context/AuthProvider.js';
 import { frontURL } from '../../../api/frontURL.js';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min.js';
 import swal from 'sweetalert';
+import { ToastContainer, toast } from 'react-toastify';
 
 
 function Restaurants() {
@@ -164,6 +165,15 @@ function Restaurants() {
     }
   })
     .then((response) => {
+      toast.success("Restaurant mis à jour ✅ !", {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+     });
+     fetchData();
       console.log(response);
     })
     .catch((error) => {
@@ -376,7 +386,17 @@ function Restaurants() {
           </Button>
         </Modal.Footer>
       </Modal>
-
+      <ToastContainer
+                           position="top-right"
+                           autoClose={5000}
+                           hideProgressBar={false}
+                           newestOnTop
+                           closeOnClick
+                           rtl={false}
+                           pauseOnFocusLoss
+                           draggable
+                           pauseOnHover
+                        />
     </Fragment>
   );
 }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
+import { ToastContainer, toast } from "react-toastify";
 
 const CreateTable = ({ editTableData, restaurantId, onCloseModal }) => {
   const [menus, setMenus] = useState([]);
@@ -10,7 +11,7 @@ const CreateTable = ({ editTableData, restaurantId, onCloseModal }) => {
     try {
       const response = await axios.get(`http://localhost:5000/api/menus/restaurant/${restaurantId}`);
       setMenus(response.data.menus);
-      console.log(response.data.menus);
+      //console.log(response.data.menus);
     } catch (error) {
       console.error("Error fetching menus:", error);
     }
@@ -28,13 +29,14 @@ const CreateTable = ({ editTableData, restaurantId, onCloseModal }) => {
       // Fill the form fields with the old information
       setNum(editTableData.numTable || "");
       setSize(editTableData.size || "");
-      setSelectedMenus(editTableData.selectedMenus || []);
+      setSelectedMenus(editTableData.id_menus || []);
     } else {
       // Reset the form fields
       setNum("");
       setSize("");
       setSelectedMenus([]);
     }
+    console.log("selecet menu", selectedMenus)
   }, [editTableData]);
 
   const handleSubmit = async (e) => {
@@ -45,10 +47,18 @@ const CreateTable = ({ editTableData, restaurantId, onCloseModal }) => {
         const response = await axios.put(`http://localhost:5000/api/table/update/${editTableData.id}`, {
           size: size,
           numTable: num,
-          id_menus: JSON.stringify(selectedMenus),
+          id_menus: JSON.stringify(selectedMenus? selectedMenus : []),
           id_restaurant: restaurantId,
         });
         console.log("Table updated successfully");
+        toast.success("Table modifiée ✅ !", {
+          position: "bottom-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true
+        });
         fetchData();
         // Handle success, e.g., show a success message or redirect to another page
       } catch (error) {
@@ -57,16 +67,18 @@ const CreateTable = ({ editTableData, restaurantId, onCloseModal }) => {
       }
     } else {
       const id = uuidv4();
+      console.log("select menu : ",selectedMenus)
 
       try {
         const response = await axios.post("http://localhost:5000/api/table/add", {
           id: id,
           size: size,
           numTable: num,
-          id_menus: JSON.stringify(selectedMenus),
+          id_menus: JSON.stringify(selectedMenus? selectedMenus : []),
           id_restaurant: restaurantId,
         });
         console.log("Table saved successfully");
+      
         fetchData();
         // Handle success, e.g., show a success message or redirect to another page
       } catch (error) {
@@ -77,18 +89,42 @@ const CreateTable = ({ editTableData, restaurantId, onCloseModal }) => {
       // Handle form submission
       console.log("Submit", { num, size, selectedMenus });
     }
-
     onCloseModal();
   };
 
   const handleMenuChange = (e, menuId) => {
-    const isChecked = e.target.checked;
-    if (isChecked) {
-      setSelectedMenus((prevSelectedMenus) => [...prevSelectedMenus, menuId]);
-    } else {
-      setSelectedMenus((prevSelectedMenus) => prevSelectedMenus.filter((menu) => menu !== menuId));
-    }
+        const isChecked = e.target.checked;
+
+      setSelectedMenus((prevSelectedMenus) => {
+        const updatedMenus = [...prevSelectedMenus];
+        const index = updatedMenus.indexOf(menuId);
+        if (isChecked) {
+          if (index === -1) {
+            updatedMenus.push(menuId);
+          }
+        } else {
+          if (index !== -1) {
+            updatedMenus.splice(index, 1);
+          }
+        }
+        return updatedMenus;
+  });
+
+
+    // const isChecked = e.target.checked;
+    // console.log("chwck", isChecked, "id : ", menuId)
+    
+    // if (isChecked) {
+    //   setSelectedMenus((prevSelectedMenus) => [...prevSelectedMenus, menuId]);
+    // } else {
+    //   setSelectedMenus((prevSelectedMenus) => {
+    //     console.log("prev:", prevSelectedMenus); // prev: ["61b2030c-4a23-48d0-a877-6fabc6769dd8", "bc8f2acb-8ebd-42c9-a801-0f73a5a0211e"]
+    //     const arr = prevSelectedMenus;
+    //     const filteredMenus = prevSelectedMenus.filter((menu) => menu !== menuId);
+    //     return filteredMenus;      });
+    // }
   };
+  
 
   return (
     <form onSubmit={handleSubmit}>
@@ -116,14 +152,15 @@ const CreateTable = ({ editTableData, restaurantId, onCloseModal }) => {
 
       <div className="form-group">
         <label>Menus</label>
-        {menus.map((menu) => (
-          <div key={menu.id} className="form-check">
+        <ul>
+        {menus.map((menu,index) => (
+          <li key={index} className="form-check">
             <input
               className="form-check-input"
               type="checkbox"
               id={`menu-${menu.id}`}
               value={menu.name}
-              checked={selectedMenus.includes(menu.id)}
+              checked={selectedMenus.includes(`${menu.id}`)}
               onChange={(e) => handleMenuChange(e, menu.id)}
             />
             <label className="form-check-label" htmlFor={`menu-${menu.id}`}>
@@ -143,13 +180,26 @@ const CreateTable = ({ editTableData, restaurantId, onCloseModal }) => {
                 <span className="menu-name">{menu.name}</span>
               </div>
             </label>
-          </div>
+          </li>
         ))}
+        </ul>
       </div>
 
       <button type="submit" className="btn btn-outline-primary">
+    
         {editTableData ? "Modifier" : "Ajouter"}
       </button>
+      <ToastContainer
+                           position="top-right"
+                           autoClose={5000}
+                           hideProgressBar={false}
+                           newestOnTop
+                           closeOnClick
+                           rtl={false}
+                           pauseOnFocusLoss
+                           draggable
+                           pauseOnHover
+                        />
     </form>
   );
 };

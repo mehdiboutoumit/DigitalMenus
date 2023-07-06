@@ -8,6 +8,7 @@ import PerfectScrollbar from "react-perfect-scrollbar";
 
 /// Menu
 import MetisMenu from "metismenujs";
+import { Dropdown } from "react-bootstrap";
 
 const baseURL = "http://localhost:3000";
 
@@ -19,7 +20,23 @@ class MM extends Component {
   componentWillUnmount() {
     this.mm("dispose");
   }
+
+ 
+
+  toggleDropdown = () => {
+    this.setState((prevState) => ({
+      isDropdownOpen: !prevState.isDropdownOpen,
+    }));
+  };
+
+  handleLogout = () => {
+    // Add your logout logic here
+    console.log('Logout');
+  };
+
   render() {
+
+   
     return (
       <div className="mm-wrapper">
         <ul className="metismenu" ref={(el) => (this.el = el)}>
@@ -35,7 +52,8 @@ class SideBar extends Component {
   componentDidMount() {
     // sidebar open/close
     var btn = document.querySelector(".nav-control");
-    var aaa = document.querySelector("#main-wrapper");
+    var aaa = document.querySelector(".mm-wrapper");
+    console.log(aaa)
 
     function toggleFunc() {
       return aaa.classList.toggle("menu-toggle");
@@ -43,7 +61,29 @@ class SideBar extends Component {
 
     btn.addEventListener("click", toggleFunc);
   }
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      isDropdownOpen: false,
+    };
+  }
+
+  toggleDropdown = () => {
+    this.setState((prevState) => ({
+      isDropdownOpen: !prevState.isDropdownOpen,
+    }));
+  };
+
+  handleLogout = () => {
+    // Add your logout logic here
+    console.log('Logout');
+  };
+
+
   render() {
+    
+
     /// Path
     const path = window.location.pathname;
 
@@ -53,6 +93,7 @@ class SideBar extends Component {
     Dishes = ["Plats"],
     ContactSupport =["ConatctSupport"],
     Subs = ["Subs"],
+    Finance = ["Finance"],
     deshBoard = ["", "analytics", "companies", "statistics"],
       app = [
         "app-profile",
@@ -116,6 +157,7 @@ class SideBar extends Component {
         "form-validation-jquery",
       ],
       table = ["table-bootstrap-basic", "table-datatable-basic"];
+      
 
     return (
      
@@ -180,22 +222,37 @@ class SideBar extends Component {
               className={`${Subs.includes(path.slice(1)) ? "mm-active" : ""}`}
             >
               <Link className="ai-icon" to="/Subs">
-              <svg xmlns="http://www.w3.org/2001/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+              <svg xmlns="http://www.w3.org/2001/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-info"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
                 <span className="nav-text">Abonnements</span>
               </Link>
              
             </li> }
+
             {<li
+              className={`${Finance.includes(path.slice(1)) ? "mm-active" : ""}`}
+            >
+              <Link className="ai-icon" to="/Finance">
+                <i className="flaticon-381-notepad"></i>
+                <span className="nav-text">Gestion financière</span>
+              </Link>
+             
+            </li> }
+
+            {<li
+            style={{ bottom: '0',
+            width: '100%',
+            position: 'absolute'}}
               className={`${ContactSupport.includes(path.slice(1)) ? "mm-active" : ""}`}
+             
             >
               <Link className="ai-icon" to="/ContactSupport">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-info"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
                 <span className="nav-text"> Support 212</span>
               </Link>
              
             </li> }
-           
 
+          
             
           </MM>
       

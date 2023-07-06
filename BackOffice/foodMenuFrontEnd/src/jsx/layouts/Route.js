@@ -180,7 +180,7 @@ const Routes = () => {
             ))}
          </Switch>
 
-         {/* <Footer /> */}
+          <Footer /> 
       </Fragment>
    );
 };
