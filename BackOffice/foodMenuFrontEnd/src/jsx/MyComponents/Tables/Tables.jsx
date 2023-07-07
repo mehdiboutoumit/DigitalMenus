@@ -8,13 +8,14 @@ import QRCode from 'qrcode.react';
 import AuthContext from "../../../context/AuthProvider.js";
 import swal from "sweetalert";
 import { ToastContainer, toast } from "react-toastify";
+import { useHistory } from "react-router-dom";
 
 
 const Tables = ({restaurantId}) => {
   
   const {auth} = useContext(AuthContext);
   const {accessToken} = auth;
- 
+ const history = useHistory();
   //const rows = dataTables;
   const [rows , setRows] = useState([]);
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -33,15 +34,25 @@ const Tables = ({restaurantId}) => {
       const updatedRows = await Promise.all(
         tableData.map(async (row) => {
           console.log(row);
-          const menuIds = JSON.parse(row?.id_menus);
+          const menuIds =  row?.id_menus ? JSON.parse(row.id_menus) : null;
           //const menuIds = row?.id_menus;
+        if(menuIds){
           const menuList = await getMenuDetails(menuIds);
           console.log("Menulist",menuList);
+        
 
           return {
             ...row,
             div_menus: (
-              <div>
+              <div style={{
+                width: 'auto',
+                margin : '20px',
+                display : 'flex',
+                flexDirection : 'column',
+                alignItems : 'left',
+                justifyContent : 'left',
+                
+              }}>
                 {menuList.map((menu, index) => (
                   <div key={index}>
                   <a  href={`/ShowMenu/${menu.menu?.id}`}>
@@ -49,11 +60,12 @@ const Tables = ({restaurantId}) => {
                       src={`http://localhost:5000/images/${menu.menu?.image}`}
                       alt={menu.menu?.name}
                       style={{
-                        width: '80px',
+                        width: '120px',
                         height: '80px',
                         borderRadius: '10%',
                         objectFit: 'cover',
-                        marginRight: '20px'
+                        marginRight: '20px',
+                        margin : '10px'
                       }}
                     />
                     {menu.menu?.name}
@@ -63,11 +75,21 @@ const Tables = ({restaurantId}) => {
               </div>
             ),
           };
-        })
+        }
+      else{ return {
+        ...row,
+            div_menus : <div></div>
+      }}})
       );
 
       setRows(updatedRows);
     } catch (error) {
+      // if (error.response?.status === 401) {
+      //   history.push('/login');
+      // } else {
+      //   history.push('/error500');
+      // }
+      swal("Error");
       console.error('Error fetching tables:', error);
     }
   };
@@ -85,6 +107,7 @@ const Tables = ({restaurantId}) => {
 
         menuList.push(menu);
       } catch (error) {
+        swal("Erreur !");
         console.error(`Error fetching menu with ID ${menuId}:`, error);
       }
     }
@@ -172,7 +195,7 @@ const Tables = ({restaurantId}) => {
          
         } catch (error) {
           console.error('Error deleting tables:', error);
-        }    console.log("Delete", rowData);
+        }   
 
          swal(
             "Table supprimée avec succes !",
