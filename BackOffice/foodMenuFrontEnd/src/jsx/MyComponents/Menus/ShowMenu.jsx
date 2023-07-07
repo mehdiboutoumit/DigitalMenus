@@ -11,6 +11,7 @@ import AuthContext from '../../../context/AuthProvider';
 import MenuPDF from './MenuPDF';
 import { ToastContainer, toast } from 'react-toastify';
 import swal from 'sweetalert';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom';
 
 
 
@@ -18,7 +19,7 @@ import swal from 'sweetalert';
 const ShowMenu = () => {
   const { auth } = useContext(AuthContext);
   const{ accessToken } = auth;
-
+  const history = useHistory();
   const {menuId} = useParams();
   const [menuName, setMenuName] = useState("");
 
@@ -119,6 +120,11 @@ const ShowMenu = () => {
           }
         }
       } catch (error) {
+        if (error.response?.status === 401) {
+          history.push('/login');
+        } else {
+          history.push('/error500');
+        }
         console.error('Error:', error);
       }
     };
@@ -225,6 +231,11 @@ const ShowMenu = () => {
       console.log('Data saved successfully!');
       console.log('Updated Categories:', updatedCategories);
     } catch (error) {
+      if (error.response?.status === 401) {
+        history.push('/login');
+      } else {
+        history.push('/error500');
+      }
       console.error('Error:', error);
     }
   };
@@ -523,6 +534,11 @@ const ShowMenu = () => {
         })
         .catch((error) => {
           // Handle the error
+          if (error.response?.status === 401) {
+            history.push('/login');
+          } else {
+            history.push('/error500');
+          }
           console.error("Error deleting portion:", error);
         });
     const updatedPortions = portions.filter((port) => port.id !== id);
@@ -604,7 +620,11 @@ const ShowMenu = () => {
           console.log("Extra deleted successfully");
         })
         .catch((error) => {
-          // Handle the error
+          if (error.response?.status === 401) {
+            history.push('/login');
+          } else {
+            history.push('/error500');
+          }
           console.error("Error deleting extra:", error);
         });
     const updatedExtras = extras.filter((ext) => ext.id !== id);

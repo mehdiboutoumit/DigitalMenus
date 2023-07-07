@@ -2,9 +2,11 @@ import React, { useState, useEffect, useContext } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import axios from "axios";
 import AuthContext from "../../../context/AuthProvider";
+import { useHistory } from "react-router-dom/cjs/react-router-dom";
 
 const CreateDish = ({  editDishData,  onCreateDish, update }) => {
   const { auth } = useContext(AuthContext);
+  const history = useHistory();
   const{ accessToken } = auth;
   const [name, setName] = useState("");
   const [image, setImage] = useState(null);
@@ -110,7 +112,11 @@ const CreateDish = ({  editDishData,  onCreateDish, update }) => {
         onCreateDish(dishData, update);
       }
     } catch (error) {
-      // Handle any error that occurred during the submission
+      if (error.response?.status === 401) {
+        history.push('/login');
+      } else {
+        history.push('/error500');
+      }
       console.error(error);
     }
   };

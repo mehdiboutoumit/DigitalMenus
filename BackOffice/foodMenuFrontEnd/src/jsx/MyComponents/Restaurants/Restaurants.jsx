@@ -16,7 +16,7 @@ function Restaurants() {
   const { auth } = useContext(AuthContext);
   const history = useHistory();
   const{ accessToken } = auth;
-  console.log("Provider",auth) //undefined
+  //console.log("Provider",auth) //undefined
   const [expandedRestaurantId, setExpandedRestaurantId] = useState(null);
   const [truncatedDescriptions, setTruncatedDescriptions] = useState([]);
   const [dataRestaurants, setdataRestaurants] = useState([]);
@@ -39,7 +39,11 @@ function Restaurants() {
 });
       setdataRestaurants(response.data.restaurants);
     } catch (error) {
-      history.push(`/login`)
+      if (error.response?.status === 401) {
+        history.push('/login');
+      } else {
+        history.push('/error500');
+      }
       console.error('Error fetching restaurants:', error);
     }
   };
@@ -177,7 +181,11 @@ function Restaurants() {
       console.log(response);
     })
     .catch((error) => {
-      console.log(error);
+      if (error.response?.status === 401) {
+        history.push('/login');
+      } else {
+        history.push('/error500');
+      }
     });
     // Close the edit modal
     handleCloseEditModal();

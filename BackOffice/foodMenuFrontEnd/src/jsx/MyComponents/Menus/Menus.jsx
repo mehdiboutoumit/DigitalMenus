@@ -9,11 +9,13 @@ import axios from 'axios';
 import AuthContext from '../../../context/AuthProvider';
 import { ToastContainer } from 'react-toastify';
 import swal from 'sweetalert';
+import { useHistory } from 'react-router-dom';
 
 function Menus({ restaurantId }) {
 
   const { auth } = useContext(AuthContext);
   const{ accessToken } = auth;
+  const history = useHistory();
   
 const [dataMenus, setDataMenus] = useState([]);
 const [refresh, setRefresh] = useState(0);
@@ -35,6 +37,7 @@ const [refresh, setRefresh] = useState(0);
       setDataMenus(response.data.menus);
       console.log(response.data.menus)
     } catch (error) {
+      swal("Erreur");
       console.error('Error fetching menus:', error);
     }
   };
@@ -72,8 +75,13 @@ const [refresh, setRefresh] = useState(0);
   const handleCloseCreateModal = () => {
     setShowCreateModal(false);
     try{
-    fetchData();}catch(e){
-      console.log(e);
+    fetchData();}catch(error){
+      if (error.response?.status === 401) {
+        history.push('/login');
+      } else {
+        history.push('/error500');
+      }
+      console.log(error);
     }
   };
 
@@ -171,7 +179,11 @@ const [refresh, setRefresh] = useState(0);
           console.log(response.data); // Assuming the server returns a response message or data
           fetchData();  } 
           catch (error) {
-          // Handle the error
+            if (error.response?.status === 401) {
+              history.push('/login');
+            } else {
+              history.push('/error500');
+            }
           console.error(error);
         }
 

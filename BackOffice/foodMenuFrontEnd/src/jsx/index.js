@@ -43,16 +43,18 @@ import Subs from "./MyComponents/Subs/Subs";
 
 import ContactSupport from "./MyComponents/ConatctSupport/ContactSupport";
 
+
+import Error400 from "./MyComponents/Errors/Error400";
+import Error403 from "./MyComponents/Errors/Error403";
+import Error404 from "./MyComponents/Errors/Error404";
+import Error500 from "./MyComponents/Errors/Error500";
+import Error503 from "./MyComponents/Errors/Error503";
+
 /// Pages
 // import Registration from "./pages/Registration";
 // import Login from "./pages/Login";
 // import LoginUser from "./pages/LoginUser";
 // import LockScreen from "./pages/LockScreen";
-import Error400 from "./pages/Error400";
-import Error403 from "./pages/Error403";
-import Error404 from "./pages/Error404";
-import Error500 from "./pages/Error500";
-import Error503 from "./pages/Error503";
 //import ForgotPassword from "./pages/ForgotPassword";
 
 /// Widget
@@ -133,6 +135,7 @@ import Toastr from "./components/PluginsMenu/Toastr/Toastr";
 import JqvMap from "./components/PluginsMenu/Jqv Map/JqvMap";
 import RechartJs from "./components/charts/rechart";
 import Logout from "./MyComponents/Auth/Logout";
+import Profile from "./MyComponents/Profile/Profile";
 
 
 
@@ -182,12 +185,19 @@ const Markup = () => {
     {url : "ShowOrder", component : ShowOrder},
     
     //Subs
-    {url : "Subs", component : Subs}
-    
-    ,
+    {url : "Subs", component : Subs},
+
+    //Profile
+    {url : "Profile/:id" , component : Profile},
 
   //Contact support
   {url : "ContactSupport", component : ContactSupport},
+
+  { url: "error400", component: Error400 },
+    { url: "error403", component: Error403 },
+    { url: "error404", component: Error404 },
+    { url: "error500", component: Error500 },
+    { url: "error503", component: Error503 },
 
     /// Deshborad
     { url: "", component: Dashboard },
@@ -269,11 +279,11 @@ const Markup = () => {
     // { url: "page-login", component: Login },
     { url: "commandes", component: Commandes },
    // { url: "menus", component: menus },
-    { url: "page-error-400", component: Error400 },
-    { url: "page-error-403", component: Error403 },
-    { url: "page-error-404", component: Error404 },
-    { url: "page-error-500", component: Error500 },
-    { url: "page-error-503", component: Error503 },
+    // { url: "page-error-400", component: Error400 },
+    // { url: "page-error-403", component: Error403 },
+    // { url: "page-error-404", component: Error404 },
+    // { url: "page-error-500", component: Error500 },
+    // { url: "page-error-503", component: Error503 },
     // { url: "page-forgot-password", component: ForgotPassword },
   ];
   return (
@@ -319,6 +329,9 @@ const Markup = () => {
                       component={data.component}
                     />
                   ))}
+                   <Route path="*">
+            <Error404 />
+          </Route>
                 </Switch>
               </div>
             </div>

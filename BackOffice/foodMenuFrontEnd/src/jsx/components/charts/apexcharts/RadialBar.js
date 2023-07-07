@@ -7,7 +7,7 @@ class ApexRedialBar extends React.Component {
 
       this.state = {
 		   render: false,
-         series: [81],
+         series: [98],
          options: {
             chart: {
                height: 300,

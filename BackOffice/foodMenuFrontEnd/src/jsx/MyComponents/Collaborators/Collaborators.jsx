@@ -5,9 +5,11 @@ import { Dropdown, Button, Modal } from "react-bootstrap";
 import axios from "axios";
 import CreateCollab from "./createCollab";
 import AuthContext from "../../../context/AuthProvider";
+import { useHistory } from "react-router-dom";
 
 const Collaborators = (restaurantId) => {
   // const rows = dataCollab;
+  const history = useHistory();
   const { auth } = useContext(AuthContext);
   const{ accessToken } = auth;
   const [dataCollab, setDataCollab] = useState([])
@@ -30,6 +32,11 @@ const Collaborators = (restaurantId) => {
       setDataCollab(users);
       //console.log(users);
     } catch (error) {
+      if (error.response?.status === 401) {
+        history.push('/login');
+      } else {
+        history.push('/error500');
+      }
       console.error('Error fetching menus:', error);
     }
   };

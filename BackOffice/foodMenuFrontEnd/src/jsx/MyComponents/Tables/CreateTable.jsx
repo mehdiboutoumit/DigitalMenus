@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import { ToastContainer, toast } from "react-toastify";
+import { useHistory } from "react-router-dom/cjs/react-router-dom";
 
 const CreateTable = ({ editTableData, restaurantId, onCloseModal }) => {
   const [menus, setMenus] = useState([]);
   const [selectedMenus, setSelectedMenus] = useState([]);
+  const history = useHistory();
 
   const fetchData = async () => {
     try {
@@ -36,18 +38,19 @@ const CreateTable = ({ editTableData, restaurantId, onCloseModal }) => {
       setSize("");
       setSelectedMenus([]);
     }
-    console.log("selecet menu", selectedMenus)
+    //console.log("selecet menu", selectedMenus)
   }, [editTableData]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (editTableData) {
+     
       try {
         const response = await axios.put(`http://localhost:5000/api/table/update/${editTableData.id}`, {
           size: size,
           numTable: num,
-          id_menus: JSON.stringify(selectedMenus? selectedMenus : []),
+          id_menus: selectedMenus? selectedMenus : [],
           id_restaurant: restaurantId,
         });
         console.log("Table updated successfully");
@@ -60,30 +63,38 @@ const CreateTable = ({ editTableData, restaurantId, onCloseModal }) => {
           draggable: true
         });
         fetchData();
-        // Handle success, e.g., show a success message or redirect to another page
       } catch (error) {
+        // if (error.response?.status === 401) {
+        //   history.push('/login');
+        // } else {
+        //   history.push('/error500');
+        // }
         console.error("Error updating table:", error);
         // Handle error, e.g., show an error message
       }
     } else {
       const id = uuidv4();
-      console.log("select menu : ",selectedMenus)
+      console.log("select menu : ",selectedMenus);
 
       try {
         const response = await axios.post("http://localhost:5000/api/table/add", {
           id: id,
           size: size,
           numTable: num,
-          id_menus: JSON.stringify(selectedMenus? selectedMenus : []),
+          id_menus: selectedMenus? selectedMenus : [],
           id_restaurant: restaurantId,
         });
         console.log("Table saved successfully");
-      
         fetchData();
         // Handle success, e.g., show a success message or redirect to another page
       } catch (error) {
+        // if (error.response?.status === 401) {
+        //   history.push('/login');
+        // } else {
+        //   history.push('/error500');
+        // }
         console.error("Error saving table:", error);
-        // Handle error, e.g., show an error message
+       
       }
 
       // Handle form submission
@@ -93,23 +104,22 @@ const CreateTable = ({ editTableData, restaurantId, onCloseModal }) => {
   };
 
   const handleMenuChange = (e, menuId) => {
-        const isChecked = e.target.checked;
+      
+    console.log(typeof selectedMenus)
+    if(selectedMenus.length >0){
+ 
+      if (JSON.parse(selectedMenus).includes(menuId)) {
+        console.log("includes")
+        setSelectedMenus(() => JSON.stringify( JSON.parse(selectedMenus).filter((checkedItem) => checkedItem !== menuId)));
+      } else {
+        setSelectedMenus(JSON.stringify([...JSON.parse(selectedMenus), menuId]));
+      }
+    }
+    else{
+      setSelectedMenus(JSON.stringify([menuId]))
+    }
 
-      setSelectedMenus((prevSelectedMenus) => {
-        const updatedMenus = [...prevSelectedMenus];
-        const index = updatedMenus.indexOf(menuId);
-        if (isChecked) {
-          if (index === -1) {
-            updatedMenus.push(menuId);
-          }
-        } else {
-          if (index !== -1) {
-            updatedMenus.splice(index, 1);
-          }
-        }
-        return updatedMenus;
-  });
-
+   
 
     // const isChecked = e.target.checked;
     // console.log("chwck", isChecked, "id : ", menuId)
@@ -125,7 +135,11 @@ const CreateTable = ({ editTableData, restaurantId, onCloseModal }) => {
     // }
   };
   
+  useEffect(() =>{
+    console.log("effect menuse",selectedMenus)
+    console.log("effect menuse type",typeof selectedMenus)
 
+  },[selectedMenus])
   return (
     <form onSubmit={handleSubmit}>
       <div className="form-group">

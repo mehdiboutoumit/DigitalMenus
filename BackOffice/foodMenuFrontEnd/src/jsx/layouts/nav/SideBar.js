@@ -53,7 +53,7 @@ class SideBar extends Component {
     // sidebar open/close
     var btn = document.querySelector(".nav-control");
     var aaa = document.querySelector(".mm-wrapper");
-    console.log(aaa)
+   
 
     function toggleFunc() {
       return aaa.classList.toggle("menu-toggle");
