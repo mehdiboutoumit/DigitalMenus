@@ -1,4 +1,5 @@
 import React from "react";
+import Cookie from 'js-cookie'
 import { Link } from "react-router-dom";
 /// Scroll
 import PerfectScrollbar from "react-perfect-scrollbar";
@@ -334,7 +335,7 @@ const Header = ({ onNote, toggle, onProfile, onActivity, onNotification }) => {
                 >
                   <div className="header-info">
                     <small></small>
-                    <span>James Sullivan</span>
+                    <span>{Cookie.get('user')}</span>
                   </div>
                   <img src={profile} width="20" alt="" />
                 </Link>

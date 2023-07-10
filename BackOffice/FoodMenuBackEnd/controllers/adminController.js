@@ -14,6 +14,7 @@ exports.login = async (req, res, next) => {
         name: adminFromDb.name,
         email: adminFromDb.email,
         id: adminFromDb.id,
+
       };
       // generate jwt
       const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
@@ -25,17 +26,30 @@ exports.login = async (req, res, next) => {
       await adminService.updateAdmin(adminFromDb.id, {
         refresh_token: refreshToken,
       });
-      res.cookie("jwt", refreshToken, {
-        httpOnly: true,
-        maxAge: 24 * 60 * 60 * 1000, // change to 24*60*60*1000
-        // sameSite: "None",
-        // secure: true,
-      });
 
+      const role = "admin";
+
+      // req.session.role = "superadmin";
+      // res.cookie("jwt", refreshToken, {
+      //   httpOnly: true,
+      //   maxAge: 24 * 60 * 60 * 1000, // change to 24*60*60*1000
+      //   // sameSite: "None",
+      //   // secure: true,
+      // });
+
+      // res.cookie("role", role, {
+      //   //httpOnly: true,
+      //   maxAge: 24 * 60 * 60 * 1000, // change to 24*60*60*1000
+      //   // sameSite: "None",
+      //   // secure: true,
+      // });
+      console.log(user.name)
       return res.json({
         message: "success",
         accessToken,
+        role, user : user.name
       });
+     
     } else {
       return res.status(401).json({ message: "Wrong Email or Password" });
     }

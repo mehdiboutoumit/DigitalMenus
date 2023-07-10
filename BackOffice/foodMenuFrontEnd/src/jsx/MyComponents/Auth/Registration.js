@@ -6,6 +6,16 @@ import { baseURL } from "../../../api/baseURL";
 const Registration = () => {
    const [registrationData, setRegistrationData] = useState({});
    const history = useHistory();
+
+   const [confirmPassword, setConfirmPassword] = useState("");
+
+   const handleConfirmPasswordChange = (e) => {
+      setConfirmPassword(e.target.value);
+    };
+
+   const [selectedRole, setSelectedRole] = useState("admin");
+
+
    const handleBlur = (e) => {
       const newRegistrationData = { ...registrationData };
       newRegistrationData[e.target.name] = e.target.value;
@@ -55,9 +65,60 @@ const Registration = () => {
                               <label className="mb-1 ">   <strong>Password</strong>  </label>
                               <input type="password" className="form-control" name="password"  onChange={handleBlur}  />
                            </div>
-                           <div className="text-center mt-4">
-                              <button type="submit" className="btn btn-primary btn-block"   >  Sign me up  </button>
+                           <div className="form-group">
+                           <label className="mb-1">
+                              <strong>Confirm Password</strong>
+                           </label>
+                           <input
+                              type="password"
+                              className={`form-control ${
+                                 confirmPassword === "" ? "" : registrationData.password === confirmPassword ? "border-success" : "border-danger"
+                               }`}                              name="confirmPassword"
+                              onChange={handleConfirmPasswordChange}
+                           />
                            </div>
+                           <div className="form-group">
+                           <label className="mb-1">
+                              <strong>Role</strong>
+                           </label>
+                           <div className="form-check">
+                              <input
+                                 type="radio"
+                                 id="admin"
+                                 name="role"
+                                 value="admin"
+                                 className="form-check-input"
+                                 checked={selectedRole === "admin"}
+                                 onChange={handleBlur}
+                              />
+                              <label htmlFor="admin" className="form-check-label">
+                                 Admin
+                              </label>
+                           </div>
+
+                           <div className="form-check">
+                              <input
+                                 type="radio"
+                                 id="superadmin"
+                                 name="role"
+                                 value="superadmin"
+                                 className="form-check-input"
+                                 checked={selectedRole === "superadmin"}
+                                 onChange={handleBlur}
+                              />
+                              <label htmlFor="superadmin" className="form-check-label">
+                                 Superadmin
+                              </label>
+                           </div>
+                           </div>
+                           <button
+                           type="submit"
+                           className="btn btn-primary btn-block"
+                           disabled={registrationData.password !== confirmPassword}
+                           >
+                           Sign me up
+                           </button>
+                         
                         </form>
                         <div className="new-account mt-3">
                            <p className="">

@@ -1,8 +1,11 @@
-import React from 'react'
+import Cookies from 'js-cookie'
+import React, { useEffect } from 'react'
 import Chart from 'react-apexcharts'
 import { Box } from '@material-ui/core';
 
+
 function Dashboard() {
+console.log(Cookies.get("role"));
     //Subs
     const SubsData = [
         { day: "Monday", count: 101 },

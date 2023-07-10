@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-
+import Cookie from 'js-cookie';
 /// Link
 import { Link , BrowserRouter} from "react-router-dom";
 
@@ -231,10 +231,10 @@ class SideBar extends Component {
             {<li
               className={`${Finance.includes(path.slice(1)) ? "mm-active" : ""}`}
             >
-              <Link className="ai-icon" to="/Finance">
+              {Cookie.get("role")==="superadmin" && <Link className="ai-icon" to="/Finance">
                 <i className="flaticon-381-notepad"></i>
                 <span className="nav-text">Gestion financière</span>
-              </Link>
+              </Link>}
              
             </li> }
 

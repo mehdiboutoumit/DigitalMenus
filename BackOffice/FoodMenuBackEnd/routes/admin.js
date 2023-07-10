@@ -17,4 +17,6 @@ router //
   .route("/logout")
   .get(adminController.logout);
 
+
+
 module.exports = router;

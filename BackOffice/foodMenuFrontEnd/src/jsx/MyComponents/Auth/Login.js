@@ -1,3 +1,4 @@
+import Cookies from 'js-cookie';
 import React, { useState, useContext } from "react";
 import { Link, useHistory } from "react-router-dom";
 import AuthContext from "../../../context/AuthProvider";
@@ -5,16 +6,19 @@ import axios from "axios";
 import { baseURL } from "../../../api/baseURL";
 const LOGIN_URL = "/api/admin/login";
 
+
 const Login = () => {
   const { setAuth } = useContext(AuthContext);
   const navigation = useHistory();
   const [loginData, setLoginData] = useState({});
   const [loading, setLoading] = useState(false);
   const [err, setErr ] = useState("");
-    const handleBlur = (e) => {
+    const handleChange = (e) => {
     const newLoginData = { ...loginData };
     newLoginData[e.target.name] = e.target.value;
     setLoginData(newLoginData);
+
+    console.log(Cookies.get('role'));
   };
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -33,14 +37,21 @@ const Login = () => {
         }
       );
       const accessToken = response?.data?.accessToken;
-      console.log(response.data);
-      console.log(JSON.stringify(response.data));
-      setAuth({
-        email: loginData.email,
-        password: loginData.password,
-        accessToken,
-      });
-      console.log("accesss ",accessToken)
+      const role = response?.data?.role;
+      const name = response?.data?.user;
+     // Cookies.remove('role');
+      Cookies.set('role', role);
+      Cookies.set('accessToken', accessToken);
+      console.log(name)
+      Cookies.set('user', name);
+
+      // setAuth({
+      //   email: loginData.email,
+      //   password: loginData.password,
+      //   accessToken,
+      // });
+      // console.log("accesss ",accessToken)
+      
       navigation.push("/");
     } catch (err) {
       setLoading(false);
@@ -81,7 +92,7 @@ const Login = () => {
                       type="email"
                       className="form-control"
                       placeholder="hello@example.com"
-                      onChange={handleBlur}
+                      onChange={handleChange}
                     />
                   </div>
                   <div className="form-group">
@@ -94,7 +105,7 @@ const Login = () => {
                       type="password"
                       className="form-control"
                       placeholder="Password"
-                      onChange={handleBlur}
+                      onChange={handleChange}
                     />
                   </div>
                   <div className="form-row d-flex justify-content-between mt-4 mb-2">
