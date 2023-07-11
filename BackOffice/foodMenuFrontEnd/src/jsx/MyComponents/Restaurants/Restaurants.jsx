@@ -11,7 +11,7 @@ import swal from 'sweetalert';
 import { ToastContainer, toast } from 'react-toastify';
 
 
-function Restaurants() {
+function Restaurants(adminId) {
   //const dataRestaurants = dataRestau;
   const { auth } = useContext(AuthContext);
   const history = useHistory();

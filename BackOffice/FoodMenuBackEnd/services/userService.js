@@ -1,14 +1,13 @@
 const { User, Role } = require("../models");
 
 exports.createUser = async (user) => {
-  const { name, email, password, id_role, id_admin, id_restaurant } = user;
+  const { name, email, password, id_role,  id_restaurant } = user;
 
   const { dataValues } = await User.create({
     name,
     email,
     password,
     id_role,
-    id_admin,
     id_restaurant,
   });
   const newUser = {
@@ -16,7 +15,7 @@ exports.createUser = async (user) => {
     email: dataValues.email,
     id: dataValues.id,
     id_role,
-    id_admin,
+    id_admin : 0,
     id_restaurant,
   };
   return newUser;

@@ -87,6 +87,11 @@ const Collaborators = (restaurantId) => {
 
   const handleCloseCreateModal = () => {
     setShowCreateModal(false);
+    try {
+      fetchData();
+    } catch (error) {
+      
+    }
   };
 
   return (
@@ -106,7 +111,7 @@ const Collaborators = (restaurantId) => {
                 </Modal.Title>
               </Modal.Header>
               <Modal.Body>
-                <CreateCollab editCollabData={editCollabData} />
+                <CreateCollab onClose={handleCloseCreateModal} editCollabData={editCollabData} restaurantId={restaurantId.restaurantId} />
               </Modal.Body>
             </Modal>
             </div>

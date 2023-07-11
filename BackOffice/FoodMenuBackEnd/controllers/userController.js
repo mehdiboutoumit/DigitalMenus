@@ -12,7 +12,6 @@ exports.createUser = async (req, res, next) => {
       email,
       password: hashedPaswword,
       id_role,
-      id_admin: connectedUser.id,
       id_restaurant,
     });
     return res.json({ message: "success", user: newUser });

@@ -3,13 +3,18 @@ import React, { useState , useEffect } from "react";
 import { baseURL } from "../../../api/baseURL";
 
 
-const CreateCollab = ({ editCollabData }) => {
+const CreateCollab = ({onClose,  editCollabData , restaurantId }) => {
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
-    const [role, setRole] = useState("");
-    const [notes, setNotes] = useState("");
+    const [role, setRole] = useState(1);
     const [roles, setRoles] = useState([]);
+
+    const [confirmPassword, setConfirmPassword] = useState("");
+
+    const handleConfirmPasswordChange = (e) => {
+       setConfirmPassword(e.target.value);}
+
 const fetchRoles = async()=>{
     try {
     
@@ -31,21 +36,32 @@ setRoles(res.data.role);
         setPassword(editCollabData.password || "");
         setEmail(editCollabData.email || "");
         setRole(editCollabData.role || "");
-        setNotes(editCollabData.notes || "");
+       
       } else {
         // Reset the form fields
         setName("");
         setPassword("");
         setEmail("");
         setRole("");
-        setNotes("");
+       
       }
     }, [editCollabData]);
+
+    
   
     const handleSubmit = (e) => {
       e.preventDefault();
+      try {
+        const res = axios.post(`${baseURL}/user/add`, {
+          name, password, email, id_role : role, id_restaurant : restaurantId
+        });
+        onClose();
+        
+      } catch (error) {
+        
+      }
       // Handle form submission
-      console.log("Submit", { name, password, email, role, notes });
+      console.log("Submit", { name, password, email, role });
     };
   
     return (
@@ -82,33 +98,38 @@ setRoles(res.data.role);
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
+        
+        {!editCollabData && <div className="form-group">
+              <label className="mb-1">
+                <label>Confirm Password</label>
+              </label>
+              <input
+                type="password"
+                className={`form-control ${
+                    confirmPassword === "" ? "" : password === confirmPassword ? "border-success" : "border-danger"
+                  }`}                              name="confirmPassword"
+                onChange={handleConfirmPasswordChange}
+              />
+              </div>}
         <div className="form-group">
           <label htmlFor="role">Role</label>
           <select
             className="form-control"
             id="role"
             value={role}
-            onChange={(e) => setRole(e.target.value)}
+            onChange={(e) => setRole(parseInt(e.target.value))}
           >
             <option value="">Select a role</option>
             {roles.map((role) => (
-              <option key={role.id} value={role.role}>
+              <option key={role.id} value={role.id}>
                 {role.role}
               </option>
             ))}
           </select>
         </div>
-        <div className="form-group">
-          <label htmlFor="notes">Notes</label>
-          <textarea
-            className="form-control"
-            id="notes"
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-          ></textarea>
-        </div>
-        <button type="submit" className="btn btn-primary">
-          {editCollabData ? "Update" : "Create"}
+        
+        <button type="submit" className="btn btn-primary" disabled={name.length < 4 || password !== confirmPassword || password < 4 || role ===""}>
+          {editCollabData ? "Modifier" : "Ajouter"}
         </button>
       </form>
     );
