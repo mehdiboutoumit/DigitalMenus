@@ -88,7 +88,7 @@ setRoles(res.data.role);
           />
         </div>
 
-        <div className="form-group">
+        {!editCollabData && <div className="form-group">
           <label htmlFor="password">password</label>
           <input
             type="password"
@@ -97,7 +97,7 @@ setRoles(res.data.role);
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-        </div>
+        </div>}
         
         {!editCollabData && <div className="form-group">
               <label className="mb-1">
@@ -117,20 +117,24 @@ setRoles(res.data.role);
             className="form-control"
             id="role"
             value={role}
+            
             onChange={(e) => setRole(parseInt(e.target.value))}
           >
-            <option value="">Select a role</option>
+
             {roles.map((role) => (
-              <option key={role.id} value={role.id}>
+              <option key={role.id} value={role.id} >
                 {role.role}
               </option>
             ))}
           </select>
         </div>
         
-        <button type="submit" className="btn btn-primary" disabled={name.length < 4 || password !== confirmPassword || password < 4 || role ===""}>
-          {editCollabData ? "Modifier" : "Ajouter"}
-        </button>
+        
+          {editCollabData ?  <button type="submit" className="btn btn-primary" disabled={ role ===""}>
+              Modifier </button> : <button type="submit" className="btn btn-primary" disabled={name.length < 4 || password !== confirmPassword || password < 4 || role ===""}>
+                              Ajouter
+                            </button>}
+       
       </form>
     );
   };

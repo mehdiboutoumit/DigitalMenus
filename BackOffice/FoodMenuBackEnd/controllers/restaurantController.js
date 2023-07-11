@@ -13,14 +13,14 @@ exports.createRestaurant = async (req, res, next) => {
     restaurant.image = "not name";
   }
 
-  const { id, name, address, description, image } = restaurant;
+  const { id, name, address, description, image, id_admin } = restaurant;
   const newRestaurant = await restaurantService.createRestaurant({
     id,
     name,
     image ,
     address,
     description,
-    // id_admin: connectedUser.id,
+    id_admin,
   });
 
   return res.json({ message: "success", restaurant: newRestaurant });

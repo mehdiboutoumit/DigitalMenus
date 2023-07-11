@@ -136,6 +136,7 @@ import JqvMap from "./components/PluginsMenu/Jqv Map/JqvMap";
 import RechartJs from "./components/charts/rechart";
 import Logout from "./MyComponents/Auth/Logout";
 import Profile from "./MyComponents/Profile/Profile";
+import Accounts from "./MyComponents/Accounts/Accounts";
 
 
 
@@ -151,7 +152,8 @@ const Markup = () => {
 
 
     
-
+    //Accounts
+    {url : "Accounts", component : Accounts},
 
     //Collab
     {url : "collaborateurs", component: CollabView},
@@ -295,6 +297,11 @@ const Markup = () => {
             <Login />
           </div>
         </Route>
+        <Route path="/logout">
+          <div className="container-fluid">
+            <Logout />
+          </div>
+        </Route>
         <Route path="/register">
           <div className="container-fluid">
             <Registration />
@@ -335,7 +342,10 @@ const Markup = () => {
                 </Switch>
               </div>
             </div>
+            <div >
             <Footer />
+           
+            </div>
           </div>
         </Route>
       </Switch>

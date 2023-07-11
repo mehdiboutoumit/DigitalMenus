@@ -47,14 +47,23 @@ function Restaurants() {
 });
       setdataRestaurants(response.data.restaurants);
     }
-    else {
-      const adminId = Cookies.get('userId');
-      const response = await axios.get(`${baseURL}/restaurant/admin/${adminId}`,  {
-  headers: {
-    authorization: `Bearer ${accessToken}`,
-  },
-});
-      setdataRestaurants(response.data.restaurants);
+    else { 
+      if(accessType === "admin"){
+                const adminId = Cookies.get('userId');
+                const response = await axios.get(`${baseURL}/restaurant/admin/${adminId}`,  {
+            headers: {
+              authorization: `Bearer ${accessToken}`,
+            },
+          });
+                setdataRestaurants(response.data.restaurants);
+      }
+      else {
+        swal ({text : "Non authentifie" }).then((confirm) => {
+          if (confirm) {
+              window.location.href = "/login";
+          };})
+      }
+      
     }
     } catch (error) {
       if (error.response?.status === 401) {

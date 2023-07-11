@@ -1,4 +1,5 @@
 import React, { Fragment, useState, useEffect, useContext } from "react";
+import Cookies from 'js-cookie'
 import { MDBDataTable } from "mdbreact";
 import { Dropdown, Button, Modal, Badge, Tab, Nav } from "react-bootstrap";
 import { Link } from 'react-router-dom';
@@ -27,13 +28,31 @@ const Orders = () => {
     // Fetch restaurants from the server and update the state
     const fetchRestaurants = async () => {
       try {
-        const response = await axios.get(`${baseURL}/restaurant`, {
-          headers: {
-            authorization: `Bearer ${accessToken}`,
-          },
-        });
-        const data = response.data.restaurants;
-        setRestaurants(data);
+        if(Cookies.get('accessType') === "superadmin"){
+            const response = await axios.get(`${baseURL}/restaurant`, {
+              headers: {
+                authorization: `Bearer ${accessToken}`,
+              },
+            });
+            const data = response.data.restaurants;
+            setRestaurants(data); 
+            
+      }
+      else{
+        if (Cookies.get('accessType') === "admin"){
+          const response = await axios.get(`${baseURL}/restaurant/admin/${Cookies.get('userId')}`, {
+            headers: {
+              authorization: `Bearer ${accessToken}`,
+            },
+          });
+          const data = response.data.restaurants;
+          setRestaurants(data); 
+        }
+        else{
+
+        }
+      }
+     
       } catch (error) {
         console.log(error);
       }

@@ -2,6 +2,7 @@ import Cookies from 'js-cookie'
 import React, { useEffect } from 'react'
 import Chart from 'react-apexcharts'
 import { Box } from '@material-ui/core';
+import { Button } from 'react-bootstrap';
 
 
 function Dashboard() {
@@ -62,8 +63,8 @@ console.log("role",Cookies.get("role"), "accessType", Cookies.get("accessType"))
     
       return (
         <>
-        <h1 className='text-center'>Acceuil</h1>
-            <div className='d-flex justify-content-center justify-content-between'>
+        <div> <h1 className='text-center'>{Cookies.get('accessType') ? "Acceuil" : <div><h1>Vous etes pas connecte</h1><Button onClick={()=>{window.location.href="/login"}}>Se connecter</Button></div>}</h1>
+        {Cookies.get('accessType') && <div className='d-flex justify-content-center justify-content-between'>
                 
                     <Box border={1} p={2} mb={2}>
             <h3>Nombre de commandes quotidiennes</h3>
@@ -78,7 +79,8 @@ console.log("role",Cookies.get("role"), "accessType", Cookies.get("accessType"))
             <Chart options={optionsSubs} series={seriesSubs} type="line" height={400} />
             </Box>
         
-        </div>
+        </div>}</div>
+      
       </>
       );
     

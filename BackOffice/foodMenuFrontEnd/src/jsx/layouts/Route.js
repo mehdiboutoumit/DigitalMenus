@@ -179,8 +179,11 @@ const Routes = () => {
                />
             ))}
          </Switch>
-
-          <Footer /> 
+         <div style={{ bottom: '0',
+            width: '100%',
+            position: 'absolute'}}>
+          <Footer />
+         </div>
       </Fragment>
    );
 };

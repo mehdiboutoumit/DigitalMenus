@@ -88,7 +88,7 @@ class SideBar extends Component {
     const path = window.location.pathname;
 
     /// Active menu
-    let Collaborators = ["Collaborateurs"],Restaurant=["Restaurant"],
+    let Accounts = ["Accounts"],Restaurant=["Restaurant"],
     Categories = ["Categories"],
     Dishes = ["Plats"],
     ContactSupport =["ConatctSupport"],
@@ -162,7 +162,7 @@ class SideBar extends Component {
     return (
      
       <div className="deznav">
-        <PerfectScrollbar className="deznav-scroll">
+       {Cookie.get('accessType') && <PerfectScrollbar className="deznav-scroll">
           <MM className="metismenu" id="menu">
             <li
               className={`${
@@ -184,6 +184,16 @@ class SideBar extends Component {
                 <span className="nav-text">Collaborateurs</span>
               </Link>
             </li> */}
+
+          {<li
+              className={`${Accounts.includes(path.slice(1)) ? "mm-active" : ""}`}
+            >
+              {Cookie.get("accessType")==="superadmin" && <Link className="ai-icon" to="/Accounts">
+                <i className="flaticon-381-user"></i>
+                <span className="nav-text">Les comptes</span>
+              </Link>}
+             
+            </li> }
 
 
             
@@ -231,7 +241,7 @@ class SideBar extends Component {
             {<li
               className={`${Finance.includes(path.slice(1)) ? "mm-active" : ""}`}
             >
-              {Cookie.get("role")==="superadmin" && <Link className="ai-icon" to="/Finance">
+              {Cookie.get("accessType")==="superadmin" && <Link className="ai-icon" to="/Finance">
                 <i className="flaticon-381-notepad"></i>
                 <span className="nav-text">Gestion financière</span>
               </Link>}
@@ -258,7 +268,7 @@ class SideBar extends Component {
       
 
          
-        </PerfectScrollbar>
+        </PerfectScrollbar>}
       </div>
     
     );
