@@ -5,7 +5,7 @@ import { Box } from '@material-ui/core';
 
 
 function Dashboard() {
-console.log(Cookies.get("role"));
+console.log("role",Cookies.get("role"), "accessType", Cookies.get("accessType"));
     //Subs
     const SubsData = [
         { day: "Monday", count: 101 },

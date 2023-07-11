@@ -29,6 +29,11 @@ router
   router.route("/:id").get(
     restaurantController.getRestaurantById
   )
+
+  router.route("/admin/:adminId").get(
+    restaurantController.getAllResraurantsOfAdmin
+  )
+
   router
   .route("/update/:id").put(
     verifyJWT,

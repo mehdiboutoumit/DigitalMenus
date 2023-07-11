@@ -49,10 +49,6 @@ module.exports = (sequelize, DataTypes) => {
       name: {
         type: DataTypes.STRING,
         allowNull: false,
-        validate: {
-          notEmpty: true,
-          len: [2, 255],
-        },
       },
       email: {
         type: DataTypes.STRING,
@@ -77,7 +73,12 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING(300),
         defaultValue: null,
       },
+      accessType: {
+        type: DataTypes.STRING(300),
+        defaultValue: "user",
+      }
     },
+    
     {
       sequelize,
       modelName: "User",

@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { baseURL } from "../../../api/baseURL";
+import swal from "sweetalert";
 
 const Registration = () => {
    const [registrationData, setRegistrationData] = useState({});
@@ -13,7 +14,7 @@ const Registration = () => {
       setConfirmPassword(e.target.value);
     };
 
-   const [selectedRole, setSelectedRole] = useState("admin");
+   // const [selectedRole, setSelectedRole] = useState("admin");
 
 
    const handleBlur = (e) => {
@@ -24,7 +25,11 @@ const Registration = () => {
    const submitHandler = async(e) => {
       e.preventDefault();
       try {
-         const res = await axios.post(`${baseURL}/admin/register`,registrationData);
+         var newRegistrationData = { ...registrationData, accessType : "admin" };
+         setRegistrationData(newRegistrationData);
+         const res = await axios.post(`${baseURL}/user/add`,newRegistrationData);
+         console.log(newRegistrationData)
+         swal("Votre compte est cree avec succes !")
          history.push(`/login`); 
                
       } catch (error) {
@@ -77,7 +82,7 @@ const Registration = () => {
                               onChange={handleConfirmPasswordChange}
                            />
                            </div>
-                           <div className="form-group">
+                           {/* <div className="form-group">
                            <label className="mb-1">
                               <strong>Role</strong>
                            </label>
@@ -110,7 +115,7 @@ const Registration = () => {
                                  Superadmin
                               </label>
                            </div>
-                           </div>
+                           </div> */}
                            <button
                            type="submit"
                            className="btn btn-primary btn-block"

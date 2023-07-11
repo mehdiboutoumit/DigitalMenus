@@ -26,7 +26,7 @@ const Login = () => {
     try {
       setLoading(true);
       const response = await axios.post(
-        `${baseURL}/admin/login`,
+        `${baseURL}/user/login`,
         JSON.stringify({
           email: loginData.email,
           password: loginData.password,
@@ -36,14 +36,30 @@ const Login = () => {
           withCredentials: false,
         }
       );
-      const accessToken = response?.data?.accessToken;
-      const role = response?.data?.role;
-      const name = response?.data?.user;
+      const json = response?.data;
+      
+      // Loop over the JSON object
+      for (const propertyName in json) {
+        if (Object.hasOwnProperty.call(json, propertyName)) {
+          const propertyValue = json[propertyName];
+          
+          // Set the cookie using the property name as the cookie name and the value as the cookie value
+          Cookies.set(propertyName, propertyValue);
+        }
+      }
+
+      
+      // const accessToken = response?.data?.accessToken;
+      // const role = response?.data?.role;
+      // const name = response?.data?.user;
+      // const accessType = response?.data?.accessType;
+      // const userId = response?.data?.id;
      // Cookies.remove('role');
-      Cookies.set('role', role);
-      Cookies.set('accessToken', accessToken);
-      console.log(name)
-      Cookies.set('user', name);
+      // Cookies.set('role', role);
+      // Cookies.set('accessToken', accessToken);
+      // Cookies.set('user', name);
+      // Cookies.set('accessType', accessType);
+      // Cookies.set('userId', userId);
 
       // setAuth({
       //   email: loginData.email,

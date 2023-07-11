@@ -8,9 +8,11 @@ function Logout() {
     const navigation = useHistory();
     useEffect(() => {
         axios.get(`${baseURL}/admin/logout`)
-        .then(()=>{navigation.push('/login');
+        .then(()=>{
       Cookie.remove('role');
-    Cookie.remove('accessToken');})
+    Cookie.remove('accessToken');
+  Cookie.remove('accessType');
+  navigation.push('/login');})
         .catch((err) => console.log(err))
 
         

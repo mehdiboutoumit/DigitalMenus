@@ -7,7 +7,7 @@ const corsOptions = require("./config/corsOption");
 const credentials = require("./middlewares/credentials");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
-const bodyParser = require("body-parser")
+
 //init
 const db = require("./models");
 const app = express();
@@ -24,7 +24,7 @@ app.use("/images",express.static("./images"));
 app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded({limit: '50mb'}));
 
-app.use(bodyParser())
+
 app.use(cookieParser())
 app.use(
   session({

@@ -335,7 +335,7 @@ const Header = ({ onNote, toggle, onProfile, onActivity, onNotification }) => {
                 >
                   <div className="header-info">
                     <small></small>
-                    <span>{Cookie.get('user')}</span>
+                    <span>{Cookie.get('name')}</span>
                   </div>
                   <img src={profile} width="20" alt="" />
                 </Link>

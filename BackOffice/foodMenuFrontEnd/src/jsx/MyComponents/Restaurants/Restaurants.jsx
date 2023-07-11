@@ -1,4 +1,5 @@
 import React, { Fragment, useState, useEffect, useContext } from 'react';
+import Cookies from 'js-cookie';
 import { MDBDataTable } from 'mdbreact';
 import dataRestau from './dataRestau.jsx';
 import { Link } from 'react-router-dom';
@@ -9,9 +10,13 @@ import { frontURL } from '../../../api/frontURL.js';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min.js';
 import swal from 'sweetalert';
 import { ToastContainer, toast } from 'react-toastify';
+import { baseURL } from '../../../api/baseURL.js';
 
 
-function Restaurants(adminId) {
+function Restaurants() {
+  
+  const accessType = Cookies.get('accessType');
+
   //const dataRestaurants = dataRestau;
   const { auth } = useContext(AuthContext);
   const history = useHistory();
@@ -30,14 +35,27 @@ function Restaurants(adminId) {
 
 
   const fetchData = async () => {
+
+
   
     try {
+      if(accessType === "superadmin"){
       const response = await axios.get('http://localhost:5000/api/restaurant/', {
   headers: {
     authorization: `Bearer ${accessToken}`,
   },
 });
       setdataRestaurants(response.data.restaurants);
+    }
+    else {
+      const adminId = Cookies.get('userId');
+      const response = await axios.get(`${baseURL}/restaurant/admin/${adminId}`,  {
+  headers: {
+    authorization: `Bearer ${accessToken}`,
+  },
+});
+      setdataRestaurants(response.data.restaurants);
+    }
     } catch (error) {
       if (error.response?.status === 401) {
         history.push('/login');

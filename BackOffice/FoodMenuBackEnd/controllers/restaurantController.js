@@ -29,6 +29,16 @@ exports.getAllRestaurants = async (req, res, next) => {
   const restaurants = await restaurantService.getAllRestaurants();
   return res.json({ message: "success", restaurants });
 };
+exports.getAllResraurantsOfAdmin = async (req, res, next) => {
+  if (req.params?.adminId) {
+    const restaurants = await restaurantService.getAllRestaurantsOfAdmin(
+      req.params.adminId
+    );
+    return res.json({ message: "success", restaurants });
+  } else {
+    return res.json({ message: "there is no restaurant with this id" });
+  }
+};
 exports.getRestaurantById = async (req, res, next) => {
   const { id } = req.params;
   const restaurant = await restaurantService.getRestaurantById(id);

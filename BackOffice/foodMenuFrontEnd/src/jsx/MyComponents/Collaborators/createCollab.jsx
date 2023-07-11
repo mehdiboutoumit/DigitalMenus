@@ -53,7 +53,7 @@ setRoles(res.data.role);
       e.preventDefault();
       try {
         const res = axios.post(`${baseURL}/user/add`, {
-          name, password, email, id_role : role, id_restaurant : restaurantId
+          name, password, email, id_role : role, id_restaurant : restaurantId, accessType : "user"
         });
         onClose();
         

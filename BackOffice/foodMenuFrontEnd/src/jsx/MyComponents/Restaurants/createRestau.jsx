@@ -1,4 +1,4 @@
-import { IconButton } from "@material-ui/core";
+import Cookies from 'js-cookie'
 import React, { useEffect, useState } from "react";
 import { Button, Modal } from "react-bootstrap";
 import axios from "axios";
@@ -6,6 +6,7 @@ import {v4 as uuidv4} from 'uuid';
 import { ToastContainer, toast } from "react-toastify";
 
 function CreateRestau() {
+  const adminId = Cookies.get('userId');
 const [name,setName] = useState('');
 const [image, setimage] = useState(null);
 const [description, setDescription] = useState('');
@@ -26,7 +27,8 @@ formData.append("id", id);
 formData.append("name", name);
 formData.append("address", address);
 formData.append("description", description);
-formData.append("image", image); // Assuming `image` is the file object obtained from the file input
+formData.append("image", image);
+formData.append("id_admin", adminId);
 
 const response = await axios.post("http://localhost:5000/api/restaurant/add", formData, {
   headers: {

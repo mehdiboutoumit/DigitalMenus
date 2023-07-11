@@ -1,9 +1,11 @@
 const userService = require("../services/userService");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 exports.createUser = async (req, res, next) => {
-  const { name, email, password, id_role, id_restaurant } = req.body;
-  const { user: connectedUser } = req;
+  const { name, email, password, id_role, id_restaurant , accessType } = req.body;
+  //const { user: connectedUser } = req;
+  console.log(accessType)
   const userFromDb = await userService.findUserByEmail(email);
   if (userFromDb == null) {
     const hashedPaswword = await bcrypt.hash(password, 10);
@@ -13,6 +15,7 @@ exports.createUser = async (req, res, next) => {
       password: hashedPaswword,
       id_role,
       id_restaurant,
+      accessType
     });
     return res.json({ message: "success", user: newUser });
   } else {
@@ -42,6 +45,8 @@ exports.login = async (req, res, next) => {
         name: userFromDb.name,
         email: userFromDb.email,
         id: userFromDb.id,
+        accessType : userFromDb.accessType,
+        id_role : userFromDb.id_role
       };
       // generate jwt
       const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
@@ -59,10 +64,14 @@ exports.login = async (req, res, next) => {
         // sameSite: "None",
         // secure: true,
       });
+      const role = "Need to get role name";
 
       return res.json({
-        message: "success",
         accessToken,
+        accessType : user.accessType,
+        role: role,
+        userId : user.id,
+        name : user.name
       });
     } else {
       return res.status(400).json({ message: "Wrong Email or Password" });

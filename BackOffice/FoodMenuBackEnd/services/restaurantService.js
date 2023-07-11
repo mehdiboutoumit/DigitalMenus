@@ -31,6 +31,29 @@ exports.getAllRestaurants = async () => {
   });
   return restaurants;
 };
+exports.getAllRestaurantsOfAdmin = async (adminId) => {
+  let restaurants = await Restaurant.findAll({
+    where: {
+      id_admin: adminId,
+    },
+  });
+  if (restaurants == null) {
+    return [];
+  }
+
+  restaurants = restaurants.map((restaurant) => {
+  
+    return {
+      id: restaurant.dataValues.id,
+      name: restaurant.dataValues.name,
+      image: restaurant.dataValues.image,
+      address: restaurant.dataValues.address,
+      description: restaurant.dataValues.description,
+      id_admin: restaurant.dataValues.id_admin,
+    };
+  });
+  return restaurants;
+};
 exports.updateRestaurant = async (id, body) => {
   console.log("service");
   await Restaurant.update(body, {
