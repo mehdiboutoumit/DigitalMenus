@@ -47,22 +47,20 @@ exports.getUserById = async (id) => {
     return data.dataValues;
   }
 };
-exports.getAllUsers = async () => {
+exports.getAllUsers = async (id) => {
   let users = await User.findAll({
     include: "Role",
   });
   if (users == null) {
     return [];
   }
-  users = users.map((role) => {
+  users = users.map((user) => {
     return {
-      id: role.dataValues.id,
-      name: role.dataValues.name,
-      email: role.dataValues.email,
-      role: {
-        id: role.dataValues.Role.id,
-        role: role.dataValues.Role.role,
-      },
+      id: user.dataValues.id ,
+      name: user.dataValues.name,
+      email: user.dataValues.email,
+      accessType : user.dataValues.accessType,
+      role: user.dataValues.Role.role
     };
   });
   return users;

@@ -3,4 +3,12 @@
     width: auto;
     height: 3em;
   }
+.footer {
+  
+    position: relative;
+    left: 0;
+    bottom: 0;
+    height: auto;
+    width: 100%;
+  }
   

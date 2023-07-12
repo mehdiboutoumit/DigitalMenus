@@ -1,10 +1,13 @@
 import Cookies from 'js-cookie';
+import logo1 from "../../../images/logo1.png"
 import React, { useState, useContext } from "react";
 import { Link, useHistory } from "react-router-dom";
 import AuthContext from "../../../context/AuthProvider";
 import axios from "axios";
 import { baseURL } from "../../../api/baseURL";
+import { Box } from '@material-ui/core';
 const LOGIN_URL = "/api/admin/login";
+
 
 
 const Login = () => {
@@ -95,7 +98,10 @@ const Login = () => {
           <div className="row no-gutters">
             <div className="col-xl-12">
               <div className="auth-form">
-                <h4 className="text-center mb-4 "> Sign in your account </h4>
+                <Box>
+                   <img src={logo1} alt='logo' className='logo'/>
+                </Box>
+                <h4 className="text-center mb-4 "> Se connecter </h4>
                 <form action="" onSubmit={submitHandler}>
                   <div className="form-group">
                     {" "}
@@ -114,13 +120,13 @@ const Login = () => {
                   <div className="form-group">
                     <label className="mb-1 ">
                       {" "}
-                      <strong>Password</strong>{" "}
+                      <strong>Mot de passe</strong>{" "}
                     </label>
                     <input
                       name="password"
                       type="password"
                       className="form-control"
-                      placeholder="Password"
+                      placeholder="Mot de passe"
                       onChange={handleChange}
                     />
                   </div>
@@ -137,14 +143,14 @@ const Login = () => {
                           htmlFor="basic_checkbox_1"
                         >
                           {" "}
-                          Remember my preference{" "}
+                          Se souvenir de moi {" "}
                         </label>
                       </div>
                     </div>
                     <div className="form-group">
                       <Link className="" to="/forgotpassword">
                         {" "}
-                        Forgot Password?{" "}
+                        Mot de pass oublié ?{" "}
                       </Link>
                     </div>
                   </div>
@@ -157,17 +163,17 @@ const Login = () => {
                       className="btn btn-primary btn-block"
                       onClick={() => submitHandler}
                     >
-                      {!loading ? "Sign Me In" : "Loading..."}
+                      {!loading ? "Se connecter" : "Connexion ..."}
                     </button>
                   </div>
                 </form>
                 <div className="new-account mt-3">
                   <p className="">
                     {" "}
-                    Don't have an account?{" "}
+                    Pas de compte ?{" "}
                     <Link className="text-primary" to="/register">
                       {" "}
-                      Sign up{" "}
+                      Registrer{" "}
                     </Link>{" "}
                   </p>
                 </div>

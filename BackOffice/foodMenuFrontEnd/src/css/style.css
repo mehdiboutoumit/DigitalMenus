@@ -264,6 +264,8 @@ article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
 body {
   margin: 0;
   font-family: "Roboto", sans-serif;
+  position: absolute;
+  height: 100vh;
   font-size: 0.875rem;
   font-weight: 400;
   line-height: 1.5;
@@ -9482,6 +9484,11 @@ a {
     transform: scale(1); } }
 .footer {
   padding-left: 17.1875rem;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: auto;
+  width: 100%;
   background-color: #ffffff; }
   .footer .copyright {
     padding: 0.9375rem; }

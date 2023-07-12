@@ -10,8 +10,8 @@ router
     // verifyPermission(["admin"]),
     userController.createUser
   )
-  router.route("/").get(
-    verifyJWT,
+  router.route("/:id").get(
+    //verifyJWT,
     // verifyPermission(["admin"]),
     userController.getAllUsers
   );

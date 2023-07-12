@@ -18,8 +18,8 @@ var style = {
 const Footer = () => {
    return (
       <div className="footer" >
-         <div/>
-         <div className="copyright"  style={style}>
+        
+         <div className="copyright"  >
             <p>
                Copyright ©  Developed by{" "}
                <Link to="#" target="_blank">
@@ -30,7 +30,7 @@ const Footer = () => {
             </p>
             
          </div>
-        
+      
       </div>
    );
 };

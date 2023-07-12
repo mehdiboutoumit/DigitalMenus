@@ -290,7 +290,7 @@ const Markup = () => {
   ];
   return (
     // you can change baseName to whatever you want
-    <Router basename="/">
+    <Router basename="/" >
       <Switch>
         <Route path="/login">
           <div className="container-fluid">
@@ -323,10 +323,10 @@ const Markup = () => {
           </div>
         </Route>
         <Route>
-          <div id="" className="show">
+          <div id="" className="" style={{minHeight :"100vh", display: "flex", flexDirection: "column"}}>
             <Nav />
-            <div className="content-body">
-              <div className="container-fluid">
+            <div className="content-body" style={{ flex: 1 , marginBottom : 2}}>
+              <div className="container-fluid" style={{ flex: 1 , marginBottom : 2}}>
                 <Switch>
                   {routes.map((data, i) => (
                     <Route
@@ -342,7 +342,7 @@ const Markup = () => {
                 </Switch>
               </div>
             </div>
-            <div >
+            <div style={{  marginTop : 100}}>
             <Footer />
            
             </div>

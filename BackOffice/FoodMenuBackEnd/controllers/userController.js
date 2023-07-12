@@ -5,7 +5,6 @@ const jwt = require("jsonwebtoken");
 exports.createUser = async (req, res, next) => {
   const { name, email, password, id_role, id_restaurant , accessType } = req.body;
   //const { user: connectedUser } = req;
-  console.log(accessType)
   const userFromDb = await userService.findUserByEmail(email);
   if (userFromDb == null) {
     const hashedPaswword = await bcrypt.hash(password, 10);
@@ -23,7 +22,8 @@ exports.createUser = async (req, res, next) => {
   }
 };
 exports.getAllUsers = async (req, res, next) => {
-  const users = await userService.getAllUsers();
+  const {id} = req.params;
+  const users = await userService.getAllUsers(id);
   return res.json({ message: "success", users: users });
 };
 exports.getAllUsersOfRestaurant = async (req, res, next) => {
@@ -64,12 +64,12 @@ exports.login = async (req, res, next) => {
         // sameSite: "None",
         // secure: true,
       });
-      const role = "Need to get role name";
+      
 
       return res.json({
         accessToken,
         accessType : user.accessType,
-        role: role,
+        role: user.id_role,
         userId : user.id,
         name : user.name
       });
@@ -162,6 +162,11 @@ exports.getUserById = async (req, res, next) => {
 exports.updateUser = async (req, res, next) => {
   const { id } = req.params;
   const { body: user } = req;
-  await userService.updateUser(id, user);
+  var updateduser = {};
+  if(user.name) updateduser.name = user.name;
+  if(user.email) updateduser.email = user.email;
+  if(user.password) updateduser.password = user.password;
+  if(user.accessType) updateduser.accessType = user.accessType;
+  await userService.updateUser(id, updateduser);
   return res.json({ message: "success" });
 };

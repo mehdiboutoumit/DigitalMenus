@@ -11,12 +11,19 @@ import { withResizeDetector } from "react-resize-detector";
 
 const App = ({ width }) => {
    const body = document.querySelector("body");
+   // var btn = document.querySelector(".nav-control");
+   // function toggleFunc() {
+   //    return body.setAttribute("data-sidebar-style", "mini")
+   //  }
+
+   //  btn.addEventListener("click", toggleFunc);
 
    width >= 1300
       ? body.setAttribute("data-sidebar-style", "full")
       : width <= 1299 && width >= 767
       ? body.setAttribute("data-sidebar-style", "mini")
       : body.setAttribute("data-sidebar-style", "overlay");
+   
    return (
       <Fragment>
          <Markup />
