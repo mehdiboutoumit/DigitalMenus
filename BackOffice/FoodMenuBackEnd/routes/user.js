@@ -33,7 +33,7 @@ router //
   .get(userController.getAllUsersOfRestaurant);
 
 router
-  .route("/:id") //
+  .route("/one/:id") //
   .get(
     verifyJWT,
     // verifyPermission(["admin"]),

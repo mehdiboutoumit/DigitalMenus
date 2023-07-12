@@ -49,7 +49,20 @@ const Orders = () => {
           setRestaurants(data); 
         }
         else{
-
+          const res = await axios.get(`${baseURL}/user/one/${Cookies.get('userId')}`, {
+            headers: {
+              authorization: `Bearer ${accessToken}`,
+            },
+          });
+          
+          const restaurantId = res.data.user.id_restaurant ;
+          const response = await axios.get(`${baseURL}/restaurant/${restaurantId}`, {
+            headers: {
+              authorization: `Bearer ${accessToken}`,
+            },
+          });
+          const restau = response.data.restaurant;
+          setSelectedRestaurant(restau) 
         }
       }
      
@@ -139,13 +152,10 @@ const Orders = () => {
       totalprice: order.totalprice,
       actions: (
         <>
-          <Button><Link to={`/ShowOrder/${order.id}`}>Details</Link></Button>
-         
-          
-              <Button variant="info" onClick={() => handleStart(order)}><i className="flaticon-381-clock"></i></Button>
-              <Button variant="danger" onClick={() => handleDelete(order)}><i className="flaticon-381-multiply-1"></i></Button>
-           
-    
+              <Button><Link to={`/ShowOrder/${order.id}`}>Details</Link></Button>
+             <span> {(!Cookies.get('id_role') === 1) && <Button variant="info" onClick={() => handleStart(order)}><i className="flaticon-381-clock"></i></Button> }</span>
+             <span> {(!Cookies.get('id_role') === 1)  && <Button variant="danger" onClick={() => handleDelete(order)}><i className="flaticon-381-multiply-1"></i></Button>} </span>
+ 
         </>
       ),
     })),
@@ -232,7 +242,7 @@ const Orders = () => {
       <h1 style={{display: "flex", justifyContent: "center", alignItems: "center"}}>Les commandes</h1>
       <hr></hr>
 
-      <div>
+     {!Cookies.get('id_role') === "2" &&  <div>
       <Select
         options={restaurants.map((restaurant) => ({
           value: restaurant,
@@ -243,7 +253,7 @@ const Orders = () => {
         placeholder="Selectionner un restaurant"
         components = {{Option : customOption}}
       />
-   </div>
+   </div>}
    {selectedRestaurant && (
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100px", border: "1px solid orange",borderRadius: "20%"}}>
         <img src={`http://localhost:5000/images/${selectedRestaurant.image}`} alt={selectedRestaurant.name} style={{  width: "100px", height: "100px" }} />

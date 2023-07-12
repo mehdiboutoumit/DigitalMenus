@@ -154,7 +154,7 @@ exports.getUserById = async (req, res, next) => {
       id_admin: userFromDb.id_admin,
       id_restaurant: userFromDb.id_restaurant,
     };
-    return res.json({ message: "success", user });
+    return res.json({ message: "success user", user });
   } else {
     return res.json({ message: "there is no user with this id" });
   }
