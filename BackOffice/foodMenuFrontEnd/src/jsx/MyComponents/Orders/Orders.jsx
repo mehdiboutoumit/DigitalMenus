@@ -13,7 +13,6 @@ import { Box } from "@material-ui/core";
 
 const Orders = () => {
   const {auth} = useContext(AuthContext);
-  const {accessToken} = auth;
   const [orders, setOrders] = useState([]);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [editOrderData, setEditOrderData] = useState(null);
@@ -31,7 +30,8 @@ const Orders = () => {
         if(Cookies.get('accessType') === "superadmin"){
             const response = await axios.get(`${baseURL}/restaurant`, {
               headers: {
-                authorization: `Bearer ${accessToken}`,
+                authorization: `Bearer ${Cookies.get(Cookies.get('acessToken'))}`,
+                id : `Bearer ${Cookies.get('userId')}`
               },
             });
             const data = response.data.restaurants;
@@ -42,7 +42,8 @@ const Orders = () => {
         if (Cookies.get('accessType') === "admin"){
           const response = await axios.get(`${baseURL}/restaurant/admin/${Cookies.get('userId')}`, {
             headers: {
-              authorization: `Bearer ${accessToken}`,
+              authorization: `Bearer ${Cookies.get('acessToken')}`,
+              id : `Bearer ${Cookies.get('userId')}`
             },
           });
           const data = response.data.restaurants;
@@ -51,14 +52,14 @@ const Orders = () => {
         else{
           const res = await axios.get(`${baseURL}/user/one/${Cookies.get('userId')}`, {
             headers: {
-              authorization: `Bearer ${accessToken}`,
+              authorization: `Bearer ${Cookies.get('acessToken')}`,
             },
           });
           
           const restaurantId = res.data.user.id_restaurant ;
           const response = await axios.get(`${baseURL}/restaurant/${restaurantId}`, {
             headers: {
-              authorization: `Bearer ${accessToken}`,
+              authorization: `Bearer ${Cookies.get('acessToken')}`,
             },
           });
           const restau = response.data.restaurant;
@@ -84,7 +85,7 @@ const Orders = () => {
       try {
         const response = await axios.get(`${baseURL}/order/restaurant/${selectedRestaurant.id}`, {
           headers: {
-            authorization: `Bearer ${accessToken}`,
+            authorization: `Bearer ${Cookies.get('acessToken')}`,
           },
         });
         const data = response.data.orders;
@@ -242,7 +243,7 @@ const Orders = () => {
       <h1 style={{display: "flex", justifyContent: "center", alignItems: "center"}}>Les commandes</h1>
       <hr></hr>
 
-     {!Cookies.get('id_role') === "2" &&  <div>
+     {!(Cookies.get('id_role') === 2) &&  <div>
       <Select
         options={restaurants.map((restaurant) => ({
           value: restaurant,

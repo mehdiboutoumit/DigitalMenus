@@ -1,19 +1,20 @@
-const adminService = require("../services/adminService");
 const userService = require("../services/userService");
 const verifyPermission = function (roles) {
   return async (req, res, next) => {
-    const { user } = req;
+    const idHeader = req.headers["id"];
+    const id = idHeader.split(" ")[1];
+    //const {id} = req.params;
     let access = false;
     if (roles.includes("admin")) {
       console.log("is admin");
-      const data = await adminService.findAdminById(user.id);
-      access = data == null ? false : true;
+      const user = await userService.findUserById(id);
+      access = user.accessType == "admin" || "superadmin" ? true : false; //every superadmin is an admin
       // if (access) req.is_admin = true;
     }
-    if (roles.includes("user")) {
+    if (roles.includes("superadmin")) {
       console.log("is user");
-      const data = await userService.findUserById(user.id);
-      access = data == null ? false : true;
+      const user = await userService.findUserById(id);
+      access = user.accessType == "superadmin" ? true : false;
     }
     if (!access) {
       console.log("access denied");

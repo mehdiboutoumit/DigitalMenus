@@ -8,14 +8,14 @@ router
   .route("/add") //
   .post(
     verifyJWT,
-    // verifyPermission(["admin"]),
+    verifyPermission(["admin"]),
     upload.single("image"),
     restaurantController.createRestaurant
   )
   router
   .route("/") .get(
     verifyJWT,
-    // verifyPermission(["admin"]),
+    verifyPermission(["superadmin"]),
     restaurantController.getAllRestaurants
   );
 
@@ -31,6 +31,7 @@ router
   )
 
   router.route("/admin/:adminId").get(
+    verifyPermission(["admin"]),
     restaurantController.getAllResraurantsOfAdmin
   )
 

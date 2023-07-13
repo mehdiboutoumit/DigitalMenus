@@ -43,6 +43,7 @@ function Restaurants() {
       const response = await axios.get('http://localhost:5000/api/restaurant/', {
   headers: {
     authorization: `Bearer ${accessToken}`,
+    id : `Bearer ${Cookies.get('userId')}`
   },
 });
       setdataRestaurants(response.data.restaurants);
@@ -51,10 +52,11 @@ function Restaurants() {
       if(accessType === "admin"){
                 const adminId = Cookies.get('userId');
                 const response = await axios.get(`${baseURL}/restaurant/admin/${adminId}`,  {
-            headers: {
-              authorization: `Bearer ${accessToken}`,
-            },
-          });
+                  headers: {
+                    authorization: `Bearer ${Cookies.get('accessToken')}`,
+                    id : `Bearer ${Cookies.get('userId')}`
+                  },
+                });
                 setdataRestaurants(response.data.restaurants);
       }
       else {
@@ -190,9 +192,11 @@ function Restaurants() {
   editedRestaurant.append('description', selectedRestaurant.description);
   editedRestaurant.append('image', image);
   
-  axios.put(`http://localhost:5000/api/restaurant/update/${ID}`, editedRestaurant, {
+  axios.put(`${baseURL}/restaurant/update/${ID}`, editedRestaurant, {
     headers: {
-      'Content-Type': 'multipart/form-data'
+      'Content-Type': 'multipart/form-data',
+      authorization: `Bearer ${Cookies.get('accessToken')}`,
+      id : `Bearer ${Cookies.get('userId')}`
     }
   })
     .then((response) => {

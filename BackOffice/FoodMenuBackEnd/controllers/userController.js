@@ -150,6 +150,7 @@ exports.getUserById = async (req, res, next) => {
       name: userFromDb.name,
       email: userFromDb.email,
       id: userFromDb.id,
+      accessType : userFromDb.accessType,
       id_role: userFromDb.id_role,
       id_admin: userFromDb.id_admin,
       id_restaurant: userFromDb.id_restaurant,
