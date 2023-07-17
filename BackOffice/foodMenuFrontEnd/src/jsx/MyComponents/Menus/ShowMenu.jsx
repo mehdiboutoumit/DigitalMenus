@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import Cookies from 'js-cookie'
 import { useParams } from 'react-router-dom';
 import { Modal, Button } from 'react-bootstrap';
 import CreateCategory from '../Categories/createCategory';
@@ -12,6 +13,7 @@ import MenuPDF from './MenuPDF';
 import { ToastContainer, toast } from 'react-toastify';
 import swal from 'sweetalert';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom';
+import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 
 
 
@@ -53,15 +55,17 @@ const ShowMenu = () => {
   
     const fetchData = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/menus/${menuId}`, {
+        const res = await axios.get(`http://localhost:5000/api/menus/${menuId}`,{
           headers: {
-            authorization: `Bearer ${accessToken}`,
+            authorization: `Bearer ${Cookies.get('accessToken')}`,
+            id : `Bearer ${Cookies.get('userId')}`
           },
         });
         setMenuName(res.data.menu.name);
-        const response = await axios.get(`http://localhost:5000/api/category/menu/${menuId}`, {
+        const response = await axios.get(`http://localhost:5000/api/category/menu/${menuId}`,{
           headers: {
-            authorization: `Bearer ${accessToken}`,
+            authorization: `Bearer ${Cookies.get('accessToken')}`,
+            id : `Bearer ${Cookies.get('userId')}`
           },
         });
         const categoryData = response.data.categories.map((category) => ({
@@ -77,9 +81,10 @@ const ShowMenu = () => {
  
           const updatedCategories = {};
           for (const category of categoryData) {
-            const response = await axios.get(`http://localhost:5000/api/dish/category/${category.id}`, {
+            const response = await axios.get(`http://localhost:5000/api/dish/category/${category.id}`,{
               headers: {
-                authorization: `Bearer ${accessToken}`,
+                authorization: `Bearer ${Cookies.get('accessToken')}`,
+                id : `Bearer ${Cookies.get('userId')}`
               },
             });
             const dishes = response.data.dishes.map((d) => ({
@@ -98,15 +103,17 @@ const ShowMenu = () => {
           }
           const response = await axios.get(`http://localhost:5000/api/portion/`, {
             headers: {
-              authorization: `Bearer ${accessToken}`,
+              authorization: `Bearer ${Cookies.get('accessToken')}`,
+              id : `Bearer ${Cookies.get('userId')}`
             },
           });
           const portionsData = response.data.portions;
           setPortions(portionsData);
 
-          const res = await axios.get(`http://localhost:5000/api/extra/`, {
+          const res = await axios.get(`http://localhost:5000/api/extra/`,{
             headers: {
-              authorization: `Bearer ${accessToken}`,
+              authorization: `Bearer ${Cookies.get('accessToken')}`,
+              id : `Bearer ${Cookies.get('userId')}`
             },
           });
           const extrasData = res.data.extras;
@@ -164,9 +171,12 @@ const ShowMenu = () => {
           // Make a POST request to save the category
           const response = await axios.post('http://localhost:5000/api/category/add', categoryData, {
             headers: {
-              'Content-Type': 'multipart/form-data'
+              'Content-Type': 'multipart/form-data',
+              authorization: `Bearer ${Cookies.get('accessToken')}`,
+              id : `Bearer ${Cookies.get('userId')}`
             }
           });
+         
       
   
         for (const dish of dishes) {
@@ -192,7 +202,9 @@ const ShowMenu = () => {
     // Make a POST request to save the dish
     await axios.post('http://localhost:5000/api/dish/add', dishData, {
       headers: {
-        'Content-Type': 'multipart/form-data'
+        'Content-Type': 'multipart/form-data',
+        authorization: `Bearer ${Cookies.get('accessToken')}`,
+        id : `Bearer ${Cookies.get('userId')}`
       }
     });
 
@@ -200,14 +212,16 @@ const ShowMenu = () => {
     for (const portion of portions){
       await axios.post('http://localhost:5000/api/portion/add', portion, {
         headers: {
-          authorization: `Bearer ${accessToken}`,
+          authorization: `Bearer ${Cookies.get('accessToken')}`,
+          id : `Bearer ${Cookies.get('userId')}`
         },
       });
   }
   for (const extra of extras){
     await axios.post('http://localhost:5000/api/extra/add', extra, {
       headers: {
-        authorization: `Bearer ${accessToken}`,
+        authorization: `Bearer ${Cookies.get('accessToken')}`,
+        id : `Bearer ${Cookies.get('userId')}`
       },
     });
 }
@@ -644,6 +658,7 @@ const ShowMenu = () => {
   
   return (
     <>
+    <Link to=''></Link>
 <div className="text-primary text-center">
    <h1 style={{color : 'orange', fontSize: "60px", fontWeight: "bold", fontFamily: "Rockwell Extra Bold" }}>{menuName}</h1>
 </div>

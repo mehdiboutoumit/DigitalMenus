@@ -20,7 +20,6 @@ function Restaurants() {
   //const dataRestaurants = dataRestau;
   const { auth } = useContext(AuthContext);
   const history = useHistory();
-  const{ accessToken } = auth;
   //console.log("Provider",auth) //undefined
   const [expandedRestaurantId, setExpandedRestaurantId] = useState(null);
   const [truncatedDescriptions, setTruncatedDescriptions] = useState([]);
@@ -42,7 +41,7 @@ function Restaurants() {
       if(accessType === "superadmin"){
       const response = await axios.get('http://localhost:5000/api/restaurant/', {
   headers: {
-    authorization: `Bearer ${accessToken}`,
+    authorization: `Bearer ${Cookies.get('accessToken')}`,
     id : `Bearer ${Cookies.get('userId')}`
   },
 });
@@ -53,7 +52,7 @@ function Restaurants() {
                 const adminId = Cookies.get('userId');
                 const response = await axios.get(`${baseURL}/restaurant/admin/${adminId}`,  {
                   headers: {
-                    authorization: `Bearer ${Cookies.get('accessToken')}`,
+                    authorization: `Bearer ${Cookies.get(Cookies.get('accessToken'))}`,
                     id : `Bearer ${Cookies.get('userId')}`
                   },
                 });
@@ -68,8 +67,8 @@ function Restaurants() {
       
     }
     } catch (error) {
-      if (error.response?.status === 401) {
-        history.push('/login');
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        window.location.href = '/logout';
       } else {
         history.push('/error500');
       }
@@ -195,7 +194,7 @@ function Restaurants() {
   axios.put(`${baseURL}/restaurant/update/${ID}`, editedRestaurant, {
     headers: {
       'Content-Type': 'multipart/form-data',
-      authorization: `Bearer ${Cookies.get('accessToken')}`,
+      authorization: `Bearer ${Cookies.get(Cookies.get('accessToken'))}`,
       id : `Bearer ${Cookies.get('userId')}`
     }
   })

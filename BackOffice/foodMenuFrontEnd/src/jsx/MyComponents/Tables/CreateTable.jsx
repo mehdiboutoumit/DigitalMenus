@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Cookies from 'js-cookie'
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import { ToastContainer, toast } from "react-toastify";
@@ -52,6 +53,11 @@ const CreateTable = ({ editTableData, restaurantId, onCloseModal }) => {
           numTable: num,
           id_menus: selectedMenus? selectedMenus : [],
           id_restaurant: restaurantId,
+        }, {
+          headers: {
+            authorization: `Bearer ${Cookies.get('accessToken')}`,
+            id : `Bearer ${Cookies.get('userId')}`
+          },
         });
         console.log("Table updated successfully");
         toast.success("Table modifiée ✅ !", {

@@ -6,7 +6,7 @@ const verifyPermission = require("../middlewares/verifyPermission");
 router
   .route("/add") //
   .post(
-    verifyJWT,
+    //verifyJWT,
     // verifyPermission(["admin"]),
     tableController.createTable
   )

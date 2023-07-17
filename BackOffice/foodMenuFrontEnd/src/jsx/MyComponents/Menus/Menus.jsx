@@ -1,4 +1,5 @@
 import React, { Fragment, useState, useEffect, useContext } from 'react';
+import Cookies from 'js-cookie'
 import { MDBDataTable } from 'mdbreact';
 //import dataMenus from './dataMenus';
 import { Link } from '@material-ui/core';
@@ -31,7 +32,8 @@ const [refresh, setRefresh] = useState(0);
     try {
       const response = await axios.get(`http://localhost:5000/api/menus/restaurant/${restaurantId}`, {
         headers: {
-          authorization: `Bearer ${accessToken}`,
+          authorization: `Bearer ${Cookies.get('accessToken')}`,
+          id : `Bearer ${Cookies.get('userId')}`
         },
       });
       setDataMenus(response.data.menus);

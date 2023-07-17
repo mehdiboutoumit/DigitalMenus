@@ -3,6 +3,12 @@ import Chart from 'react-apexcharts'
 import { Box } from '@material-ui/core';
 
 function AdminDashboard() {
+      //Restaurants count
+      const restaurantsCount = 7;
+
+      //Total Incomes
+      const totalIncome = 1000;
+
       //Subs
       const SubsData = [
         { day: "Monday", count: 101 },
@@ -61,39 +67,40 @@ function AdminDashboard() {
     <div>
          <div className='d-flex align-items-center justify-content-center justify-content-between'>
 
-<div className="row">
+      <div className="row d-flex align-items-center justify-content-center">
+              
+      <div className="col-xl-3 col-lg-6 col-sm-6">
+            <div className="widget-stat card bg-success">
+                <div className="card-body p-4">
+                  <div className="media">
+                      <span className="mr-3">
+                        <i className="flaticon-381-diamond"></i>
+                      </span>
+                      <div className="media-body text-white text-center">
+                        <p className="mb-1">Revenus</p>
+                        <h3 className="text-white" style={{ fontSize: "25px", overflowWrap: "break-word" }}>{totalIncome} MAD</h3>
+                      </div>
+                  </div>
+                </div>
+            </div>
+          </div>
+          <div className="col-xl-3 col-lg-6 col-sm-6">
+            <div className="widget-stat card bg-primary">
+                <div className="card-body p-4">
+                  <div className="media">
+                      <span className="mr-3">
+                        <i className="flaticon-381-home-1"></i>
+                      </span>
+                      <div className="media-body text-white text-center">
+                        <p className="mb-1">Restaurants</p>
+                        <h3 className="text-white" style={{ fontSize: "25px", overflowWrap: "break-word" }}>{restaurantsCount}</h3>
+                      </div>
+                  </div>
+                </div>
+            </div>
+          </div>
+    <div className="row">
         
-<div className="col-xl-3 col-lg-6 col-sm-6">
-       <div className="widget-stat card bg-success">
-          <div className="card-body p-4">
-             <div className="media">
-                <span className="mr-3">
-                   <i className="flaticon-381-diamond"></i>
-                </span>
-                <div className="media-body text-white text-right">
-                   <p className="mb-1">Revenus</p>
-                   <h3 className="text-white">10000 MAD</h3>
-                </div>
-             </div>
-          </div>
-       </div>
-    </div>
-    <div className="col-xl-3 col-lg-6 col-sm-6">
-       <div className="widget-stat card bg-primary">
-          <div className="card-body p-4">
-             <div className="media">
-                <span className="mr-3">
-                   <i className="flaticon-381-home-1"></i>
-                </span>
-                <div className="media-body text-white text-right">
-                   <p className="mb-1">Restaurants</p>
-                   <h3 className="text-white">76</h3>
-                </div>
-             </div>
-          </div>
-       </div>
-    </div>
-
     <Box border={1} p={2} mb={2}>
         <h3>Nombre de commandes quotidiennes</h3>
         <Chart options={optionsOrders} series={seriesOrders} type="bar" height={400} />
@@ -108,7 +115,7 @@ function AdminDashboard() {
     </Box>
           
 </div>
-
+</div>
 </div>
     </div>
   )

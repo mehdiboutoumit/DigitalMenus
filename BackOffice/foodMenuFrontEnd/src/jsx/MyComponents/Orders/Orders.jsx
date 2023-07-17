@@ -30,7 +30,7 @@ const Orders = () => {
         if(Cookies.get('accessType') === "superadmin"){
             const response = await axios.get(`${baseURL}/restaurant`, {
               headers: {
-                authorization: `Bearer ${Cookies.get(Cookies.get('acessToken'))}`,
+                authorization: `Bearer ${Cookies.get('accessToken')}`,
                 id : `Bearer ${Cookies.get('userId')}`
               },
             });
@@ -42,7 +42,7 @@ const Orders = () => {
         if (Cookies.get('accessType') === "admin"){
           const response = await axios.get(`${baseURL}/restaurant/admin/${Cookies.get('userId')}`, {
             headers: {
-              authorization: `Bearer ${Cookies.get('acessToken')}`,
+              authorization: `Bearer ${Cookies.get('accessToken')}`,
               id : `Bearer ${Cookies.get('userId')}`
             },
           });
@@ -52,14 +52,16 @@ const Orders = () => {
         else{
           const res = await axios.get(`${baseURL}/user/one/${Cookies.get('userId')}`, {
             headers: {
-              authorization: `Bearer ${Cookies.get('acessToken')}`,
+              authorization: `Bearer ${Cookies.get('accessToken')}`,
+              id : `Bearer ${Cookies.get('userId')}`
             },
           });
           
           const restaurantId = res.data.user.id_restaurant ;
           const response = await axios.get(`${baseURL}/restaurant/${restaurantId}`, {
             headers: {
-              authorization: `Bearer ${Cookies.get('acessToken')}`,
+              authorization: `Bearer ${Cookies.get('accessToken')}`,
+              id : `Bearer ${Cookies.get('userId')}`
             },
           });
           const restau = response.data.restaurant;
@@ -85,7 +87,8 @@ const Orders = () => {
       try {
         const response = await axios.get(`${baseURL}/order/restaurant/${selectedRestaurant.id}`, {
           headers: {
-            authorization: `Bearer ${Cookies.get('acessToken')}`,
+            authorization: `Bearer ${Cookies.get('accessToken')}`,
+            id : `Bearer ${Cookies.get('userId')}`
           },
         });
         const data = response.data.orders;
@@ -185,11 +188,9 @@ const Orders = () => {
         <>
           <Button><Link to={`/ShowOrder/${order.id}`}>Details</Link></Button>
          
-          
-              <Button variant="success" onClick={() => handleComplete(order)}><i className="flaticon-381-success"></i></Button>
-              <Button variant="danger" onClick={() => handleDelete(order)}><i className="flaticon-381-multiply-1"></i></Button>
-           
-    
+          <span> {(!(Cookies.get('id_role') === 1)) && Cookies.get('accessType') === "user"  && <Button variant="success" onClick={() => handleComplete(order)}><i className="flaticon-381-success"></i></Button> }</span>
+             <span> {(!(Cookies.get('id_role') === 1)) && Cookies.get('accessType') === "user"  && <Button variant="danger" onClick={() => handleDelete(order)}><i className="flaticon-381-multiply-1"></i></Button>} </span>
+ 
         </>
       ),
     })),
@@ -217,7 +218,7 @@ const Orders = () => {
       actions: (
         <>
           <Button><Link to={`/ShowOrder/${order.id}`}>Details</Link></Button>
-          <Button variant="danger" onClick={() => handleDelete(order)}><i className="flaticon-381-trash"></i></Button>
+          <span> {(!(Cookies.get('id_role') === 1)) && Cookies.get('accessType') === "user"  && <Button variant="danger" onClick={() => handleDelete(order)}><i className="flaticon-381-multiply-1"></i></Button>} </span>
            
     
         </>

@@ -1,4 +1,5 @@
 import React, { Fragment, useState, useEffect, useContext } from "react";
+import Cookies from 'js-cookie'
 import { MDBDataTable } from "mdbreact";
 // import dataTables from "./dataTables.jsx";
 import { Dropdown, Button, Modal } from "react-bootstrap";
@@ -100,7 +101,8 @@ const Tables = ({restaurantId}) => {
       try {
         const response = await axios.get(`http://localhost:5000/api/menus/${menuId}`, {
           headers: {
-            authorization: `Bearer ${accessToken}`,
+            authorization: `Bearer ${Cookies.get('accessToken')}`,
+            id : `Bearer ${Cookies.get('userId')}`
           },
         });
         const menu = response.data;

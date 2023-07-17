@@ -5,7 +5,8 @@ import Header from "./Header";
 import ChatBox from "../ChatBox";
 import Chat from "../../components/chatBox/Chat";
 
-const KokiNav = ({ title }) => {
+const KokiNav = ({  }) => {
+  const title = "Digi Restau"
   const [toggle, setToggle] = useState("");
   const onClick = (name) => setToggle(toggle === name ? "" : name);
 

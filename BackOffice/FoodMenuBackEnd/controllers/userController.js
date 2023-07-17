@@ -50,10 +50,10 @@ exports.login = async (req, res, next) => {
       };
       // generate jwt
       const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-        expiresIn: "10m",
+        //expiresIn: "10m",
       }); // change it to 10 minutes
       const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, {
-        expiresIn: "20m",
+       // expiresIn: "20m",
       }); // change it to 1 day
       await userService.updateUser(userFromDb.id, {
         refresh_token: refreshToken,
@@ -106,7 +106,7 @@ exports.refreshToken = async (req, res, next) => {
         name: foundUser.name,
       },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "10m" } // change it to 10 minutes
+      { expiresIn: "50m" } // change it to 10 minutes
     );
     res.json({ accessToken });
   });

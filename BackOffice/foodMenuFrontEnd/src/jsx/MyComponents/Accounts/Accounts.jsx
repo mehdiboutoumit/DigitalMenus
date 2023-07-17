@@ -49,14 +49,7 @@ function Accounts() {
 
   const handleCloseCreateModal = () => {
     setShowCreateModal(false);
-    toast.success("Termine avec succes ✅ !", {
-      position: "bottom-right",
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-    });
+
     try {
       fetchData();
     } catch (error) {

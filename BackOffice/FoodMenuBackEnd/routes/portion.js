@@ -6,12 +6,12 @@ const verifyPermission = require("../middlewares/verifyPermission");
 router
   .route("/add") //
   .post(
-    verifyJWT,
+    //verifyJWT,
     // verifyPermission(["admin"]),
     portionController.createPortion
   )
   router.route("/").get(
-    verifyJWT, //
+    //verifyJWT, //
     // verifyPermission(["admin"]),
     portionController.getAllPortions
   );
