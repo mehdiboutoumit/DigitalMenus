@@ -44,7 +44,7 @@ const [refresh, setRefresh] = useState(0);
     }
   };
   useEffect(() => {
-
+    document.title = "Menus"
     fetchData();
   }, [] );
 

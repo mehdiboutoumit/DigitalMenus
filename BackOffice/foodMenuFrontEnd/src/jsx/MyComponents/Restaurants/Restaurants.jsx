@@ -76,8 +76,12 @@ function Restaurants() {
     }
   };
   useEffect(() => {
-
+    document.title = "Restaurants"
     fetchData();
+
+    return () => {
+      document.title = "Digi Restau"
+  }
   }, [] );
 
 

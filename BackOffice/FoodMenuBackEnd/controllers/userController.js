@@ -71,7 +71,8 @@ exports.login = async (req, res, next) => {
         accessType : user.accessType,
         role: user.id_role,
         userId : user.id,
-        name : user.name
+        name : user.name,
+        resuatrantId : id_restaurant
       });
     } else {
       return res.status(400).json({ message: "Wrong Email or Password" });

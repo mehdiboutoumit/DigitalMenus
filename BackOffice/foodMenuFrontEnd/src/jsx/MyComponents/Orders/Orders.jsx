@@ -23,6 +23,7 @@ const Orders = () => {
 
 
   useEffect(() => {
+    document.title = "Commandes"
    
     // Fetch restaurants from the server and update the state
     const fetchRestaurants = async () => {
@@ -77,6 +78,7 @@ const Orders = () => {
     fetchRestaurants();
     return () => {
       // Cancel any ongoing fetch orders operation
+      document.title = "Digi Restau"
       setIsFetchingOrders(false);
     };
   }, []);

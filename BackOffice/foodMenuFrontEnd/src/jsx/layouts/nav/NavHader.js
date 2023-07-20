@@ -44,7 +44,7 @@ const NavHader = () => {
             </div>
          </div>
          <div className="nav-control" onClick={() => setToggle(!toggle)}>
-            <div className={`hamburger ${toggle ? "is-active" : ""}`}>
+            <div className={`hamburger ${!toggle ? "is-active" : ""}`}>
                <span className="line"></span>
                <span className="line"></span>
                <span className="line"></span>
