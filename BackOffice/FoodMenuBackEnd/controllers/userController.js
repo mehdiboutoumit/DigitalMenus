@@ -46,7 +46,8 @@ exports.login = async (req, res, next) => {
         email: userFromDb.email,
         id: userFromDb.id,
         accessType : userFromDb.accessType,
-        id_role : userFromDb.id_role
+        id_role : userFromDb.id_role,
+        id_restaurant : userFromDb.id_restaurant
       };
       // generate jwt
       const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
@@ -72,7 +73,7 @@ exports.login = async (req, res, next) => {
         role: user.id_role,
         userId : user.id,
         name : user.name,
-        resuatrantId : id_restaurant
+        resuatrantId : user.id_restaurant
       });
     } else {
       return res.status(400).json({ message: "Wrong Email or Password" });

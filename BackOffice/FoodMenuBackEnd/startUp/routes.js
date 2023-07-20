@@ -13,6 +13,7 @@ const portion = require("../routes/portion");
 const tag = require("../routes/tag");
 const table = require("../routes/table");
 const order = require("../routes/order");
+const sub = require("../routes/sub");
 
 module.exports = function (app) {
   //json parser
@@ -34,6 +35,7 @@ module.exports = function (app) {
   // app.use("/api/v1/tag", tag);
   app.use("/api/table", table);
   app.use("/api/order", order);
+  app.use("/api/sub", sub);
 
   //error
   //   app.use(errorHandler);
