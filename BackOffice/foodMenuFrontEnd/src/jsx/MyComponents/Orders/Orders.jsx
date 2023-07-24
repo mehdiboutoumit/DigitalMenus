@@ -202,7 +202,6 @@ const Orders = () => {
     columns: [
       { label: "Table", field: "table", sort: "asc" },
       { label: "Date", field: "date", sort: "asc" },
-      { label: "Prix total", field: "totalprice", sort: "asc" },
       { label: "Actions", field: "actions" }
     ],
     rows: orders.filter((order) => order.state === 0).map((order) => ({

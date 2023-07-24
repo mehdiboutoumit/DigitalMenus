@@ -16,6 +16,8 @@ router //
   .route("/restaurant/:idRestaurant")
   .get(orderController.getAllOrdersOfRestaurant);
 
+router.route("/details/:id").get(orderController.getAllIndivOrdersOfGlobalOrder)
+
   router
   .route("/") //
   // .post(

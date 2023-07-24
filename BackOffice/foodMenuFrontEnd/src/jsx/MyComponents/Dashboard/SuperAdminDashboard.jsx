@@ -1,11 +1,61 @@
-import React, { useState ,useEffect } from 'react'
+import React, { useEffect, useState } from "react";
 import Cookies from 'js-cookie'
-import ChartistGraph from 'react-chartist';
-import Select from "react-select";
-import { Link } from "react-router-dom/cjs/react-router-dom.min";
 import { Line } from "react-chartjs-2";
+import Select from "react-select";
+import { Card } from "react-bootstrap";
+import { Link } from "react-router-dom/cjs/react-router-dom.min";
+import axios from "axios";
+import { baseURL } from "../../../api/baseURL";
+import swal from 'sweetalert'
 
 function SuperAdminDashboard() {
+
+  const accessType = Cookies.get('accessType')
+  const [dataRestaurants , setdataRestaurants] = useState([]);
+
+  const fetchData = async () => {
+    try {
+      if(accessType === "superadmin"){
+      const response = await axios.get(`${baseURL}/restaurant/`, {
+  headers: {
+    authorization: `Bearer ${Cookies.get('accessToken')}`,
+    id : `Bearer ${Cookies.get('userId')}`
+  },
+});
+      setdataRestaurants(response.data.restaurants);
+    }
+    else { 
+      if(accessType === "admin"){
+                const adminId = Cookies.get('userId');
+                const response = await axios.get(`${baseURL}/restaurant/admin/${adminId}`,  {
+                  headers: {
+                    authorization: `Bearer ${Cookies.get(Cookies.get('accessToken'))}`,
+                    id : `Bearer ${Cookies.get('userId')}`
+                  },
+                });
+                setdataRestaurants(response.data.restaurants);
+      }
+      else {
+        swal ({text : "Non authentifie" }).then((confirm) => {
+          if (confirm) {
+              window.location.href = "/login";
+          };})
+      }
+      
+    }
+    } catch (error) {
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        window.location.href = '/logout';
+      } else {
+        window.location.href = "/error500"
+       // history.push('/error500');
+      }
+      console.error('Error fetching restaurants:', error);
+    }
+  };
+  useEffect(() =>{
+    fetchData();
+  },[])
   
   //Trending restaurant
 
@@ -66,7 +116,7 @@ function SuperAdminDashboard() {
        backgroundColor: "rgba(75,192,192,1)",
        borderColor: "rgba(0,0,0,1)",
        borderWidth: 1,
-       data: restaurantData[selectedRestaurant].numberOfOrders,
+       data: restaurantData["Restaurant A"].numberOfOrders,
      },
    ],
  };
@@ -93,7 +143,7 @@ function SuperAdminDashboard() {
                         </span>
                         <div className="media-body text-white text-right">
                            <p className="mb-1">Nombre des restaurants</p>
-                           <h3 className="text-white">{restaurantData[selectedRestaurant].restaurantCount}</h3>
+                           <h3 className="text-white">{dataRestaurants.length}</h3>
                         </div>
                      </div>
                   </div>
@@ -103,8 +153,8 @@ function SuperAdminDashboard() {
        <div className="col-md-6">
          {/* Dropdown list of restaurants */}
          <Select
-           options={restaurants.map((r) => ({ value: r, label: r }))}
-           value={{ value: selectedRestaurant, label: selectedRestaurant }}
+           options={dataRestaurants.map((r) => ({ value: r, label: r.name }))}
+           value={{ value: selectedRestaurant, label: selectedRestaurant.name }}
            onChange={handleChangeRestaurant}
          />
        </div>
@@ -128,7 +178,7 @@ function SuperAdminDashboard() {
                         </span>
                         <div className="media-body text-white text-right">
                            <p className="mb-1">Nombre des menus</p>
-                           <h3 className="text-white">{restaurantData[selectedRestaurant].numberOfMenus}</h3>
+                           <h3 className="text-white">{restaurantData["Restaurant A"].numberOfMenus}</h3>
                         </div>
                      </div>
                   </div>
@@ -144,7 +194,7 @@ function SuperAdminDashboard() {
                         </span>
                         <div className="media-body text-white text-right">
                            <p className="mb-1">Nombre des Abonnés </p>
-                           <h3 className="text-white">{restaurantData[selectedRestaurant].subs}</h3>
+                           <h3 className="text-white">{restaurantData["Restaurant A"].subs}</h3>
                         </div>
                      </div>
                   </div>

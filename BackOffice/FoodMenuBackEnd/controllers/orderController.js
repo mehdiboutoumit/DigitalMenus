@@ -1,6 +1,8 @@
 const individualOrderService = require("../services/individualOrderService");
 const globalOrderService = require("../services/globalOrderService");
 
+
+
 exports.startOrder = async (req, res, next) => {
   const { id } = req.params;
   await globalOrderService.startOrder(id);
@@ -19,7 +21,16 @@ exports.deletePortion = async (req,res)=>{
   return res.json({ message: "success" });
 }
 
-
+exports.getAllIndivOrdersOfGlobalOrder = async (req, res, next) => {
+  if (req.params?.id) {
+    const orders = await individualOrderService.getAllIndivOrdersOfGlobalOrder(
+      req.params.id
+    );
+    return res.json({ message: "success", orders });
+  } else {
+    return res.json({ message: "there is no restaurant with this id" });
+  }
+};
 
 
 exports.getAllOrdersOfRestaurant = async (req, res, next) => {

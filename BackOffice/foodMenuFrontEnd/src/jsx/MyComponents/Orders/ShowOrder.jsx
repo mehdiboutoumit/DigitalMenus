@@ -1,8 +1,15 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./Orders.css";
 import { Table } from "react-bootstrap";
+import axios from "axios";
+import { baseURL } from "../../../api/baseURL";
+import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 
 const ShowOrder = ({ Gorder }) => {
+
+  const {id} = useParams();
+  const [orders, setOrders]  =useState([]);
+
   Gorder = {
     id: 1,
     customerName: "John Doe",
@@ -35,6 +42,21 @@ const ShowOrder = ({ Gorder }) => {
       },
     ],
   };
+
+  const fetchData = async ()=> {
+    try {
+      const res = await axios.get(`${baseURL}/order/details/${id}`);
+      setOrders(res.data.orders)
+      console.log(res.data.orders);
+
+    } catch (error) {
+      
+    }
+  }
+
+  useEffect(()=>{
+      fetchData();
+  },[])
   
   return (
     <div className="order-details">
@@ -43,45 +65,35 @@ const ShowOrder = ({ Gorder }) => {
         <tbody>
           <tr>
             <td><strong>Order ID:</strong></td>
-            <td>{Gorder.id}</td>
-          </tr>
-          <tr>
-            <td><strong>Customer Name:</strong></td>
-            <td>{Gorder.customerName}</td>
+            <td>{id}</td>
           </tr>
           <tr>
             <td><strong>Order Date:</strong></td>
-            <td>{Gorder.orderDate}</td>
+           {orders.length !=0 && <td>{orders[0].createdAt}</td>}
           </tr>
         </tbody>
       </Table>
-      {Gorder.individualOrders.map((individualOrder, index) => (
+      {orders && orders.map((individualOrder, index) => (
         <div key={index} className="individual-order">
           <h3>Individual Order #{index + 1}</h3>
           <Table striped bordered>
-            <tbody>
-              <tr>
-                <td><strong>Table Number:</strong></td>
-                <td>{individualOrder.tableNumber}</td>
-              </tr>
-            </tbody>
-          </Table>
-          <Table striped bordered>
             <thead>
               <tr>
-                <th>Dish</th>
-                <th>Quantity</th>
+                {<th>Dish</th>}
+                {<th>Portion</th>}
                 <th>Price</th>
+                <th>Note</th>
               </tr>
             </thead>
             <tbody>
-              {individualOrder.dishes.map((dish, dishIndex) => (
-                <tr key={dishIndex}>
-                  <td>{dish.name}</td>
-                  <td>{dish.quantity}</td>
-                  <td>${dish.price}</td>
+              
+                <tr key={index}>
+                  {<td>{individualOrder.id_dish}</td>}
+                 { <td>{individualOrder.id_dish}</td>}
+                  <td>{individualOrder.price}</td>
+                  <td>{individualOrder.note}</td>
                 </tr>
-              ))}
+           
             </tbody>
           </Table>
         </div>

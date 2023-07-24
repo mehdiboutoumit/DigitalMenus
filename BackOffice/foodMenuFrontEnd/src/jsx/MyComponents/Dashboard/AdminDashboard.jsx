@@ -1,11 +1,61 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Cookies from 'js-cookie'
 import { Line } from "react-chartjs-2";
 import Select from "react-select";
 import { Card } from "react-bootstrap";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
+import axios from "axios";
+import { baseURL } from "../../../api/baseURL";
+import swal from 'sweetalert'
 
 const AdminDashboard = () => {
+
+  const accessType = Cookies.get('accessType')
+  const [dataRestaurants , setdataRestaurants] = useState([]);
+
+  const fetchData = async () => {
+    try {
+      if(accessType === "superadmin"){
+      const response = await axios.get(`${baseURL}/restaurant/admin/${Cookies.get('userId')}`, {
+  headers: {
+    authorization: `Bearer ${Cookies.get('accessToken')}`,
+    id : `Bearer ${Cookies.get('userId')}`
+  },
+});
+      setdataRestaurants(response.data.restaurants);
+    }
+    else { 
+      if(accessType === "admin"){
+                const adminId = Cookies.get('userId');
+                const response = await axios.get(`${baseURL}/restaurant/admin/${adminId}`,  {
+                  headers: {
+                    authorization: `Bearer ${Cookies.get(Cookies.get('accessToken'))}`,
+                    id : `Bearer ${Cookies.get('userId')}`
+                  },
+                });
+                setdataRestaurants(response.data.restaurants);
+      }
+      else {
+        swal ({text : "Non authentifie" }).then((confirm) => {
+          if (confirm) {
+              window.location.href = "/login";
+          };})
+      }
+      
+    }
+    } catch (error) {
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        window.location.href = '/logout';
+      } else {
+        window.location.href = "/error500"
+       // history.push('/error500');
+      }
+      console.error('Error fetching restaurants:', error);
+    }
+  };
+  useEffect(() =>{
+    fetchData();
+  },[])
   // Dummy data for statistics
   const restaurants = [
     "Restaurant A",
@@ -85,7 +135,7 @@ const AdminDashboard = () => {
                         </span>
                         <div className="media-body text-white text-right">
                            <p className="mb-1">Nombre des restaurants</p>
-                           <h3 className="text-white">{restaurantData[selectedRestaurant].restaurantCount}</h3>
+                           <h3 className="text-white">{dataRestaurants.length}</h3>
                         </div>
                      </div>
                   </div>
@@ -95,7 +145,7 @@ const AdminDashboard = () => {
        <div className="col-md-6">
          {/* Dropdown list of restaurants */}
          <Select
-           options={restaurants.map((r) => ({ value: r, label: r }))}
+           options={dataRestaurants.map((r) => ({ value: r, label: r }))}
            value={{ value: selectedRestaurant, label: selectedRestaurant }}
            onChange={handleChangeRestaurant}
          />
