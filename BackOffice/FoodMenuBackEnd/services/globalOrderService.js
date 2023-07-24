@@ -19,6 +19,15 @@ exports.finishOrder = async (id) => {
   });
 };
 
+exports.deleteOrder = async (id) => {
+  const order = await GlobalOrder.destroy({
+    where: {
+      id: id,
+    },
+  });
+  return order;
+};
+
 
 
 exports.createGlobalOrder = async (order) => {

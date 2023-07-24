@@ -121,3 +121,12 @@ exports.findUserById = async (id) => {
     return data.dataValues;
   }
 };
+
+exports.deleteUser = async (id) => {
+  const user = await User.destroy({
+    where: {
+      id: id,
+    },
+  });
+  return user;
+};

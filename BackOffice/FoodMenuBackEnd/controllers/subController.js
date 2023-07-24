@@ -52,8 +52,7 @@ exports.updateSub = async (req, res, next) => {
   var updatedSub = {};
   if(Sub.name) updatedSub.name = Sub.name;
   if(Sub.email) updatedSub.email = Sub.email;
-  if(Sub.password) updatedSub.password = Sub.password;
-  if(Sub.accessType) updatedSub.accessType = Sub.accessType;
+  if(Sub.points) updatedSub.points = Sub.points;
   await SubService.updateSub(id, updatedSub);
   return res.json({ message: "success" });
 };

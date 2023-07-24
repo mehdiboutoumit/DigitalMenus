@@ -34,7 +34,10 @@ exports.getAllOrdersOfRestaurant = async (req, res, next) => {
 };
 
 
-
+exports.deleteOrder = async (req,res)=>{
+  globalOrderService.deleteOrder(req.params.id);
+  return res.json({ message: "success" });
+}
 
 
 

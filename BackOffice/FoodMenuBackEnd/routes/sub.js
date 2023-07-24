@@ -18,7 +18,7 @@ router
     // verifyPermission(["admin"]),
     subController.getSubById
   )
- router.route("/:id") .put(
+ router.route("update/:id") .put(
     verifyJWT,
     // verifyPermission(["admin"]),
     subController.updateSub

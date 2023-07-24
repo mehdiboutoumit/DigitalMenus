@@ -173,3 +173,8 @@ exports.updateUser = async (req, res, next) => {
   await userService.updateUser(id, updateduser);
   return res.json({ message: "success" });
 };
+
+exports.deleteUser = async (req,res)=>{
+  userService.deleteUser(req.params.id);
+  return res.json({ message: "success" });
+}

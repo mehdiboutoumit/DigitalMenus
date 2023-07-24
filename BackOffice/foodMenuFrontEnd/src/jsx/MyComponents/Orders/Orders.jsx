@@ -10,6 +10,8 @@ import Select from 'react-select';
 import { useHistory } from "react-router-dom";
 import AuthContext from "../../../context/AuthProvider";
 import { Box } from "@material-ui/core";
+import swal from 'sweetalert'
+
 
 const Orders = () => {
   const {auth} = useContext(AuthContext);
@@ -22,6 +24,22 @@ const Orders = () => {
   const [refetch, setRefetch] = useState('')
 
 
+  const fetchOrders = async () => {
+    try {
+      const response = await axios.get(`${baseURL}/order/restaurant/${selectedRestaurant.id}`, {
+        headers: {
+          authorization: `Bearer ${Cookies.get('accessToken')}`,
+          id : `Bearer ${Cookies.get('userId')}`
+        },
+      });
+      const data = response.data.orders;
+       setOrders(data);
+    } catch (error) {
+      console.log(error);
+    }
+    setIsFetchingOrders(false);
+  };
+ 
 
   useEffect(() => {
     document.title = "Commandes"
@@ -86,23 +104,6 @@ const Orders = () => {
   useEffect(() => {
     // Fetch orders from the server and update the state
     setIsFetchingOrders(true);
-    const fetchOrders = async () => {
-      try {
-        const response = await axios.get(`${baseURL}/order/restaurant/${selectedRestaurant.id}`, {
-          headers: {
-            authorization: `Bearer ${Cookies.get('accessToken')}`,
-            id : `Bearer ${Cookies.get('userId')}`
-          },
-        });
-        const data = response.data.orders;
-         setOrders(data);
-      } catch (error) {
-        console.log(error);
-      }
-      setIsFetchingOrders(false);
-    };
-   
-
     if (selectedRestaurant) {
       fetchOrders();
     }
@@ -150,6 +151,40 @@ const Orders = () => {
 
   const handleDelete = (rowData) => {
     // Handle delete action
+    swal({
+      title: `êtes-vous sûr de vouloir supprimer ce commande ?`,
+      text:
+         "Cette action est irréversible",
+      icon: "warning",
+      buttons: true,
+      buttons: [ "Annuler","Supprimer"],
+      dangerMode: true,
+   }).then(async(willDelete) => {
+      if (willDelete) {
+        try {
+          const response = await axios.delete(`http://localhost:5000/api/order/delete/${rowData.d}`);
+          // Handle the response if needed
+          console.log(response.data); // Assuming the server returns a response message or data
+          fetchOrders();  } 
+          catch (error) {
+            if (error.response?.status === 401) {
+              //history.push('/login');
+              window.location.href = "/login"
+            } else {
+              //history.push('/error500');
+              window.location.href = "/error500"
+            }
+          console.error(error);
+        }
+
+         swal(
+            "Commande supprimé avec succes !",
+            {
+               icon: "success",
+            }
+         );
+      }
+    })
     console.log("Delete", rowData);
   };
 

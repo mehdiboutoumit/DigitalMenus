@@ -6,6 +6,7 @@ import axios from "axios";
 import CreateCollab from "./createCollab";
 import AuthContext from "../../../context/AuthProvider";
 import { useHistory } from "react-router-dom";
+import swal from 'sweetalert'
 
 const Collaborators = (restaurantId) => {
   // const rows = dataCollab;
@@ -76,6 +77,40 @@ const Collaborators = (restaurantId) => {
 
   const handleDelete = (rowData) => {
     // Handle delete action
+    swal({
+      title: `êtes-vous sûr de vouloir supprimer ce collaborateur ?`,
+      text:
+         "Cette action est irréversible",
+      icon: "warning",
+      buttons: true,
+      buttons: [ "Annuler","Supprimer"],
+      dangerMode: true,
+   }).then(async(willDelete) => {
+      if (willDelete) {
+        try {
+          const response = await axios.delete(`http://localhost:5000/api/user/delete/${rowData.d}`);
+          // Handle the response if needed
+          console.log(response.data); // Assuming the server returns a response message or data
+          fetchData();  } 
+          catch (error) {
+            if (error.response?.status === 401) {
+              //history.push('/login');
+              window.location.href = "/login"
+            } else {
+              //history.push('/error500');
+              window.location.href = "/error500"
+            }
+          console.error(error);
+        }
+
+         swal(
+            "Collaborateur supprimé avec succes !",
+            {
+               icon: "success",
+            }
+         );
+      }
+    })
     console.log("Delete", rowData);
   };
 

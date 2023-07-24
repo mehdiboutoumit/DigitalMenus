@@ -44,6 +44,6 @@ router
     // verifyPermission(["admin"]),
     userController.updateUser
   );
-//router.route("/delete").delete(userController.deleteUser);
+router.route("/delete/:id").delete(userController.deleteUser);
 
 module.exports = router;

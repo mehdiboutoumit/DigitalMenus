@@ -28,4 +28,6 @@ router //
     // verifyPermission(["admin"]),
    // orderController.getAllOrders
   );
+
+  router.route('/delete/:id').delete(orderController.deleteOrder)
 module.exports = router;

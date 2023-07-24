@@ -34,9 +34,6 @@ function Restaurants() {
 
 
   const fetchData = async () => {
-
-
-  
     try {
       if(accessType === "superadmin"){
       const response = await axios.get('http://localhost:5000/api/restaurant/', {
