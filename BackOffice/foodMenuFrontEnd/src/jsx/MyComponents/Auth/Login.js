@@ -79,7 +79,7 @@ const Login = () => {
         console.log("No Server Response");
         setErr("Probleme de serveur")
       } else if (err.response.status === 400) {
-        setErr("Email ou password non rempli")
+        setErr("Email ou mot de passe erroné")
         console.log("Missing Username or Password");
       } else if (err.response.status === 401) {
         setErr("Non autorisé")

@@ -19,6 +19,7 @@ const Orders = () => {
   const [restaurants, setRestaurants] = useState([]);
   const [selectedRestaurant, setSelectedRestaurant] =useState(null);
   const [isFetchingOrders, setIsFetchingOrders] = useState(false);
+  const [refetch, setRefetch] = useState('')
 
 
 
@@ -105,20 +106,45 @@ const Orders = () => {
     if (selectedRestaurant) {
       fetchOrders();
     }
-  }, [selectedRestaurant]);
+  }, [selectedRestaurant, refetch]);
 
   const handleRestaurantChange = (selectedOption) => {
     setSelectedRestaurant(selectedOption.value);
   };
 
-  const handleComplete = (rowData) => {
-    // Set the order data to editOrderData state
-    setEditOrderData(rowData);
-    // Show the create modal
-    setShowCreateModal(true);
+  const handleComplete = async(row) => {
+    try {
+      const res = await axios.put(`${baseURL}/order/finish/${row.id}`)
+      console.log("Finish",res);
+      const response = await axios.get(`${baseURL}/order/restaurant/${selectedRestaurant.id}`, {
+        headers: {
+          authorization: `Bearer ${Cookies.get('accessToken')}`,
+          id : `Bearer ${Cookies.get('userId')}`
+        },
+      });
+      const data = response.data.orders;
+       setOrders(data);
+    } catch (error) {
+      console.log(error);
+    }
+    
   };
 
-  const handleStart = () => {
+  const handleStart =async (row) => {
+    try {
+      const res = await axios.put(`${baseURL}/order/start/${row.id}`)
+      console.log("Start",res);
+      const response = await axios.get(`${baseURL}/order/restaurant/${selectedRestaurant.id}`, {
+        headers: {
+          authorization: `Bearer ${Cookies.get('accessToken')}`,
+          id : `Bearer ${Cookies.get('userId')}`
+        },
+      });
+      const data = response.data.orders;
+       setOrders(data);
+    } catch (error) {
+      console.log(error);
+    }
     
   }
 
@@ -159,8 +185,10 @@ const Orders = () => {
       actions: (
         <>
               <Button><Link to={`/ShowOrder/${order.id}`}>Details</Link></Button>
-             <span> {(!Cookies.get('id_role') === 1) && <Button variant="info" onClick={() => handleStart(order)}><i className="flaticon-381-clock"></i></Button> }</span>
-             <span> {(!Cookies.get('id_role') === 1)  && <Button variant="danger" onClick={() => handleDelete(order)}><i className="flaticon-381-multiply-1"></i></Button>} </span>
+             {/* <span> {(!Cookies.get('id_role') === 1) && <Button variant="info" onClick={() => handleStart(order)}><i className="flaticon-381-clock"></i></Button> }</span>
+             <span> {(!Cookies.get('id_role') === 1)  && <Button variant="danger" onClick={() => handleDelete(order)}><i className="flaticon-381-multiply-1"></i></Button>} </span> */}
+             <span> {<Button variant="info" onClick={() => handleStart(order)}><i className="flaticon-381-clock"></i></Button> }</span>
+             <span> { <Button variant="danger" onClick={() => handleDelete(order)}><i className="flaticon-381-multiply-1"></i></Button>} </span>
  
         </>
       ),
@@ -190,8 +218,10 @@ const Orders = () => {
         <>
           <Button><Link to={`/ShowOrder/${order.id}`}>Details</Link></Button>
          
-          <span> {(!(Cookies.get('id_role') === 1)) && Cookies.get('accessType') === "user"  && <Button variant="success" onClick={() => handleComplete(order)}><i className="flaticon-381-success"></i></Button> }</span>
-             <span> {(!(Cookies.get('id_role') === 1)) && Cookies.get('accessType') === "user"  && <Button variant="danger" onClick={() => handleDelete(order)}><i className="flaticon-381-multiply-1"></i></Button>} </span>
+          {/* <span> {(!(Cookies.get('id_role') === 1)) && Cookies.get('accessType') === "user"  && <Button variant="success" onClick={() => handleComplete(order)}><i className="flaticon-381-success"></i></Button> }</span>
+             <span> {(!(Cookies.get('id_role') === 1)) && Cookies.get('accessType') === "user"  && <Button variant="danger" onClick={() => handleDelete(order)}><i className="flaticon-381-multiply-1"></i></Button>} </span> */}
+             <span> {<Button variant="success" onClick={() => handleComplete(order)}><i className="flaticon-381-success"></i></Button> }</span>
+             <span> { <Button variant="danger" onClick={() => handleDelete(order)}><i className="flaticon-381-multiply-1"></i></Button>} </span>
  
         </>
       ),

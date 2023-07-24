@@ -1,5 +1,26 @@
 const { GlobalOrder, IndividualOrder, Extra } = require("../models");
 
+
+
+
+exports.startOrder = async (id) => {
+  await GlobalOrder.update({state : 1}, {
+    where: {
+      id: id,
+    },
+  });
+};
+
+exports.finishOrder = async (id) => {
+  await GlobalOrder.update({state : 2}, {
+    where: {
+      id: id,
+    },
+  });
+};
+
+
+
 exports.createGlobalOrder = async (order) => {
   const globalOrderInstance = await GlobalOrder.create({
     id_table: order.id_table,

@@ -3,7 +3,20 @@ const router = express.Router();
 const orderController = require("../controllers/orderController");
 const verifyJWT = require("../middlewares/verifyJWT");
 const verifyPermission = require("../middlewares/verifyPermission");
-router
+
+router.route("/start/:id").put(
+  orderController.startOrder
+)
+
+router.route("/finish/:id").put(
+  orderController.finishOrder
+)
+
+router //
+  .route("/restaurant/:idRestaurant")
+  .get(orderController.getAllOrdersOfRestaurant);
+
+  router
   .route("/") //
   // .post(
   //   verifyJWT, //
@@ -15,12 +28,4 @@ router
     // verifyPermission(["admin"]),
    // orderController.getAllOrders
   );
-router //
-  .route("/restaurant/:idRestaurant")
-  .get(orderController.getAllOrdersOfRestaurant);
-
-// router
-//   .route("/:id") //
-//   .get(verifyJWT, orderController.getOrderById)
-//   .put(verifyJWT, verifyPermission(["admin"]), orderController.updateOrder);
 module.exports = router;

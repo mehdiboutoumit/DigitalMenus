@@ -226,8 +226,8 @@ class SideBar extends Component {
             >
              {(Cookie.get("accessType")==="superadmin" 
               || Cookie.get("accessType")==="admin"  ) && <Link className="ai-icon" to="/Subs">
-              <svg xmlns="http://www.w3.org/2001/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-info"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-                <span className="nav-text">Abonnements</span>
+                <i className="la la-group"></i>
+                 <span className="nav-text">Abonnements</span>
               </Link>}
              
             </li> }
@@ -250,7 +250,7 @@ class SideBar extends Component {
              
             >
               <Link className="ai-icon" to="/ContactSupport">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-info"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                <i className="la la-question"></i>
                 <span className="nav-text"> Support 212</span>
               </Link>
              

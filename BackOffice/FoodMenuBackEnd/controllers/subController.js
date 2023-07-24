@@ -13,9 +13,8 @@ exports.createSub = async (req, res, next) => {
     return res.json({ message: "success", Sub: newSub });
 };
 exports.getAllSubs = async (req, res, next) => {
-  const {id} = req.params;
-  const Subs = await SubService.getAllSubs(id);
-  return res.json({ message: "success", Subs: Subs });
+  const Subs = await SubService.getAllSubs();
+  return res.json({ message: "success", subs: Subs });
 };
 exports.getAllSubsOfRestaurant = async (req, res, next) => {
   if (req.params?.idRestaurant) {

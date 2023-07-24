@@ -46,13 +46,11 @@ exports.getSubById = async (id) => {
   }
 };
 exports.getAllSubs = async (id) => {
-  let Subs = await Sub.findAll({
-    include: "sub",
-  });
+  let Subs = await Sub.findAll();
   if (Subs == null) {
     return [];
   }
-  Subs = Subs.map((Sub) => {
+  Subs = Subs.map((sub) => {
     return {
         id: sub.dataValues.id,
         name: sub.dataValues.name,
@@ -61,7 +59,9 @@ exports.getAllSubs = async (id) => {
         id_restaurant : sub.dataValues.id_restaurant
     };
   });
+  
   return Subs;
+
 };
 exports.getAllSubsOfRestaurant = async (idRestaurant) => {
   let Subs = await Sub.findAll({

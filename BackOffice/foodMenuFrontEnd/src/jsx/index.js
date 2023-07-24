@@ -41,6 +41,8 @@ import ShowOrder from "./MyComponents/Orders/ShowOrder";
 
 import Subs from "./MyComponents/Subs/Subs";
 
+import Finance from "./MyComponents/Finance/Finance";
+
 import ContactSupport from "./MyComponents/ConatctSupport/ContactSupport";
 
 
@@ -189,6 +191,7 @@ const Markup = () => {
     
     //Subs
     {url : "Subs", component : Subs},
+    {url : "Finance", component : Finance},
 
     //Profile
     {url : "Profile/:id" , component : Profile},

@@ -352,6 +352,7 @@ function Restaurants() {
 
   return (
     <Fragment>
+      <div className='d-flex justify-content-center align-items-center'><h1>Vos restaurants</h1></div>
       <div className="row">
         <div className="col-xl-12">
           <div className="table-responsive">
