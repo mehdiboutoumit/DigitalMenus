@@ -44,6 +44,10 @@ exports.getAllOrdersOfRestaurant = async (req, res, next) => {
   }
 };
 
+exports.getData = async (req,res) =>{
+  const data = globalOrderService.getDashboardData();
+  return res.json({ message: "success", data });
+}
 
 exports.deleteOrder = async (req,res)=>{
   globalOrderService.deleteOrder(req.params.id);

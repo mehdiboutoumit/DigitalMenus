@@ -68,5 +68,8 @@
   justify-content: center;
   height: 100%;
   width: 100%;
+}
 
+.individual-order {
+  max-width: 600px;
 }

@@ -20,13 +20,16 @@ router //
   .get(portionController.getAllPortionsOfDish);
 
 router
-  .route("/:id") //
-  .get(verifyJWT, portionController.getPortionById)
+  .route("/:id")
   .put(
     verifyJWT,
     // verifyPermission(["admin"]),
     portionController.updatePortion
   );
+
+  router
+  .route("/:id") //
+  .get(portionController.getPortionById)
  
   router.route("/delete/:id").delete(
     portionController.deletePortion

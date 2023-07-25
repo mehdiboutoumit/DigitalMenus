@@ -12,17 +12,45 @@ function SuperAdminDashboard() {
 
   const accessType = Cookies.get('accessType')
   const [dataRestaurants , setdataRestaurants] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [selectedRestaurant, setSelectedRestaurant] = useState({});
+  const [trendingRestaurants, setTrending] = useState([]);
 
   const fetchData = async () => {
     try {
       if(accessType === "superadmin"){
-      const response = await axios.get(`${baseURL}/restaurant/`, {
-  headers: {
-    authorization: `Bearer ${Cookies.get('accessToken')}`,
-    id : `Bearer ${Cookies.get('userId')}`
-  },
-});
-      setdataRestaurants(response.data.restaurants);
+      const response1 = await axios.get(`${baseURL}/restaurant/`, {
+      headers: {
+        authorization: `Bearer ${Cookies.get('accessToken')}`,
+        id : `Bearer ${Cookies.get('userId')}`
+        },
+  });
+      // Fetch all menus
+      const menusResponse = await axios.get(`${baseURL}/menus/`, {
+        headers: {
+          authorization: `Bearer ${Cookies.get('accessToken')}`,
+          id: `Bearer ${Cookies.get('userId')}`
+        },
+      });
+      const menus = menusResponse.data.menus;
+
+      // Fetch all subs
+      const subsResponse = await axios.get(`${baseURL}/sub/`, {
+        headers: {
+          authorization: `Bearer ${Cookies.get('accessToken')}`,
+          id: `Bearer ${Cookies.get('userId')}`
+        },
+      });
+      const subs = subsResponse.data.subs;
+      const restaurants1 = response1.data.restaurants;
+      // Calculate the number of menus for each restaurant
+      const restaurantsWithMenusNumber = restaurants1.map((restaurant) => {
+        const menusNumber = menus.filter((menu) => menu.id_restaurant === restaurant.id).length;
+        const subsNumber = subs.filter((sub) => sub.id_restaurant === restaurant.id).length;
+        return { ...restaurant, menusNumber, subsNumber };
+      });
+
+      setdataRestaurants(restaurantsWithMenusNumber);
     }
     else { 
       if(accessType === "admin"){
@@ -33,7 +61,32 @@ function SuperAdminDashboard() {
                     id : `Bearer ${Cookies.get('userId')}`
                   },
                 });
-                setdataRestaurants(response.data.restaurants);
+                // Fetch all menus
+      const menusResponse = await axios.get(`${baseURL}/menu/`, {
+        headers: {
+          authorization: `Bearer ${Cookies.get('accessToken')}`,
+          id: `Bearer ${Cookies.get('userId')}`
+        },
+      });
+      const menus = menusResponse.data.menus;
+
+      // Fetch all subs
+      const subsResponse = await axios.get(`${baseURL}/subs/`, {
+        headers: {
+          authorization: `Bearer ${Cookies.get('accessToken')}`,
+          id: `Bearer ${Cookies.get('userId')}`
+        },
+      });
+      const subs = subsResponse.data.subs;
+      const restaurants1 = response.data.restauarants;
+      // Calculate the number of menus for each restaurant
+      const restaurantsWithMenusNumber = restaurants1.map((restaurant) => {
+        const menusNumber = menus.filter((menu) => menu.id_restaurant === restaurant.id).length;
+        const subsNumber = subs.filter((sub) => sub.id_restaurant === restaurant.id).length;
+        return { ...restaurant, menusNumber, subsNumber };
+      });
+
+      setdataRestaurants(restaurantsWithMenusNumber);
       }
       else {
         swal ({text : "Non authentifie" }).then((confirm) => {
@@ -45,9 +98,9 @@ function SuperAdminDashboard() {
     }
     } catch (error) {
       if (error.response?.status === 401 || error.response?.status === 403) {
-        window.location.href = '/logout';
+        //window.location.href = '/logout';
       } else {
-        window.location.href = "/error500"
+       // window.location.href = "/error500"
        // history.push('/error500');
       }
       console.error('Error fetching restaurants:', error);
@@ -57,7 +110,68 @@ function SuperAdminDashboard() {
     fetchData();
   },[])
   
-  //Trending restaurant
+  useEffect(() =>{
+ 
+    fetchTrendingDishes();
+    console.log(trendingRestaurants);
+
+  },[selectedRestaurant])
+  
+
+  const fetchOrders = async () => {
+    try {
+      const response = await axios.get(`${baseURL}/order/restaurant/${selectedRestaurant.id}`, {
+        headers: {
+          authorization: `Bearer ${Cookies.get('accessToken')}`,
+          id : `Bearer ${Cookies.get('userId')}`
+        },
+      });
+      const data = response.data.orders;
+       setOrders(data);
+    } catch (error) {
+      console.log(error);
+    }
+   
+  };
+
+  
+
+const fetchTrendingDishes = () => {
+  fetchOrders();
+  const currentDate = new Date();
+const currentMonth = currentDate.getMonth() + 1; // JavaScript months are zero-based
+const currentYear = currentDate.getFullYear();
+  // Filter orders for the current month
+  const ordersInCurrentMonth = orders.filter((order) => {
+    const orderDate = new Date(order.createdAt);
+    const orderMonth = orderDate.getMonth() + 1;
+    const orderYear = orderDate.getFullYear();
+    return orderMonth === currentMonth && orderYear === currentYear;
+  });
+console.log(ordersInCurrentMonth);
+  // Count occurrences of each dish
+  const dishCounts = {};
+  ordersInCurrentMonth.forEach((order) => {
+   // const { id_dish } = order;
+    if (dishCounts[order.id_restaurant]) {
+      dishCounts[order.id_restaurant]++;
+    } else {
+      dishCounts[order.id_restaurant] = 1;
+    }
+  });
+  // Sort dishes based on occurrence count in descending order
+  const trendingDishes = Object.keys(dishCounts).sort((a, b) => dishCounts[b] - dishCounts[a]);
+  // Take the first five dishes as the most trending dishes
+  const topFiveTrendingDishes = trendingDishes.slice(0, 5);
+  setTrending(topFiveTrendingDishes);
+ // console.log(topFiveTrendingDishes);
+};
+
+// Call the fetchTrendingDishes function to get the five most trending dishes
+
+
+// trendingDishes will now contain the IDs of the five most trending dishes in the current month.
+
 
 
   //Income per month
@@ -100,7 +214,7 @@ function SuperAdminDashboard() {
     // Add more data for other restaurants
   };
 
-  const [selectedRestaurant, setSelectedRestaurant] = useState(restaurants[0]);
+
 
   const handleChangeRestaurant = (selectedOption) => {
     setSelectedRestaurant(selectedOption.value);
@@ -178,7 +292,7 @@ function SuperAdminDashboard() {
                         </span>
                         <div className="media-body text-white text-right">
                            <p className="mb-1">Nombre des menus</p>
-                           <h3 className="text-white">{restaurantData["Restaurant A"].numberOfMenus}</h3>
+                           <h3 className="text-white">{selectedRestaurant.menusNumber}</h3>
                         </div>
                      </div>
                   </div>
@@ -194,7 +308,7 @@ function SuperAdminDashboard() {
                         </span>
                         <div className="media-body text-white text-right">
                            <p className="mb-1">Nombre des Abonnés </p>
-                           <h3 className="text-white">{restaurantData["Restaurant A"].subs}</h3>
+                           <h3 className="text-white">{selectedRestaurant.subsNumber}</h3>
                         </div>
                      </div>
                   </div>
@@ -207,7 +321,7 @@ function SuperAdminDashboard() {
        <div className="card m-2">
 								<div className="card-header border-0">
 									<div>
-										<h4 className="card-title mb-2">Daily Trending Menus</h4>
+										<h4 className="card-title mb-2">Plats tendances du mois</h4>
 										<p className="mb-0 fs-14">Lorem ipsum dolor</p>
 									</div>
 								</div>

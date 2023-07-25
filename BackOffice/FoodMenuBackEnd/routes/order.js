@@ -31,5 +31,7 @@ router.route("/details/:id").get(orderController.getAllIndivOrdersOfGlobalOrder)
    // orderController.getAllOrders
   );
 
+  router.route('/statistics').get(orderController.getData)
+
   router.route('/delete/:id').delete(orderController.deleteOrder)
 module.exports = router;

@@ -16,7 +16,7 @@ exports.getAllIndivOrdersOfGlobalOrder = async (id_global_order) => {
       id: order.dataValues.id,
       price : order.dataValues.price,
       id_dish : order.dataValues.id_dish,
-      id_restaurant: order.dataValues.id_portion,
+      id_portion: order.dataValues.id_portion,
       createdAt : order.dataValues.createdAt,
       note :order.dataValues.note
     };

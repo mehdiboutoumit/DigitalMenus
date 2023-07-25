@@ -9,6 +9,8 @@ const ShowOrder = ({ Gorder }) => {
 
   const {id} = useParams();
   const [orders, setOrders]  =useState([]);
+  const [totalPrice, setTotalPrice] = useState(0);
+
 
   Gorder = {
     id: 1,
@@ -46,52 +48,80 @@ const ShowOrder = ({ Gorder }) => {
   const fetchData = async ()=> {
     try {
       const res = await axios.get(`${baseURL}/order/details/${id}`);
-      setOrders(res.data.orders)
-      console.log(res.data.orders);
+      const ordersWithNames = await Promise.all(
+        res.data.orders.map(async (order) => {
+          const dishResponse = await axios.get(`${baseURL}/dish/${order.id_dish}`);
+          const portionResponse = await axios.get(`${baseURL}/portion/${order.id_portion}`);
+          const updatedOrder = {
+            ...order,
+            dishName: dishResponse.data.dish.name,
+            portionName: portionResponse.data.portion.name,
+          };
+          return updatedOrder;
+        })
+      );
+      setOrders(ordersWithNames)
+      console.log(ordersWithNames);
 
     } catch (error) {
       
     }
   }
 
+  const calculateTotalPrice = () => {
+    if (orders.length !== 0) {
+      const total = orders.reduce((acc, order) => {
+        return acc + parseInt(order.price); // Replace 'price' with the actual property name that holds the price value in the order object
+      }, 0);
+      setTotalPrice(total);
+    } else {
+      setTotalPrice(0);
+    }
+  };
+
   useEffect(()=>{
       fetchData();
-  },[])
+      calculateTotalPrice();
+  },[orders])
   
   return (
     <div className="order-details">
-      <h2 className="order-header">Order Details</h2>
+      <h2 className="order-header">Details de la commande</h2>
       <Table striped bordered>
         <tbody>
           <tr>
-            <td><strong>Order ID:</strong></td>
+            <td><strong>ID:</strong></td>
             <td>{id}</td>
           </tr>
           <tr>
-            <td><strong>Order Date:</strong></td>
+            <td><strong>Date :</strong></td>
            {orders.length !=0 && <td>{orders[0].createdAt}</td>}
+          </tr>
+          <tr>
+            <td><strong>Prix Total</strong></td>
+           {orders.length !=0 && <td>{totalPrice} DH</td>}
           </tr>
         </tbody>
       </Table>
-      {orders && orders.map((individualOrder, index) => (
+      {orders && orders.map((order, index) => (
         <div key={index} className="individual-order">
-          <h3>Individual Order #{index + 1}</h3>
+          <h3>Plat #{index + 1}</h3>
           <Table striped bordered>
             <thead>
               <tr>
-                {<th>Dish</th>}
-                {<th>Portion</th>}
-                <th>Price</th>
+                {order.id_dish &&<th>Plat</th>}
+                {order.id_portion &&<th>Portion</th>}
+                <th>Prix</th>
                 <th>Note</th>
               </tr>
             </thead>
             <tbody>
               
                 <tr key={index}>
-                  {<td>{individualOrder.id_dish}</td>}
-                 { <td>{individualOrder.id_dish}</td>}
-                  <td>{individualOrder.price}</td>
-                  <td>{individualOrder.note}</td>
+                  {order.id_dish && <td>{order.dishName}</td>}
+                 {order.id_portion && <td>{order.portionName}</td>}
+                  <td>{order.price}</td>
+                  <td>{order.note}</td>
                 </tr>
            
             </tbody>

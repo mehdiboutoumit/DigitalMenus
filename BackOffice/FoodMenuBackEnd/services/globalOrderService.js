@@ -1,7 +1,5 @@
 const { GlobalOrder, IndividualOrder, Extra } = require("../models");
-
-
-
+const { Sequelize, DataTypes } = require('sequelize');
 
 exports.startOrder = async (id) => {
   await GlobalOrder.update({state : 1}, {
@@ -27,6 +25,86 @@ exports.deleteOrder = async (id) => {
   });
   return order;
 };
+
+
+// Function to calculate monthly and annual income for a restaurant
+const calculateIncome = async (restaurantId) => {
+  // Calculate monthly income
+  const date = new Date();
+  const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+  const lastDayOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
+  const monthlyIncome = await GlobalOrder.sum('price', {
+    where: {
+      id_restaurant: restaurantId,
+      createdAt: {
+        [Sequelize.Op.between]: [firstDayOfMonth, lastDayOfMonth],
+      },
+    },
+    include: [{ model: IndividualOrder, attributes: [] }],
+  });
+console.log(monthlyIncome);
+  // Calculate annual income
+  const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
+  const lastDayOfYear = new Date(date.getFullYear(), 12, 0);
+
+  const annualIncome = await GlobalOrder.sum('price', {
+    where: {
+      id_restaurant: restaurantId,
+      createdAt: {
+        [Sequelize.Op.between]: [firstDayOfYear, lastDayOfYear],
+      },
+    },
+    include: [{ model: IndividualOrder, attributes: [] }],
+  });
+
+  return {
+    restaurantId,
+    m_income: monthlyIncome || 0,
+    y_income: annualIncome || 0,
+  };
+};
+
+// Function to get the dashboard data
+exports.getDashboardData = async () => {
+  try {
+    // Fetch the list of restaurants
+    const restaurants = await GlobalOrder.findAll({
+      attributes: ['id_restaurant'],
+      group: ['id_restaurant'],
+    });
+
+    console.log("restau : ",restaurants);
+    // Calculate the income for each restaurant
+    const rows = await Promise.all(
+      restaurants.map(async (restaurant) => {
+        const { id_restaurant } = restaurant;
+        return calculateIncome(id_restaurant);
+      })
+    );
+
+    // Prepare the data object
+    const data = {
+      columns: [
+        { label: 'Resturant', field: 'restaurantId' },
+        { label: 'Revenue Mensuel', field: 'm_income' },
+        { label: 'Revenue annuel', field: 'y_income' },
+      ],
+      rows,
+    };
+
+    return data;
+  } catch (error) {
+    console.error('Error fetching dashboard data:', error);
+    return null;
+  }
+};
+
+// // Call the getDashboardData function to get the dashboard data
+// const dashboardData = await getDashboardData();
+// console.log(dashboardData);
+
+
 
 
 

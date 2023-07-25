@@ -11,6 +11,7 @@ import { useHistory } from "react-router-dom";
 import AuthContext from "../../../context/AuthProvider";
 import { Box } from "@material-ui/core";
 import swal from 'sweetalert'
+import { ToastContainer, toast } from "react-toastify";
 
 
 const Orders = () => {
@@ -125,6 +126,14 @@ const Orders = () => {
       });
       const data = response.data.orders;
        setOrders(data);
+       toast.success("La commande est pret ✅ !", {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+     });
     } catch (error) {
       console.log(error);
     }
@@ -143,6 +152,14 @@ const Orders = () => {
       });
       const data = response.data.orders;
        setOrders(data);
+       toast.info("La commande est en coure de preparation !", {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+     });
     } catch (error) {
       console.log(error);
     }
@@ -404,6 +421,17 @@ const Orders = () => {
               </Modal>
             </div> */}
       
+      <ToastContainer
+                          position="top-right"
+                          autoClose={5000}
+                          hideProgressBar={false}
+                          newestOnTop
+                          closeOnClick
+                          rtl={false}
+                          pauseOnFocusLoss
+                          draggable
+                          pauseOnHover
+                        />
     </Fragment>
   );
 };

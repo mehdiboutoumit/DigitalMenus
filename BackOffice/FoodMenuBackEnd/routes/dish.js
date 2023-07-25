@@ -30,6 +30,15 @@ router
     //upload.single("image"),
     dishController.updateDish
   );
+  router
+  .route("/:id") //
+  //.get( dishController.getDishById)
+  .get(
+    //verifyJWT,
+    // verifyPermission(["admin"]),
+    //upload.single("image"),
+    dishController.getDishById
+  );
 
   router.delete("/delete/:id", dishController.deleteDish);
 module.exports = router;
